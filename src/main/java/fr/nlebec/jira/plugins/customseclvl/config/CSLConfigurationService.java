@@ -15,6 +15,7 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
 import fr.nlebec.jira.plugins.customseclvl.ao.model.CSLConfigurationAO;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
+import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
 
 @Named
 public class CSLConfigurationService {
@@ -48,15 +49,8 @@ public class CSLConfigurationService {
         }
         return this.configuration;
     }
-
-    public void updateConfiguration(boolean isActive){
-        boolean dbg = LOG.isDebugEnabled();
-        if (dbg) {
-            LOG.debug("Saving configuration preferences");
-        }
-
-        this.getConfiguration().setActive(isActive);
-
+    
+    public CSLConfigurationAO getConfigurationAo() {
         CSLConfigurationAO[] configs = this.persistenceManager.find(CSLConfigurationAO.class);
         CSLConfigurationAO configAo;
         
@@ -65,8 +59,31 @@ public class CSLConfigurationService {
         } else {
             configAo = configs[0];
         }
+        return configAo;
+    }
 
+    public void updateConfiguration(boolean isActive){
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Saving configuration preferences");
+        }
+
+        this.getConfiguration().setActive(isActive);
+
+        CSLConfigurationAO configAo = getConfigurationAo();
         ItemConverter.bindPojoToActiveObject(configuration, configAo);
+        configAo.save();
+    }
+    public void addSecurityRule(SecurityRules securityRule) {
+    	if (LOG.isDebugEnabled()) {
+            LOG.debug("Add new security rule");
+        }
+    	
+    	CSLConfigurationAO configAo = getConfigurationAo();
+    	
+    	//Check Security rule
+    	this.getConfiguration().getSecurityRules().add(securityRule);
+    	
+        ItemConverter.bindPojoToActiveObject( this.getConfiguration(), configAo);
         configAo.save();
     }
 }

@@ -1,34 +1,82 @@
-$webResourceManager.requireResourcesForContext("csl-resources-admin")
+$webResourceManager.requireResourcesForContext("csl-admin")
 <html>
-<head>
-    <title>$action.getText('csl.admin.title')</title>
-    <meta name="decorator" content="atl.admin" />
-    <meta name="admin.active.section" content="admin_plugins_menu/csl_admin_section"/>
-    <meta name="admin.active.tab" content="csl_config"/>
-
-</head>
-	<body>
-	
-	
-	<!-- Div to display the different messages successes/errors/etc. -->
-	<div id="messages"></div>
-	
-	
-		<form action="ConfigureCSL!save.jspa" id="admin-form" class="aui">
-		    <h1>Welcom</h1>
-		    <div id="sucess-messages" class="message">
-		        
-		    </div>
-		   <fieldset class="group">
-		        <div class="checkbox">
-		            <input class="checkbox" type="checkbox" id="isActive" value="active" name="isActive" #if ($action.isActive()) checked #end">
-		            <label for="isActive">Active</label>
-		            <div class="description">Active</div>
-		        </div>
-		    </fieldset>
-
-		    <button class="aui-button aui-button-primary" title="save-button">Save</button>
-		</form>
-	
-	</body>
+   <head>
+      <title>$action.getText('csl.admin.title')</title>
+      <meta name="decorator" content="atl.admin" />
+      <meta name="admin.active.section" content="admin_plugins_menu/csl_admin_section"/>
+      <meta name="admin.active.tab" content="csl_config"/>
+   </head>
+   <body>
+      <!-- Div to display the different messages successes/errors/etc. -->
+      <div id="messages"></div>
+      <div id="sucess-messages" class="message"></div>
+      <button class="aui-button" id="btn-add-customsecurity-lvl">
+      <span class="aui-icon aui-icon-small aui-iconfont-add">View</span>Ajouter
+      </button>
+      <form action="ConfigureCSL!save.jspa" id="admin-form" class="aui">
+         <h1>Welcome</h1>
+         <div class="checkbox">
+            <input class="checkbox" type="checkbox" id="active" value="true" name="active" #if ($action.getActive()) checked #end>
+            <label for="active">Active</label>
+            <div class="description">Activer le plugin</div>
+         </div>
+         <div class="buttons-container">
+            <div class="buttons">
+               <input class="aui-button aui-button-primary" type="submit" value="Enregistrer" id="save-button">
+            </div>
+         </div>
+      </form>
+      <section role="dialog" id="add-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+         <!-- Dialog header -->
+         <header class="aui-dialog2-header">
+            <!-- The dialog's title -->
+            <h2 class="aui-dialog2-header-main">Ajouter nouvelle règle</h2>
+            <a class="aui-dialog2-header-close">
+            <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+            </a>
+         </header>
+         <div class="aui-dialog2-content">
+            <form id="add-form" class="aui">
+            	<div class="field-group">
+                  <label for="rule-name">Nom regle</label>
+                  <input class="text medium-field" type="text" id="rule-name" name="rule-name" >
+                  <div class="description">Nom de la règle</div>
+               </div>
+               <div class="field-group">
+                  <label for="events">Evenements<span class="aui-icon icon-required">(required)</span></label>
+                  <select id="events" multiple>
+                     <option value="CONF">Création</option>
+                     <option value="JIRA">Mise à  jour</option>
+                     <option value="BAM">Evenement lancée</option>
+                  </select>
+                  <div class="description">Liste Evenements sur lequel s'applique la règle</div>
+               </div>
+               <div class="field-group">
+                  <label for="jql">Requete JQL<span class="aui-icon icon-required">(required)</span></label>
+                  <input class="text long-field" type="text" id="jql" name="jql" >
+                  <div class="description">La requete JQL pour selectionner la population cible de clients</div>
+               </div>
+               <div class="field-group">
+                  <label for="security-lvl">Security Level<span class="aui-icon icon-required">(required)</span> </label>
+                  <select id="security-lvl" >
+                     <option value="CONF">PEP</option>
+                     <option value="JIRA">Salarié</option>
+                     <option value="BAM">Grandes Entreprises</option>
+                  </select>
+                  <div class="description">Niveau de sécurité</div>
+               </div>
+            	<div class="field-group">
+                  <label for="priority">Priorité</label>
+                  <input class="text short-field" type="text" id="priority" name="priority" >
+                  <div class="description">Plus la priorité est élévé, plus la rêgle sera prédominante sur les autres</div>
+               </div>
+               <div class="buttons-container">
+                  <div class="buttons">
+                     <input class="aui-button aui-button-primary" type="submit" value="Enregistrer" id="save-button">
+                  </div>
+               </div>
+            </form>
+         </div>
+      </section>
+   </body>
 </html>

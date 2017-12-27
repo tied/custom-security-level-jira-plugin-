@@ -24,8 +24,6 @@ import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
-import fr.nlebec.jira.plugins.customseclvl.rest.admin.AssociationResponse;
-
 @Named
 public class DefaultActivityService implements InitializingBean, DisposableBean {
 
