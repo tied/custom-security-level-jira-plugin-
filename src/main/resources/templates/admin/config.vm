@@ -1,0 +1,34 @@
+$webResourceManager.requireResourcesForContext("csl-resources-admin")
+<html>
+<head>
+    <title>$action.getText('csl.admin.title')</title>
+    <meta name="decorator" content="atl.admin" />
+    <meta name="admin.active.section" content="admin_plugins_menu/csl_admin_section"/>
+    <meta name="admin.active.tab" content="csl_config"/>
+
+</head>
+	<body>
+	
+	
+	<!-- Div to display the different messages successes/errors/etc. -->
+	<div id="messages"></div>
+	
+	
+		<form action="ConfigureCSL!save.jspa" id="admin-form" class="aui">
+		    <h1>Welcom</h1>
+		    <div id="sucess-messages" class="message">
+		        
+		    </div>
+		   <fieldset class="group">
+		        <div class="checkbox">
+		            <input class="checkbox" type="checkbox" id="isActive" value="active" name="isActive" #if ($action.isActive()) checked #end">
+		            <label for="isActive">Active</label>
+		            <div class="description">Active</div>
+		        </div>
+		    </fieldset>
+
+		    <button class="aui-button aui-button-primary" title="save-button">Save</button>
+		</form>
+	
+	</body>
+</html>
