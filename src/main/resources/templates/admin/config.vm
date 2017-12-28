@@ -20,12 +20,27 @@ $webResourceManager.requireResourcesForContext("csl-admin")
             <label for="active">Active</label>
             <div class="description">Activer le plugin</div>
          </div>
+		 
+		#foreach ($rule in $action.getSecurityRules())
+			<div class="field-group">
+				<label for="text-input">Nom</span></label>
+				<span>$rule.name</span>
+				<div class="description">Nom de la règle</div>
+			</div>
+			<div class="field-group">
+				<label for="text-input">JQL</span></label>
+				<span>$rule.jql</span>
+				<div class="description">Le JQL appliqué sur le champ</div>
+			</div>
+		  <hr>	
+		#end
+		 
          <div class="buttons-container">
             <div class="buttons">
                <input class="aui-button aui-button-primary" type="submit" value="Enregistrer" id="save-button">
             </div>
          </div>
-      </form>
+      </form>	  
       <section role="dialog" id="add-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
          <!-- Dialog header -->
          <header class="aui-dialog2-header">
@@ -37,6 +52,11 @@ $webResourceManager.requireResourcesForContext("csl-admin")
          </header>
          <div class="aui-dialog2-content">
             <form id="add-form" class="aui">
+				<div class="field-group">
+                  <label for="rule-active">Active</label>
+                  <input class="checkbox" type="checkbox" id="active" value="false" name="active" >
+                  <div class="description">Active</div>
+               </div>
             	<div class="field-group">
                   <label for="rule-name">Nom regle</label>
                   <input class="text medium-field" type="text" id="rule-name" name="rule-name" >
@@ -45,9 +65,9 @@ $webResourceManager.requireResourcesForContext("csl-admin")
                <div class="field-group">
                   <label for="events">Evenements<span class="aui-icon icon-required">(required)</span></label>
                   <select id="events" multiple>
-                     <option value="CONF">Création</option>
-                     <option value="JIRA">Mise à  jour</option>
-                     <option value="BAM">Evenement lancée</option>
+                     <option value="10000">Création</option>
+                     <option value="10001">Mise à  jour</option>
+                     <option value="10002">Evenement lancée</option>
                   </select>
                   <div class="description">Liste Evenements sur lequel s'applique la règle</div>
                </div>
@@ -59,9 +79,9 @@ $webResourceManager.requireResourcesForContext("csl-admin")
                <div class="field-group">
                   <label for="security-lvl">Security Level<span class="aui-icon icon-required">(required)</span> </label>
                   <select id="security-lvl" >
-                     <option value="CONF">PEP</option>
-                     <option value="JIRA">Salarié</option>
-                     <option value="BAM">Grandes Entreprises</option>
+                     <option value="10000">PEP</option>
+                     <option value="10001">Salarié</option>
+                     <option value="10002">Grandes Entreprises</option>
                   </select>
                   <div class="description">Niveau de sécurité</div>
                </div>
@@ -76,6 +96,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
                   </div>
                </div>
             </form>
+			
          </div>
       </section>
    </body>

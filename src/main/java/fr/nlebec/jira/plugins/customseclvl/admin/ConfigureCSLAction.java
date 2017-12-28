@@ -7,11 +7,8 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
-import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.permission.GlobalPermissionKey;
 import com.atlassian.jira.security.GlobalPermissionManager;
-import com.atlassian.jira.security.groups.GroupManager;
-import com.atlassian.jira.security.roles.ProjectRoleManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
@@ -19,9 +16,9 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserRole;
 
-import fr.nlebec.jira.plugins.customseclvl.activity.DefaultActivityService;
 import fr.nlebec.jira.plugins.customseclvl.config.CSLConfigurationService;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
+import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
 
 @Scanned
 public class ConfigureCSLAction extends JiraWebActionSupport {
@@ -96,7 +93,11 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
 	public void setConfiguration(CSLConfiguration configuration) {
 		this.configuration = configuration;
 	}
-    
+	
+	public List<SecurityRules> getSecurityRules(){
+		return getConfiguration().getSecurityRules();
+	}
+	
 }
 
 

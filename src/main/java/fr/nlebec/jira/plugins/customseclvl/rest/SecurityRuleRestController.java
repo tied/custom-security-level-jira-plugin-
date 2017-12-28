@@ -1,5 +1,7 @@
 package fr.nlebec.jira.plugins.customseclvl.rest;
 
+import java.sql.SQLException;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -21,7 +23,7 @@ import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
 import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
-import fr.nlebec.jira.plugins.customseclvl.config.CSLConfigurationService;
+import fr.nlebec.jira.plugins.customseclvl.config.SecurityRuleService;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleResponse;
 
@@ -31,19 +33,18 @@ public class SecurityRuleRestController {
     private final Logger log = Logger.getLogger(this.getClass());
     private final UserManager userManager;
     private final GlobalPermissionManager globalPermissionManager;
-    private final CSLConfigurationService configurationService;
+    private final SecurityRuleService securityRuleService;
     private final I18nHelper i18nHelper;
 
     @Inject
     public SecurityRuleRestController(@ComponentImport UserManager userManager,
                                @ComponentImport GlobalPermissionManager globalPermissionManager,
                                @ComponentImport I18nHelper i18nHelper,
-                               CSLConfigurationService configurationService)
-    {
+                               SecurityRuleService securityRuleService	){
         this.userManager = userManager;
         this.globalPermissionManager = globalPermissionManager;
         this.i18nHelper = i18nHelper;
-        this.configurationService = configurationService;
+    	this.securityRuleService = securityRuleService;
     }
 
 
@@ -58,7 +59,11 @@ public class SecurityRuleRestController {
         if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
             response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
         } else {
-        	this.configurationService.addSecurityRule(ItemConverter.bodyToPojo(body));
+        	try {
+				this.securityRuleService.addSecurityRule(ItemConverter.bodyToPojo(body, user));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
         }
         return Response.ok(response).build();
     }

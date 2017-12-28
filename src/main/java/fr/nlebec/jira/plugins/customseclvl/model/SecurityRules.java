@@ -12,6 +12,7 @@ public class SecurityRules {
 	private String name;
 	private ApplicationUser creationUser;
 	private Date creationDate;
+	private Long disableUserId;
 	private ApplicationUser disableUser;
 	private Date disableDate;
 	private Boolean active;
@@ -20,6 +21,13 @@ public class SecurityRules {
 	private List<EventPublisher> events;
 	private String jql;
 	
+	@Override
+	public String toString() {
+		return "SecurityRules [id=" + id + ", name=" + name + ", creationUser=" + creationUser + ", creationDate="
+				+ creationDate + ", disableUser=" + disableUser + ", disableDate=" + disableDate + ", active=" + active
+				+ ", priority=" + priority + ", jiraSecurityId=" + jiraSecurityId + ", events=" + events + ", jql="
+				+ jql + "]";
+	}
 	public Integer getId() {
 		return id;
 	}

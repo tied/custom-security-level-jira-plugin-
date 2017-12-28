@@ -10,23 +10,38 @@ import javax.inject.Named;
 import org.apache.log4j.Logger;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
+import com.atlassian.jira.issue.CustomFieldManager;
+import com.atlassian.jira.user.util.UserManager;
+import com.atlassian.jira.util.I18nHelper;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
 import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
 import fr.nlebec.jira.plugins.customseclvl.ao.model.CSLConfigurationAO;
+import fr.nlebec.jira.plugins.customseclvl.ao.model.SecurityRuleAO;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
+import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
 
 @Named
-public class CSLConfigurationService {
+public class SecurityRuleService {
 
-    private final static Logger LOG = Logger.getLogger(CSLConfigurationService.class);
-    
+    private final static Logger LOG = Logger.getLogger(SecurityRuleService.class);
+
     private ActiveObjects persistenceManager;
+    private I18nHelper i18n;
+    private CustomFieldManager customFieldManager;
     private CSLConfiguration configuration;
+    private UserManager userManager;
 
     @Inject
-    public CSLConfigurationService(@ComponentImport ActiveObjects persistenceManager){
+    public SecurityRuleService(@ComponentImport ActiveObjects persistenceManager,
+                                   @ComponentImport I18nHelper i18n,
+                                   @ComponentImport CustomFieldManager customFieldManager,
+                                   @ComponentImport UserManager userManager
+    		)
+    {
+        this.customFieldManager = customFieldManager;
         this.persistenceManager = checkNotNull(persistenceManager);
+        this.i18n = i18n;
     }
 
     public CSLConfiguration getConfiguration() {
@@ -54,15 +69,17 @@ public class CSLConfigurationService {
         return configAo;
     }
 
-    public void updateConfiguration(boolean isActive) throws SQLException{
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Saving configuration preferences");
-        }
 
-        this.getConfiguration().setActive(isActive);
-        CSLConfigurationAO configAo = getConfigurationAo();
-        ItemConverter.bindPojoToActiveObject(configuration, configAo);
-        configAo.save();
+    public void addSecurityRule(SecurityRules securityRule) throws SQLException {
+    	if (LOG.isDebugEnabled()) {
+            LOG.debug("Add new security rule");
+        }
+    	
+    	this.getConfiguration().getSecurityRules().add(securityRule);
+    	
+    	SecurityRuleAO securityRuleAO = this.persistenceManager.create(SecurityRuleAO.class); 
+    	
+        ItemConverter.bindPojoToActiveObject(getConfigurationAo(),securityRule, securityRuleAO);
+        securityRuleAO.save();
     }
-  
 }

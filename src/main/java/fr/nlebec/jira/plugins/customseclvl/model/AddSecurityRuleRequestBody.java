@@ -13,6 +13,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class AddSecurityRuleRequestBody {
 
 	@XmlElement
+	private Boolean active;
+
+	@XmlElement
 	private List<Long> events;
 	
 	@XmlElement
@@ -57,4 +60,11 @@ public class AddSecurityRuleRequestBody {
 	public void setPriority(Integer priority) {
 		this.priority = priority;
 	} 
+	
+	public Boolean getActive() {
+		return active;
+	}
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
 }
