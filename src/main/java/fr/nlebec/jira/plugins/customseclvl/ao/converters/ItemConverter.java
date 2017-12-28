@@ -56,9 +56,13 @@ public class ItemConverter {
     		SecurityRules sr = new SecurityRules();
     		sr.setActive(srao[i].getActive());
     		sr.setCreationDate(srao[i].getCreationDate());
-    		sr.setCreationUser(UserConverter.convertUsert(userManager, srao[i].getCreationUser()).get());
+    		if(UserConverter.convertUsert(userManager, srao[i].getCreationUser()).isPresent()){
+    			sr.setCreationUser(UserConverter.convertUsert(userManager, srao[i].getCreationUser()).get());
+    		}
     		sr.setDisableDate(srao[i].getDisableDate());
-    		sr.setDisableUser(UserConverter.convertUsert(userManager, srao[i].getDisableUser()).get());
+    		if(UserConverter.convertUsert(userManager, srao[i].getDisableUser()).isPresent()){
+    			sr.setDisableUser(UserConverter.convertUsert(userManager, srao[i].getDisableUser()).get());
+    		}
     		sr.setId(srao[i].getID());
     		sr.setJiraSecurityId(srao[i].getJiraSecurityId());
     		sr.setJql(srao[i].getJql());
