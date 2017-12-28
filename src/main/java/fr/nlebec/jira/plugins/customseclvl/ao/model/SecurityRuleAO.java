@@ -2,9 +2,12 @@ package fr.nlebec.jira.plugins.customseclvl.ao.model;
 
 import java.util.Date;
 
+
 import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.Preload;
+import net.java.ao.schema.Default;
+import net.java.ao.schema.NotNull;
 import net.java.ao.schema.Table;
 
 @Preload
@@ -22,8 +25,13 @@ public interface SecurityRuleAO extends Entity{
 	public Date getDisableDate();
 	public void setDisableDate(Date disableDate);
 	public Boolean getActive();
+	
 	public void setActive(Boolean active);
+	
 	public Integer getPriority();
+	
+	@Default(value="1")
+	@NotNull
 	public void setPriority(Integer priority);
 	public Long getJiraSecurityId();
 	public void setJiraSecurityId(Long jiraSecurityId);

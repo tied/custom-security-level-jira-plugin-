@@ -19,50 +19,47 @@ import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
 @Named
 public class CSLConfigurationService {
 
-    private final static Logger LOG = Logger.getLogger(CSLConfigurationService.class);
-    
-    private ActiveObjects persistenceManager;
-    private CSLConfiguration configuration;
+	private final static Logger LOG = Logger.getLogger(CSLConfigurationService.class);
 
-    @Inject
-    public CSLConfigurationService(@ComponentImport ActiveObjects persistenceManager){
-        this.persistenceManager = checkNotNull(persistenceManager);
-    }
+	private ActiveObjects persistenceManager;
+	private CSLConfiguration configuration;
 
-    public CSLConfiguration getConfiguration() {
-        if (this.configuration == null) {
-        	CSLConfigurationAO[] configs = this.persistenceManager.find(CSLConfigurationAO.class);
-            if (configs.length > 0) {
-                this.configuration = ItemConverter.convertActiveObjectToPOJO(configs[0]);
-            } else {
-                this.configuration = new CSLConfiguration();
-                this.persistenceManager.create(CSLConfigurationAO.class).save();
-            }
-        }
-        return this.configuration;
-    }
-    
-    public CSLConfigurationAO getConfigurationAo() {
-        CSLConfigurationAO[] configs = this.persistenceManager.find(CSLConfigurationAO.class);
-        CSLConfigurationAO configAo;
-        
-        if (configs.length == 0) {
-            configAo = this.persistenceManager.create(CSLConfigurationAO.class);
-        } else {
-            configAo = configs[0];
-        }
-        return configAo;
-    }
+	@Inject
+	public CSLConfigurationService(@ComponentImport ActiveObjects persistenceManager) {
+		this.persistenceManager = checkNotNull(persistenceManager);
+	}
 
-    public void updateConfiguration(boolean isActive) throws SQLException{
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Saving configuration preferences");
-        }
+	public CSLConfiguration getConfiguration() {
+		CSLConfigurationAO[] configs = this.persistenceManager.find(CSLConfigurationAO.class);
+		if (configs.length > 0) {
+			this.configuration = ItemConverter.convertActiveObjectToPOJO(configs[0]);
+		} else {
+			this.configuration = new CSLConfiguration();
+			this.persistenceManager.create(CSLConfigurationAO.class).save();
+		}
+		return this.configuration;
+	}
 
-        this.getConfiguration().setActive(isActive);
-        CSLConfigurationAO configAo = getConfigurationAo();
-        ItemConverter.bindPojoToActiveObject(configuration, configAo);
-        configAo.save();
-    }
-  
+	public CSLConfigurationAO getConfigurationAo() {
+		CSLConfigurationAO[] configs = this.persistenceManager.find(CSLConfigurationAO.class);
+		CSLConfigurationAO configAo;
+
+		if (configs.length == 0) {
+			configAo = this.persistenceManager.create(CSLConfigurationAO.class);
+		} else {
+			configAo = configs[0];
+		}
+		return configAo;
+	}
+
+	public void updateConfiguration(boolean isActive) throws SQLException {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Saving configuration preferences");
+		}
+		this.getConfiguration().setActive(isActive);
+		CSLConfigurationAO configAo = getConfigurationAo();
+		ItemConverter.bindPojoToActiveObject(configuration, configAo);
+		configAo.save();
+	}
+
 }

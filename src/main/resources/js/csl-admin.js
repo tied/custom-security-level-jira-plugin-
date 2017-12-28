@@ -24,11 +24,11 @@ AJS.$(document).ready(function () {
 		      contentType: "application/json",
 			  dataType: "json"
 			});
-			request.done(function( data ) {
-				
+			request.success(function( data ) {
+				 AJS.dialog2("#add-dialog").hide();
+				 location.reload();
 			});
+			
 		});
-    	if(success){
-    	 	AJS.dialog2("#add-dialog").hide();
-    	}
+    
 });

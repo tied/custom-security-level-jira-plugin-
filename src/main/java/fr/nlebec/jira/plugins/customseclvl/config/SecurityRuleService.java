@@ -44,18 +44,16 @@ public class SecurityRuleService {
         this.i18n = i18n;
     }
 
-    public CSLConfiguration getConfiguration() {
-        if (this.configuration == null) {
-        	CSLConfigurationAO[] configs = this.persistenceManager.find(CSLConfigurationAO.class);
-            if (configs.length > 0) {
-                this.configuration = ItemConverter.convertActiveObjectToPOJO(configs[0]);
-            } else {
-                this.configuration = new CSLConfiguration();
-                this.persistenceManager.create(CSLConfigurationAO.class).save();
-            }
-        }
-        return this.configuration;
-    }
+	public CSLConfiguration getConfiguration() {
+		CSLConfigurationAO[] configs = this.persistenceManager.find(CSLConfigurationAO.class);
+		if (configs.length > 0) {
+			this.configuration = ItemConverter.convertActiveObjectToPOJO(configs[0]);
+		} else {
+			this.configuration = new CSLConfiguration();
+			this.persistenceManager.create(CSLConfigurationAO.class).save();
+		}
+		return this.configuration;
+	}
     
     public CSLConfigurationAO getConfigurationAo() {
         CSLConfigurationAO[] configs = this.persistenceManager.find(CSLConfigurationAO.class);
@@ -71,15 +69,14 @@ public class SecurityRuleService {
 
 
     public void addSecurityRule(SecurityRules securityRule) throws SQLException {
-    	if (LOG.isDebugEnabled()) {
-            LOG.debug("Add new security rule");
-        }
-    	
+    	LOG.info("Add new security rule : "+ securityRule.toString());
     	this.getConfiguration().getSecurityRules().add(securityRule);
     	
     	SecurityRuleAO securityRuleAO = this.persistenceManager.create(SecurityRuleAO.class); 
     	
         ItemConverter.bindPojoToActiveObject(getConfigurationAo(),securityRule, securityRuleAO);
+        
+        LOG.info("Save security rule : "+ securityRuleAO.toString());
         securityRuleAO.save();
     }
 }
