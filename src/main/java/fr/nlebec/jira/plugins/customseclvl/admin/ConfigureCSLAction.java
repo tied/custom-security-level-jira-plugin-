@@ -87,11 +87,7 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
 	}
 
 	public CSLConfiguration getConfiguration() {
-		return configuration;
-	}
-
-	public void setConfiguration(CSLConfiguration configuration) {
-		this.configuration = configuration;
+		return configurationService.getConfiguration();
 	}
 	
 	public List<SecurityRules> getSecurityRules(){

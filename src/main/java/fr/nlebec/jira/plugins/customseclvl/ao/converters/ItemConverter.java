@@ -50,18 +50,19 @@ public class ItemConverter {
     }
     
     public static List<SecurityRules> convertActiveObjectToPOJO(SecurityRuleAO[] srao) {
-    	UserManager userManager = ComponentAccessor.getUserManager();
     	List<SecurityRules> list = new ArrayList<>();
     	for (int i = 0; i < srao.length; i++) {
     		SecurityRules sr = new SecurityRules();
     		sr.setActive(srao[i].getActive());
     		sr.setCreationDate(srao[i].getCreationDate());
-    		if(UserConverter.convertUsert(userManager, srao[i].getCreationUser()).isPresent()){
-    			sr.setCreationUser(UserConverter.convertUsert(userManager, srao[i].getCreationUser()).get());
+    		if(UserConverter.convertUsert( srao[i].getCreationUser()).isPresent()){
+    			sr.setCreationUser(UserConverter.convertUsert(srao[i].getCreationUser()).get());
     		}
-    		sr.setDisableDate(srao[i].getDisableDate());
-    		if(UserConverter.convertUsert(userManager, srao[i].getDisableUser()).isPresent()){
-    			sr.setDisableUser(UserConverter.convertUsert(userManager, srao[i].getDisableUser()).get());
+    		if(srao[i].getDisableDate() != null ) {
+    			sr.setDisableDate(srao[i].getDisableDate());
+    		}
+    		if(srao[i].getDisableUser() != null && UserConverter.convertUsert(srao[i].getDisableUser()).isPresent()){
+    			sr.setDisableUser(UserConverter.convertUsert(srao[i].getDisableUser()).get());
     		}
     		sr.setId(srao[i].getID());
     		sr.setJiraSecurityId(srao[i].getJiraSecurityId());

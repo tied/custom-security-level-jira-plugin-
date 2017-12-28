@@ -16,7 +16,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
       <form action="ConfigureCSL!save.jspa" id="admin-form" class="aui">
          <h1>Welcome</h1>
          <div class="checkbox">
-            <input class="checkbox" type="checkbox" id="active" value="true" name="active" #if ($action.getActive()) checked #end>
+            <input class="checkbox" type="checkbox" id="active" value="true" name="active" #if ($action.getConfiguration().getActive()) checked #end>
             <label for="active">Active</label>
             <div class="description">Activer le plugin</div>
          </div>

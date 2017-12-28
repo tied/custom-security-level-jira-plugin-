@@ -11,6 +11,7 @@ AJS.$(document).ready(function () {
     	var success = true;
 		var param = {};
 		param.jql = $("#jql").val();
+		param.active= $("#active").val();
 		param.securityLvl= $("#security-lvl").val();
 		param.events = $("#events").val();
 		param.ruleName = $("#rule-name").val();
