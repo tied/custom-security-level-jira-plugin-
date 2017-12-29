@@ -77,5 +77,6 @@ public class EventService {
     	
         LOG.info("Save event : "+ eventAO.toString());
         eventAO.save();
+        eventToSecurityRule.save();
     }
 }

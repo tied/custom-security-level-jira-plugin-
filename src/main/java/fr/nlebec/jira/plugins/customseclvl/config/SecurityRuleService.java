@@ -32,15 +32,13 @@ public class SecurityRuleService {
     private I18nHelper i18n;
     private CustomFieldManager customFieldManager;
     private CSLConfiguration configuration;
-    private UserManager userManager;
     private EventService eventService;
 
     @Inject
     public SecurityRuleService(@ComponentImport ActiveObjects persistenceManager,
                                    @ComponentImport I18nHelper i18n,
                                    @ComponentImport CustomFieldManager customFieldManager,
-                                   @ComponentImport UserManager userManager,
-                                   @ComponentImport EventService eventService
+                                   EventService eventService
                                    
     		)
     {
