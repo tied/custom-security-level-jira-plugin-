@@ -21,4 +21,12 @@ public class Event {
 	public void setJiraEventName(String jiraEventName) {
 		this.jiraEventName = jiraEventName;
 	}
+
+	@Override
+	public String toString() {
+		return "Event [jiraEventId=" + jiraEventId + ", jiraEventName=" + jiraEventName + "]";
+	}
+	
+	
+
 }

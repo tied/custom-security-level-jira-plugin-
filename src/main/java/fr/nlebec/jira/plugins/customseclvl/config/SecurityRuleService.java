@@ -81,6 +81,7 @@ public class SecurityRuleService {
 
     	//Before saving security Rule : add transitives dependances
     	for(Event e : securityRule.getEvents()){
+    		LOG.info("Event : "+ e.toString());
     		eventService.addEvent(e, securityRuleAO);
     	}
     	
