@@ -74,7 +74,6 @@ public class SecurityRuleService {
 
     public void addSecurityRule(SecurityRules securityRule) throws SQLException {
     	LOG.info("Add new security rule : "+ securityRule.toString());
-    	this.getConfiguration().getSecurityRules().add(securityRule);
     	
     	SecurityRuleAO securityRuleAO = this.persistenceManager.create(SecurityRuleAO.class); 
     	ItemConverter.bindPojoToActiveObject(getConfigurationAo(),securityRule, securityRuleAO);
