@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -28,6 +29,8 @@ import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
 import fr.nlebec.jira.plugins.customseclvl.config.SecurityRuleService;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleResponse;
+import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleRequestBody;
+import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleResponse;
 
 @Path("/security-rule")
 @Scanned
@@ -65,6 +68,22 @@ public class SecurityRuleRestController {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+		return Response.ok(response).build();
+	}
+	@DELETE
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("/")
+	public Response deleteSecurityLevel(DeleteSecurityRuleRequestBody body, @Context HttpServletRequest request) {
+		String userName = request.getRemoteUser();
+		ApplicationUser user = this.userManager.getUserByKey(userName);
+		DeleteSecurityRuleResponse response = new DeleteSecurityRuleResponse();
+		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
+			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
+		} else {
+			//checkParameters(body);
+			this.securityRuleService.deleteSecurityRule(body.getIdSecurityRuleToDelete());
 		}
 		return Response.ok(response).build();
 	}

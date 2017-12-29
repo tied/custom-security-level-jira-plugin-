@@ -14,24 +14,97 @@ $webResourceManager.requireResourcesForContext("csl-admin")
       <span class="aui-icon aui-icon-small aui-iconfont-add">View</span>Ajouter
       </button>
       <form action="ConfigureCSL!save.jspa" id="admin-form" class="aui">
-         <h1>Welcome</h1>
-         <div class="checkbox">
-            <input class="checkbox" type="checkbox" id="active" value="true" name="active" #if ($action.getConfiguration().getActive()) checked #end>
-            <label for="active">Active</label>
-            <div class="description">Activer le plugin</div>
-         </div>
-		 
+       <h1>Custom Security Level</h1>
+	   <h2>Configuration</h2>
+	   <div class="aui-group">
+			<div class="aui-item right">
+				<label for="active">Active</label>
+			</div>
+			<div class="aui-item">
+				<input class="checkbox" type="checkbox" id="active" value="true" name="active" #if ($action.getConfiguration().getActive()) checked #end>
+			</div>
+			<div class="aui-item">
+			</div>
+			<div class="aui-item">
+			</div>
+		</div>
+		
+		<hr>	
+		
 		#foreach ($rule in $action.getSecurityRules())
-			<div class="field-group">
-				<label for="text-input">Nom</span></label>
-				<span>$rule.name</span>
-				<div class="description">Nom de la règle</div>
+			<h2>Nom de la règle : $rule.name </h2>
+			<div class="aui-group ">
+				<div class="aui-item right">
+					<label for="text-input">Active</span></label>
+				</div>
+				<div class="aui-item">
+					<span class="aui-icon aui-icon-small aui-iconfont-devtools-task-disabled"></span> 
+				</div>
+				<div class="aui-item">
+				</div>
+				<div class="aui-item right">
+				
+				</div>
 			</div>
-			<div class="field-group">
-				<label for="text-input">JQL</span></label>
-				<span>$rule.jql</span>
-				<div class="description">Le JQL appliqué sur le champ</div>
+			 <div class="aui-group">
+				<div class="aui-item right">
+					<label for="text-input">Date de création</span></label>
+				</div>
+				<div class="aui-item">
+					<span>$rule.creationDate</span>
+					<div class="description">Date de création de la règle</div>
+				</div>
+				<div class="aui-item">
+				</div>
+				<div class="aui-item right">
+					<span class="aui-icon aui-icon-large aui-iconfont-edit" onclick="javascript:AJS.dialog2('#edit-dialog').show();" ></span>
+				</div>
 			</div>
+		   <div class="aui-group">
+				<div class="aui-item right">
+					<label for="text-input">Créateur</span></label>
+				</div>
+				<div class="aui-item">
+					<span>$rule.creationUser</span>
+					<div class="description">Créateur de la règle</div>
+				</div>
+				<div class="aui-item">
+				</div>
+				<div class="aui-item right">
+					<span class="aui-icon aui-icon-large aui-iconfont-delete" id="delete-sr-$rule.id" data-id="$rule.id" data-name="$rule.name"  ></span>
+				</div>
+			</div>
+			
+			 <div class="aui-group ">
+				<div class="aui-item right">
+					<label for="text-input">JQL</span></label>
+				</div>
+				<div class="aui-item">
+					<span>$rule.jql</span>
+					<div class="description">La requête JQL appliqué à l'évenement</div>
+				</div>
+				<div class="aui-item">
+				</div>
+				<div class="aui-item right">
+				</div>
+			</div>
+			
+				<div class="aui-group ">
+					<div class="aui-item right">
+						<label for="text-input">Evenements</span></label>
+					</div>
+					<div class="aui-item">
+						<span> #foreach ($event in $rule.getEvents()) 
+							$event.jiraEventName ($event.jiraEventId) | 
+						#end</span>
+						<div class="description">La liste des evenements</div>
+					</div>
+					<div class="aui-item">
+					</div>
+					<div class="aui-item right">
+						
+					</div>
+				</div>
 		  <hr>	
 		#end
 		 
@@ -68,6 +141,9 @@ $webResourceManager.requireResourcesForContext("csl-admin")
                      <option value="10000">Création</option>
                      <option value="10001">Mise à  jour</option>
                      <option value="10002">Evenement lancée</option>
+					 #foreach ($eventType in $action.getEventTypes())
+						<option value="$eventType.getId()">$eventType.getName()</option>            
+					 #end
                   </select>
                   <div class="description">Liste Evenements sur lequel s'applique la règle</div>
                </div>
@@ -79,9 +155,9 @@ $webResourceManager.requireResourcesForContext("csl-admin")
                <div class="field-group">
                   <label for="security-lvl">Security Level<span class="aui-icon icon-required">(required)</span> </label>
                   <select id="security-lvl" >
-                     <option value="10000">PEP</option>
-                     <option value="10001">Salarié</option>
-                     <option value="10002">Grandes Entreprises</option>
+					#foreach ($securityLvl in $action.getLevelList())
+						<option value="$securityLvl.getId()">$securityLvl.getName()</option>            
+					 #end
                   </select>
                   <div class="description">Niveau de sécurité</div>
                </div>

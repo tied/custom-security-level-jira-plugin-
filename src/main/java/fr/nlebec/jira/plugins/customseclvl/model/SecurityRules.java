@@ -12,13 +12,12 @@ public class SecurityRules {
 	private String name;
 	private ApplicationUser creationUser;
 	private Date creationDate;
-	private Long disableUserId;
 	private ApplicationUser disableUser;
 	private Date disableDate;
 	private Boolean active;
 	private Integer priority;
 	private Long jiraSecurityId;
-	private List<EventPublisher> events;
+	private List<Event> events;
 	private String jql;
 	
 	@Override
@@ -82,10 +81,10 @@ public class SecurityRules {
 	public void setJiraSecurityId(Long jiraSecurityId) {
 		this.jiraSecurityId = jiraSecurityId;
 	}
-	public List<EventPublisher> getEvents() {
+	public List<Event> getEvents() {
 		return events;
 	}
-	public void setEvents(List<EventPublisher> events) {
+	public void setEvents(List<Event> events) {
 		this.events = events;
 	}
 	public String getJql() {

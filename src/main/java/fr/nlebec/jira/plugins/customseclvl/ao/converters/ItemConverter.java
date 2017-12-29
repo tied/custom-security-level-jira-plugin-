@@ -8,14 +8,16 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
-import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.event.api.EventPublisher;
 import com.atlassian.jira.user.ApplicationUser;
-import com.atlassian.jira.user.util.UserManager;
 
 import fr.nlebec.jira.plugins.customseclvl.ao.model.CSLConfigurationAO;
+import fr.nlebec.jira.plugins.customseclvl.ao.model.EventAO;
+import fr.nlebec.jira.plugins.customseclvl.ao.model.EventToSecurityRule;
 import fr.nlebec.jira.plugins.customseclvl.ao.model.SecurityRuleAO;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
+import fr.nlebec.jira.plugins.customseclvl.model.Event;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
 
 public class ItemConverter {
@@ -47,13 +49,22 @@ public class ItemConverter {
 		securityRuleAo.setCreationUser(sr.getCreationUser().getId());
 		securityRuleAo.setJql(sr.getJql());
 		
-		//TODO: map security level
-		securityRuleAo.setJiraSecurityId(10000L);
+		EventAO eventAO = securityRuleAo.getEntityManager().create(EventAO.class);
+		EventToSecurityRule associationAo = securityRuleAo.getEntityManager().create(EventToSecurityRule.class); 
+		bindPojoToActiveObject(eventAO, securityRuleAo, associationAo);
+	
+		securityRuleAo.setJiraSecurityId(sr.getJiraSecurityId());
 		securityRuleAo.setName(sr.getName());
 		securityRuleAo.setPriority(sr.getPriority());
 		securityRuleAo.setCSLConfigurationAO(configAo);
 	}
 
+	public static void bindPojoToActiveObject(EventAO eventAO,
+		SecurityRuleAO securityRuleAo, EventToSecurityRule eventToSR) throws SQLException {
+		eventToSR.setSecurityRule(securityRuleAo);
+		eventToSR.setEvent(eventAO);
+	}
+	
 	public static List<SecurityRules> convertActiveObjectToPOJO(SecurityRuleAO[] srao) {
 		List<SecurityRules> list = new ArrayList<>();
 		for (int i = 0; i < srao.length; i++) {
@@ -87,11 +98,21 @@ public class ItemConverter {
 		securityRule.setActive(body.getActive());
 		securityRule.setCreationDate(new Date());
 		securityRule.setCreationUser(creationUser);
-		// securityRule.setEvents(getEventMapping(body.getEvents()));
+		securityRule.setEvents(getEventMapping(body.getEvents()));
 		securityRule.setJiraSecurityId(body.getSecurityLvl());
 		securityRule.setJql(body.getJql());
 		securityRule.setName(body.getRuleName());
 		securityRule.setPriority(body.getPriority());
 		return securityRule;
+	}
+
+	private static List<Event> getEventMapping(List<Long> events) {
+		List<Event> eventsCLS = new ArrayList<>();
+		for (Long event : events) {
+			Event eventCSL = new Event();
+			eventCSL.setJiraEventId(event);
+			eventsCLS.add(eventCSL);
+		}
+		return eventsCLS;
 	}
 }

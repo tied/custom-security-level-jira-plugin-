@@ -11,43 +11,37 @@ import org.apache.log4j.Logger;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.jira.issue.CustomFieldManager;
-import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.jira.util.I18nHelper;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
 import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
 import fr.nlebec.jira.plugins.customseclvl.ao.model.CSLConfigurationAO;
+import fr.nlebec.jira.plugins.customseclvl.ao.model.EventAO;
+import fr.nlebec.jira.plugins.customseclvl.ao.model.EventToSecurityRule;
 import fr.nlebec.jira.plugins.customseclvl.ao.model.SecurityRuleAO;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
 import fr.nlebec.jira.plugins.customseclvl.model.Event;
-import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
-import net.java.ao.Query;
 
 @Named
-public class SecurityRuleService {
+public class EventService {
 
-    private final static Logger LOG = Logger.getLogger(SecurityRuleService.class);
+    private final static Logger LOG = Logger.getLogger(EventService.class);
 
     private ActiveObjects persistenceManager;
     private I18nHelper i18n;
     private CustomFieldManager customFieldManager;
     private CSLConfiguration configuration;
-    private UserManager userManager;
-    private EventService eventService;
+    
 
     @Inject
-    public SecurityRuleService(@ComponentImport ActiveObjects persistenceManager,
+    public EventService(@ComponentImport ActiveObjects persistenceManager,
                                    @ComponentImport I18nHelper i18n,
-                                   @ComponentImport CustomFieldManager customFieldManager,
-                                   @ComponentImport UserManager userManager,
-                                   @ComponentImport EventService eventService
-                                   
+                                   @ComponentImport CustomFieldManager customFieldManager
     		)
     {
         this.customFieldManager = customFieldManager;
         this.persistenceManager = checkNotNull(persistenceManager);
         this.i18n = i18n;
-        this.eventService = eventService;
     }
 
 	public CSLConfiguration getConfiguration() {
@@ -74,30 +68,14 @@ public class SecurityRuleService {
     }
 
 
-    public void addSecurityRule(SecurityRules securityRule) throws SQLException {
-    	LOG.info("Add new security rule : "+ securityRule.toString());
-    	this.getConfiguration().getSecurityRules().add(securityRule);
+    public void addEvent(Event event, SecurityRuleAO srao) throws SQLException {
+    	LOG.info("Add new event : "+ event.toString());
     	
-    	SecurityRuleAO securityRuleAO = this.persistenceManager.create(SecurityRuleAO.class); 
-    	ItemConverter.bindPojoToActiveObject(getConfigurationAo(),securityRule, securityRuleAO);
-
-    	//Before saving security Rule : add transitives dependances
-    	for(Event e : securityRule.getEvents()){
-    		eventService.addEvent(e, securityRuleAO);
-    	}
+    	EventAO eventAO = this.persistenceManager.create(EventAO.class);
+    	EventToSecurityRule eventToSecurityRule = this.persistenceManager.create(EventToSecurityRule.class);
+    	ItemConverter.bindPojoToActiveObject(eventAO, srao, eventToSecurityRule);
     	
-        LOG.info("Save security rule : "+ securityRuleAO.toString());
-        securityRuleAO.save();
+        LOG.info("Save event : "+ eventAO.toString());
+        eventAO.save();
     }
-
-	public void deleteSecurityRule(Integer idSecurityRuleToDelete) {
-		
-		SecurityRuleAO[] securityRules = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRuleToDelete));
-    	  	
-    	if( securityRules.length > 0){
-            LOG.info("Delete security rule : "+ securityRules[0].toString());
-            this.persistenceManager.delete(securityRules[0]);
-    	}
-        
-	}
 }

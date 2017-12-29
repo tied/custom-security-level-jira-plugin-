@@ -27,6 +27,7 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import fr.nlebec.jira.plugins.customseclvl.config.SecurityRuleService;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
+import fr.nlebec.jira.plugins.customseclvl.util.EventUtil;
 
 @Named
 public class CustomSecurityLvlDefaultListener implements InitializingBean, DisposableBean {
@@ -56,18 +57,20 @@ public class CustomSecurityLvlDefaultListener implements InitializingBean, Dispo
 
 	@EventListener
 	public void onIssueEvent(IssueEvent event) {
-		LOG.info("Plugin Nico : " + event.getEventTypeId());
+		LOG.info("Evenement : " + event.getEventTypeId());
 		CSLConfiguration config = securityRuleService.getConfiguration();
-		if (config.getActive()) {
+		LOG.info("Est-ce que le plugin est activé : "+config.getActive().booleanValue());
+		if (Boolean.TRUE.equals(config.getActive())) {
 			for (SecurityRules securityRule : config.getSecurityRules()) {
-				if (securityRule.getActive()) {
-					if (event.getEventTypeId().equals(EventType.ISSUE_CREATED_ID)
-							|| event.getEventTypeId().equals(EventType.ISSUE_UPDATED_ID)) {
+				LOG.info("Do security level : " + securityRule.getName() + " is active ? "+securityRule.getActive());
+				if (Boolean.TRUE.equals(securityRule.getActive())) {
+					LOG.info("Events : "+EventType.ISSUE_CREATED_ID + " | " + EventType.ISSUE_UPDATED_ID+ " | "+EventType.ISSUE_COMMENTED_ID);
+					if ( EventUtil.contains(securityRule.getEvents(), event.getEventTypeId())) {
 						LOG.info("Apply security level : " + securityRule.getName());
 						String jqlQuery = securityRule.getJql() + " AND key = " + event.getIssue().getKey();
 						ApplicationUser createdUser = securityRule.getCreationUser();
 						final SearchService.ParseResult parseResult = searchService.parseQuery(createdUser, jqlQuery);
-						LOG.info("parsed result " + parseResult);
+						LOG.info("JQL Request " + jqlQuery);
 						if (parseResult.isValid()) {
 							try {
 								final SearchResults results = searchService.search(createdUser, parseResult.getQuery(),
@@ -85,8 +88,7 @@ public class CustomSecurityLvlDefaultListener implements InitializingBean, Dispo
 												false);
 									}
 								} catch (Exception e) {
-									LOG.error("error " + e.getMessage());
-									e.printStackTrace();
+									LOG.error("Error " + e.getMessage());
 								}
 							} catch (SearchException e) {
 								LOG.error("Error running search", e);
