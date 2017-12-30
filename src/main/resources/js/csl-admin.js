@@ -21,6 +21,8 @@ AJS.$(document).ready(function () {
 		param.ruleName = $("#rule-name").val();
 		param.priority = $("#priority").val();
 		
+		$("#add-form-error").addClass('hide');
+		
 		var request = $.ajax({
 			  url:  AJS.contextPath() + "/rest/csl/1.0/security-rule",
 			  type: "POST",
@@ -31,6 +33,14 @@ AJS.$(document).ready(function () {
 			request.success(function( data ) {
 				 AJS.dialog2("#add-dialog").hide();
 				 location.reload();
+			});
+			request.fail(function( data ) {
+				$("#add-form-error").removeClass('hide');
+				var jsonResponse = JSON.parse(data);
+				var errorMessage = jsonResponse.error;
+				AJS.$("#add-form-error > p:nth-child(2)").text(errorMessage);
+				
+			
 			});
 			
 		});
@@ -67,6 +77,9 @@ AJS.$(document).ready(function () {
     	 AJS.$("#edit-rule-active").attr("checked",active);
     	AJS.dialog2("#edit-dialog").show();
     });
+    
 });
+
+
 
     

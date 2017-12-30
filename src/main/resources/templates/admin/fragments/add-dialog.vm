@@ -9,6 +9,14 @@
 		      </a>
 		   </header>
 		   <div class="aui-dialog2-content">
+		   
+		   	<div id="add-form-error" class="aui-message aui-message-error hide">
+			    <p class="title">
+			        <strong>Configuration Error</strong>
+			    </p>
+			    <p></p>
+			</div>
+		   
 		      <form id="add-form" class="aui">
 		         <div class="field-group">
 		            <label for="rule-active">Active</label>

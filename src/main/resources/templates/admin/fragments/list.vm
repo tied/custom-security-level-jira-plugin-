@@ -1,6 +1,15 @@
+#if($action.getSecurityRules().size() == 0)
+	<div class="aui-message aui-message-info">
+    <p class="title">
+        <strong>Aucune règle de sécurité définie</strong>
+    </p>
+    <p>Pour ajouter une nouvelle règle de sécurité, cliquer le bouton ajouter en haut à droite</p>
+</div>
+ 
+#else
 	#foreach ($rule in $action.getSecurityRules())
 			<div class="aui-group valign-bot">
-				<div class="aui-item">
+				<div class="aui-item bold">
 					<h3>Nom de la règle : $rule.name </h3>
 				</div>
 				<div class="aui-item">
@@ -87,10 +96,45 @@
 						<label for="jira-events">Evenements</span></label>
 					</div>
 					<div class="aui-item">
-						<span id="jira-events" class="bold" > #foreach ($event in $rule.getEvents()) 
-							$event.jiraEventName ($event.jiraEventId) | 
-						#end</span>
+						#foreach ($event in $rule.getEvents())
+							<span id="jira-events" class="bold" >  
+								$event.getJiraEventName() ( $event.getJiraEventId() )
+							</span>
+							<br>
+						#end
 						<div class="description">La liste des evenements</div>
+					</div>
+					<div class="aui-item">
+					</div>
+					<div class="aui-item right">
+						
+					</div>
+				</div>
+				<div class="aui-group ">
+					<div class="aui-item right">
+						<label for="priority">Niveau de sécurité</span></label>
+					</div>
+					<div class="aui-item">
+							<span id="securityid" class="bold" >  
+								$rule.getJiraSecurityName() ( $rule.jiraSecurityId )
+							</span>
+						<div class="securityid">Niveau de sécurité appliqué si dossier compris dans la requete JQL ci-dessus</div>
+					</div>
+					<div class="aui-item">
+					</div>
+					<div class="aui-item right">
+						
+					</div>
+				</div>
+				<div class="aui-group ">
+					<div class="aui-item right">
+						<label for="priority">Priority</span></label>
+					</div>
+					<div class="aui-item">
+							<span id="priority" class="bold" >  
+								$rule.priority
+							</span>
+						<div class="description">Priorité</div>
 					</div>
 					<div class="aui-item">
 					</div>
@@ -100,3 +144,4 @@
 				</div>
 		  <hr>	
 		#end
+	#end

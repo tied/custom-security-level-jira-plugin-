@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.atlassian.event.api.EventPublisher;
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.issue.security.IssueSecurityLevel;
 import com.atlassian.jira.user.ApplicationUser;
 
 public class SecurityRules {
@@ -92,6 +94,16 @@ public class SecurityRules {
 	}
 	public void setJql(String jql) {
 		this.jql = jql;
+	}
+	
+	public String getJiraSecurityName() {
+		IssueSecurityLevel level = ComponentAccessor.getIssueSecurityLevelManager().getSecurityLevel(getJiraSecurityId());
+		String ret = "Unknown";
+		if(level != null) {
+			ret = level.getName();
+		}
+		return ret;
+		
 	}
 	
 	

@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
+import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.event.type.EventType;
 import com.atlassian.jira.event.type.EventTypeManager;
 import com.atlassian.jira.issue.security.IssueSecurityLevel;

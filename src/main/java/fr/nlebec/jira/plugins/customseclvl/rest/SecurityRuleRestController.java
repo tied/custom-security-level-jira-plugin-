@@ -17,11 +17,13 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.permission.GlobalPermissionKey;
 import com.atlassian.jira.security.GlobalPermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.jira.util.I18nHelper;
+import com.atlassian.jira.util.MessageSet;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
@@ -40,15 +42,19 @@ public class SecurityRuleRestController {
 	private final GlobalPermissionManager globalPermissionManager;
 	private final SecurityRuleService securityRuleService;
 	private final I18nHelper i18nHelper;
+	private SearchService searchService; 
 
 	@Inject
 	public SecurityRuleRestController(@ComponentImport UserManager userManager,
 			@ComponentImport GlobalPermissionManager globalPermissionManager, @ComponentImport I18nHelper i18nHelper,
-			SecurityRuleService securityRuleService) {
+			SecurityRuleService securityRuleService,
+			  @ComponentImport SearchService searchService
+			) {
 		this.userManager = userManager;
 		this.globalPermissionManager = globalPermissionManager;
 		this.i18nHelper = i18nHelper;
 		this.securityRuleService = securityRuleService;
+		this.searchService = searchService;
 	}
 
 	@POST
@@ -59,17 +65,23 @@ public class SecurityRuleRestController {
 		String userName = request.getRemoteUser();
 		ApplicationUser user = this.userManager.getUserByKey(userName);
 		AddSecurityRuleResponse response = new AddSecurityRuleResponse();
+		int errorCode = 200;
 		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
 			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
 		} else {
 			try {
-				checkParameters(body);
+				checkParameters(body,userName);
 				this.securityRuleService.addSecurityRule(ItemConverter.bodyToPojo(body, user));
 			} catch (SQLException e) {
-				e.printStackTrace();
+				errorCode = 500;
+				response.setError(e.getMessage());
+			}
+			catch (ValidationException e) {
+				errorCode = 400;
+				response.setError(e.getMessage());
 			}
 		}
-		return Response.ok(response).build();
+		return Response.status(errorCode).entity(response).build();
 	}
 	@DELETE
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -88,18 +100,29 @@ public class SecurityRuleRestController {
 		return Response.ok(response).build();
 	}
 
-	private void checkParameters(AddSecurityRuleRequestBody body) {
-
-		if (body.getActive() == null) {
-			throw new ValidationException();
-		}
-		if (StringUtils.isEmpty(body.getRuleName())) {
-			throw new ValidationException();
-		}
-		if (StringUtils.isEmpty(body.getJql())) {
-			throw new ValidationException();
-		}
+	private void checkParameters(AddSecurityRuleRequestBody body, String userName) {
+		ApplicationUser user = this.userManager.getUserByName(userName);
+		final SearchService.ParseResult parseResult = searchService.parseQuery(user, body.getJql());
+		MessageSet msgSet = searchService.validateQuery(this.userManager.getUserByName(userName), parseResult.getQuery());
 		
+		System.out.println(body.getRuleName() + " "+body.getJql());
+		if (body.getActive() == null) {
+			throw new ValidationException("Parametre active n'est pas valide");
+		}
+		if (body.getRuleName() == null || StringUtils.isEmpty(body.getRuleName())) {
+			throw new ValidationException("Le nom de la règle est vide");
+		}
+		if (body.getJql() == null || StringUtils.isEmpty(body.getJql())) {
+			throw new ValidationException("Le JQL est vide ou invalide");
+		}
+		if(msgSet.hasAnyErrors()) {
+			StringBuilder sb= new StringBuilder();
+			for(String msg : msgSet.getErrorMessages()) {
+				sb.append(msg);
+				sb.append("\t\n");
+			}
+			throw new ValidationException(sb.toString());
+		}
 
 	}
 
