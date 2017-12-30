@@ -1,0 +1,31 @@
+$webResourceManager.requireResourcesForContext("csl-admin")
+<html>
+   <head>
+      <title>$action.getText('csl.admin.title')</title>
+      <meta name="decorator" content="atl.admin" />
+      <meta name="admin.active.section" content="admin_plugins_menu/csl_admin_list_sr_section"/>
+      <meta name="admin.active.tab" content="csl_list_sr_config"/>
+   </head>
+   <body>
+   <header class="aui-page-header">
+        <div class="aui-page-header-inner">
+            <div class="aui-page-header-main">
+                <h2>Custom Security Level</h2>
+            </div>
+            
+        <div class="aui-page-header-actions">
+            <div class="aui-buttons">
+              <button class="aui-button" id="btn-add-customsecurity-lvl">
+		      		<span class="aui-icon aui-icon-small aui-iconfont-add">View</span>Ajouter
+		      </button>
+            </div>
+        </div>
+        
+        #parse("/templates/admin/fragments/add-dialog.vm")       
+	   
+     </header>
+	   #parse("/templates/admin/fragments/list.vm")
+	   
+	   #parse("/templates/admin/fragments/edit-dialog.vm")
+   </body>
+</html>

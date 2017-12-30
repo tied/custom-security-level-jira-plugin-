@@ -49,10 +49,12 @@ public class ItemConverter {
 		securityRuleAo.setCreationUser(sr.getCreationUser().getId());
 		securityRuleAo.setJql(sr.getJql());
 		
-		EventAO eventAO = securityRuleAo.getEntityManager().create(EventAO.class);
-		EventToSecurityRule associationAo = securityRuleAo.getEntityManager().create(EventToSecurityRule.class); 
-		bindPojoToActiveObject(eventAO, securityRuleAo, associationAo);
-	
+		EventToSecurityRule associationAo = configAo.getEntityManager().create(EventToSecurityRule.class); 
+		EventAO eventAO = configAo.getEntityManager().create(EventAO.class);
+		
+		for(Event e : sr.getEvents()) {
+			bindPojoToActiveObject(eventAO, securityRuleAo, associationAo, e);
+		}
 		securityRuleAo.setJiraSecurityId(sr.getJiraSecurityId());
 		securityRuleAo.setName(sr.getName());
 		securityRuleAo.setPriority(sr.getPriority());
@@ -60,9 +62,11 @@ public class ItemConverter {
 	}
 
 	public static void bindPojoToActiveObject(EventAO eventAO,
-		SecurityRuleAO securityRuleAo, EventToSecurityRule eventToSR) throws SQLException {
+		SecurityRuleAO securityRuleAo, EventToSecurityRule eventToSR, Event event) throws SQLException {
 		eventToSR.setSecurityRule(securityRuleAo);
 		eventToSR.setEvent(eventAO);
+		eventAO.setJiraId(event.getJiraEventId());
+		eventAO.setJiraName(event.getJiraEventName());
 	}
 	
 	public static List<SecurityRules> convertActiveObjectToPOJO(SecurityRuleAO[] srao) {

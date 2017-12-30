@@ -1,0 +1,102 @@
+	#foreach ($rule in $action.getSecurityRules())
+			<div class="aui-group valign-bot">
+				<div class="aui-item">
+					<h3>Nom de la règle : $rule.name </h3>
+				</div>
+				<div class="aui-item">
+					
+				</div>
+				<div class="aui-item">
+				
+				</div>
+				<div class="aui-item right" style="vertical-align: bottom;" >
+						<span class="aui-icon aui-icon-large aui-iconfont-edit" id="edit-sr-$rule.id" 
+							data-id="$rule.id" 
+							data-name="$rule.name"
+							data-priority="$rule.priority"
+							data-jql="$rule.jql"
+							data-security-lvl="$rule.jiraSecurityId"
+							data-active="$rule.active"
+						>
+						</span>
+						<span class="aui-icon aui-icon-large aui-iconfont-delete" id="delete-sr-$rule.id" data-id="$rule.id" data-name="$rule.name"  ></span>
+				</div>
+			</div>
+			<div class="aui-group ">
+				<div class="aui-item right">
+					<label for="text-input">Active</span></label>
+				</div>
+				<div class="aui-item">
+					#if ($rule.getActive())
+						<span class="aui-icon aui-icon-small aui-iconfont-success green"></span>  
+					 #else
+					 	<span class="aui-icon aui-icon-small aui-iconfont-devtools-task-disabled orange"></span>
+					 #end
+				</div>
+				<div class="aui-item">
+				</div>
+				<div class="aui-item right">
+				
+				</div>
+			</div>
+			 <div class="aui-group">
+				<div class="aui-item right">
+					<label for="creationDate">Date de création</span></label>
+				</div>
+				<div class="aui-item">
+					<span id="creationDate" class="bold">$rule.creationDate</span>
+					<div class="description">Date de création de la règle</div>
+				</div>
+				<div class="aui-item">
+				</div>
+				<div class="aui-item right">
+				
+				</div>
+			</div>
+		   <div class="aui-group">
+				<div class="aui-item right">
+					<label for="creationUser">Créateur</span></label>
+				</div>
+				<div class="aui-item">
+					<span id="creationUser" class="bold">$rule.creationUser</span>
+					<div class="description">Créateur de la règle</div>
+				</div>
+				<div class="aui-item">
+				</div>
+				<div class="aui-item right">
+					
+				</div>
+			</div>
+			
+			 <div class="aui-group ">
+				<div class="aui-item right">
+					<label for="jql">JQL</span></label>
+				</div>
+				<div class="aui-item">
+					<span id="jql" class="bold">$rule.jql</span>
+					<div class="description">La requête JQL appliquée suite au déclenchements de l'évenement</div>
+				</div>
+				<div class="aui-item">
+				</div>
+				<div class="aui-item right">
+				</div>
+			</div>
+			
+				<div class="aui-group ">
+					<div class="aui-item right">
+						<label for="jira-events">Evenements</span></label>
+					</div>
+					<div class="aui-item">
+						<span id="jira-events" class="bold" > #foreach ($event in $rule.getEvents()) 
+							$event.jiraEventName ($event.jiraEventId) | 
+						#end</span>
+						<div class="description">La liste des evenements</div>
+					</div>
+					<div class="aui-item">
+					</div>
+					<div class="aui-item right">
+						
+					</div>
+				</div>
+		  <hr>	
+		#end

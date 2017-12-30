@@ -5,7 +5,7 @@
         <vendor name="${project.organization.name}" url="${project.organization.url}" />
         <param name="plugin-icon">images/icon.png</param>
         <param name="plugin-logo">images/logo.png</param>
-        <param name="configure.url">/secure/Configure-custom-security-lvl.jspa</param>
+        <param name="configure.url">/secure/ConfigureCSL.jspa</param>
     </plugin-info>
 
     <resource type="i18n" name="i18n" location="/i18n/csl-messages"/>
@@ -25,10 +25,17 @@
         <label key="csl.websection.label">Custom Security Level</label>
     </web-section>
 
-    <web-item key="csl.admin.link" name="Plugin's Admin Link" section="admin_plugins_menu/csl_admin_section" weight="10">
+    <web-item key="csl.admin.config.link" name="Plugin's Admin Link" section="admin_plugins_menu/csl_admin_section" weight="10">
         <description key="csl.link.description">Plugin's Admin Link</description>
         <label key="csl.link.label">Configure</label>
         <link linkId="csl_config">/secure/ConfigureCSL.jspa</link>
+        <styleClass>csl-link</styleClass>
+    </web-item>
+
+	 <web-item key="csl.admin.list.securityrule.link" name="Plugin's Admin Link" section="admin_plugins_menu/csl_admin_section" weight="10">
+        <description key="csl.link.securityrules.description">Plugin's Admin Link</description>
+        <label key="csl.link.securityrules.label">My security rules</label>
+        <link linkId="csl_list_sr_config">/secure/ConfigureSecurityRules.jspa</link>
         <styleClass>csl-link</styleClass>
     </web-item>
 
@@ -42,11 +49,22 @@
         </actions>
     </webwork1>
     
-
+     <webwork1 key="csl.admin.securityrule.web-action" name="Plugin's Administration Manager">
+        <description key="csl.admin.descr">Plugin's Administration Manager</description>
+        <actions>
+            <action	name="fr.nlebec.jira.plugins.customseclvl.admin.ConfigureSecurityRulesAction"
+                       alias="ConfigureSecurityRules">
+                <view name="input">/templates/admin/list-security-rule.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+    
 	<ao key="ao-module">
        <description key="csl.ao.description">The Active Objects Service Module</description>
        <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.CSLConfigurationAO</entity>
-       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.SecurityRuleAO</entity> 
+       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.SecurityRuleAO</entity>
+       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.EventToSecurityRule</entity> 
+       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.EventAO</entity>  
     </ao> 
     
      <rest key="csl.rest" path="/csl" version="1.0">

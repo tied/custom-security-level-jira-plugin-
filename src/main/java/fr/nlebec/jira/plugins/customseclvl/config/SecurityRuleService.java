@@ -94,6 +94,10 @@ public class SecurityRuleService {
     	  	
     	if( securityRules.length > 0){
             LOG.info("Delete security rule : "+ securityRules[0].toString());
+            for (int i = 0; i < securityRules[0].getEvents().length; i++) {
+            	this.eventService.deleteEvent(securityRules[0].getEvents()[i],securityRules[0]);
+			}
+            
             this.persistenceManager.delete(securityRules[0]);
     	}
         

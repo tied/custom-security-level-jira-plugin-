@@ -5,3 +5,15 @@
 	width : 15%;
 	text-align: right;	
 }
+.green{
+	color : green;	
+}
+.orange{
+	color : orange;
+}
+.valign-bot{
+	vertical-align: bottom;
+}
+.bold{
+	font-weight: bold;
+}
