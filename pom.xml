@@ -17,7 +17,7 @@
     <name>Custom Security Level Management</name>
     <description>Manage security Level based on JQL</description>
     <packaging>atlassian-plugin</packaging>
-
+  
     <dependencies>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
@@ -128,7 +128,6 @@
                         <Import-Package>
                             org.springframework.osgi.*;resolution:="optional",
                             org.eclipse.gemini.blueprint.*;resolution:="optional",
-                            com.atlassian.webresource.api.*,
                             com.atlassian.jira.*,
                             com.atlassian.plugins.*,
                             *;resolution:="optional"

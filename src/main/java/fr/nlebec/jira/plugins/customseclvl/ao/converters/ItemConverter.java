@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.jira.config.IssueTypeManager;
 import com.atlassian.jira.event.type.EventTypeManager;
 import com.atlassian.jira.user.ApplicationUser;
 
@@ -20,7 +19,9 @@ import fr.nlebec.jira.plugins.customseclvl.ao.model.SecurityRuleAO;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
 import fr.nlebec.jira.plugins.customseclvl.model.Event;
+import fr.nlebec.jira.plugins.customseclvl.model.SecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
+import fr.nlebec.jira.plugins.customseclvl.model.UpdateSecurityRuleRequestBody;
 
 public class ItemConverter {
 
@@ -132,5 +133,33 @@ public class ItemConverter {
 			eventsCLS.add(eventCSL);
 		}
 		return eventsCLS;
+	}
+
+	public static SecurityRules bodyToPojo(UpdateSecurityRuleRequestBody body, ApplicationUser user) {
+		SecurityRules securityRule = new SecurityRules();
+		securityRule.setId(body.getId());
+		securityRule.setActive(body.getActive());
+		securityRule.setCreationDate(new Date());
+		securityRule.setCreationUser(user);
+		securityRule.setEvents(getEventMapping(body.getEvents()));
+		securityRule.setJiraSecurityId(body.getSecurityLvl());
+		securityRule.setJql(body.getJql());
+		securityRule.setName(body.getRuleName());
+		securityRule.setPriority(body.getPriority());
+		return securityRule;
+	}
+
+	public static SecurityRuleResponse pojoToResponse(SecurityRules securityRule) {
+		SecurityRuleResponse srr = new SecurityRuleResponse();
+		srr.setId(securityRule.getId());
+		srr.setActive(securityRule.getActive());
+		srr.setCreationDate(securityRule.getCreationDate());
+		srr.setCreationUser(securityRule.getCreationUser().getId());
+		//srr.setEvents());
+		srr.setSecurityLvl(securityRule.getJiraSecurityId());
+		srr.setJql(securityRule.getJql());
+		srr.setRuleName(securityRule.getName());
+		srr.setPriority(securityRule.getPriority());
+		return srr;
 	}
 }

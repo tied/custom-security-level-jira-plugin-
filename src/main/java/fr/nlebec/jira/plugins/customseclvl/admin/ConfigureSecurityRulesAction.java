@@ -16,6 +16,7 @@ import com.atlassian.jira.issue.security.IssueSecurityLevelManager;
 import com.atlassian.jira.permission.GlobalPermissionKey;
 import com.atlassian.jira.security.GlobalPermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.util.I18nHelper;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
@@ -47,15 +48,19 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
     
     private List<String> messages;
     private CSLConfiguration configuration;
+    private String message; 
+    private I18nHelper i18n;
 
     @Inject
     public ConfigureSecurityRulesAction( CSLConfigurationService configurationService,
                               @ComponentImport GlobalPermissionManager globalPermissionManager,
                               @ComponentImport LoginUriProvider loginUriProvider,
                               @ComponentImport IssueSecurityLevelManager issueSecurityLevelManager,
-                              @ComponentImport EventTypeManager eventTypeManager
+                              @ComponentImport EventTypeManager eventTypeManager,
+                              @ComponentImport I18nHelper i18nHelper
     		)
     {
+    	this.i18n = i18nHelper;
     	this.issueSecurityLevelManager = issueSecurityLevelManager;
         this.configurationService = configurationService;
         this.globalPermissionManager = globalPermissionManager;
@@ -74,6 +79,8 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
         this.configuration = configurationService.getConfiguration();
         this.securityLevels = issueSecurityLevelManager.getAllIssueSecurityLevels();
         this.eventTypes = this.eventManager.getEventTypes();
+        
+        System.out.println(this.i18n.getText("fr.csl.admin.securityrule.add.success"));
         
         return INPUT;
     }
@@ -120,6 +127,17 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
 
 	public void setEventTypes(Collection<EventType> eventTypes) {
 		this.eventTypes = eventTypes;
+	}
+	public String getMessage() {
+		String ret = "";
+		if(this.message != null){
+			ret = i18n.getText(this.message);
+		}
+		return ret;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }
 

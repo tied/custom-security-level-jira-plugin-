@@ -17,6 +17,9 @@
         <resource type="download" name="csl-main-admin.css" location="/css/csl-stylesheet.css"/>
         <resource type="download" name="csl-main-admin.js" location="/js/csl-admin.js"/>
         <resource type="download" name="images/" location="/images"/>
+        <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
         <context>csl-admin</context>
     </web-resource>
 

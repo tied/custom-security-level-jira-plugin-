@@ -1,23 +1,13 @@
-#if($action.getSecurityRules().size() == 0)
-	<div class="aui-message aui-message-info">
-    <p class="title">
-        <strong>Aucune règle de sécurité définie</strong>
-    </p>
-    <p>Pour ajouter une nouvelle règle de sécurité, cliquer le bouton ajouter en haut à droite</p>
-</div>
- 
-#else
+#if($action.getSecurityRules().size() > 0)
 	#foreach ($rule in $action.getSecurityRules())
-			<div class="aui-group valign-bot">
+		<div id="rule-$rule.id">
+			<div class="aui-group">
 				<div class="aui-item bold">
-					<h3>Nom de la règle : $rule.name </h3>
+					<h3>
+						<b>Nom de la règle : $rule.name</b> 
+					</h3>
 				</div>
-				<div class="aui-item">
-					
-				</div>
-				<div class="aui-item">
 				
-				</div>
 				<div class="aui-item right" style="vertical-align: bottom;" >
 						<span class="aui-icon aui-icon-large aui-iconfont-edit" id="edit-sr-$rule.id" 
 							data-id="$rule.id" 
@@ -26,6 +16,7 @@
 							data-jql="$rule.jql"
 							data-security-lvl="$rule.jiraSecurityId"
 							data-active="$rule.active"
+							data-events="$rule.getSimpleEventsList()"
 						>
 						</span>
 						<span class="aui-icon aui-icon-large aui-iconfont-delete" id="delete-sr-$rule.id" data-id="$rule.id" data-name="$rule.name"  ></span>
@@ -42,11 +33,6 @@
 					 	<span class="aui-icon aui-icon-small aui-iconfont-devtools-task-disabled orange"></span>
 					 #end
 				</div>
-				<div class="aui-item">
-				</div>
-				<div class="aui-item right">
-				
-				</div>
 			</div>
 			 <div class="aui-group">
 				<div class="aui-item right">
@@ -55,11 +41,6 @@
 				<div class="aui-item">
 					<span id="creationDate" class="bold">$rule.creationDate</span>
 					<div class="description">Date de création de la règle</div>
-				</div>
-				<div class="aui-item">
-				</div>
-				<div class="aui-item right">
-				
 				</div>
 			</div>
 		   <div class="aui-group">
@@ -70,11 +51,6 @@
 					<span id="creationUser" class="bold">$rule.creationUser</span>
 					<div class="description">Créateur de la règle</div>
 				</div>
-				<div class="aui-item">
-				</div>
-				<div class="aui-item right">
-					
-				</div>
 			</div>
 			
 			 <div class="aui-group ">
@@ -84,10 +60,6 @@
 				<div class="aui-item">
 					<span id="jql" class="bold">$rule.jql</span>
 					<div class="description">La requête JQL appliquée suite au déclenchements de l'évenement</div>
-				</div>
-				<div class="aui-item">
-				</div>
-				<div class="aui-item right">
 				</div>
 			</div>
 			
@@ -104,11 +76,6 @@
 						#end
 						<div class="description">La liste des evenements</div>
 					</div>
-					<div class="aui-item">
-					</div>
-					<div class="aui-item right">
-						
-					</div>
 				</div>
 				<div class="aui-group ">
 					<div class="aui-item right">
@@ -119,11 +86,6 @@
 								$rule.getJiraSecurityName() ( $rule.jiraSecurityId )
 							</span>
 						<div class="securityid">Niveau de sécurité appliqué si dossier compris dans la requete JQL ci-dessus</div>
-					</div>
-					<div class="aui-item">
-					</div>
-					<div class="aui-item right">
-						
 					</div>
 				</div>
 				<div class="aui-group ">
@@ -136,12 +98,8 @@
 							</span>
 						<div class="description">Priorité</div>
 					</div>
-					<div class="aui-item">
-					</div>
-					<div class="aui-item right">
-						
-					</div>
 				</div>
-		  <hr>	
+				<hr>
+			</div>
 		#end
 	#end

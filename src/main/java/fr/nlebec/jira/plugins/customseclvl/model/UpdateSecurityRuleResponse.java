@@ -1,10 +1,10 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
-public class AddSecurityRuleResponse extends CSLResponse {
+public class UpdateSecurityRuleResponse extends CSLResponse {
 
 	public String location;
 	
-	public AddSecurityRuleResponse() {
+	public UpdateSecurityRuleResponse() {
 	}
 
 	public String getLocation() {
@@ -14,5 +14,4 @@ public class AddSecurityRuleResponse extends CSLResponse {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-
 }

@@ -7,9 +7,6 @@ $webResourceManager.requireResourcesForContext("csl-admin")
       <meta name="admin.active.tab" content="csl_config"/>
    </head>
    <body>
-      <!-- Div to display the different messages successes/errors/etc. -->
-      <div id="messages"></div>
-      <div id="sucess-messages" class="message"></div>
 
  	<header class="aui-page-header">
         <div class="aui-page-header-inner">

@@ -15,6 +15,7 @@ import com.atlassian.jira.issue.security.IssueSecurityLevelManager;
 import com.atlassian.jira.permission.GlobalPermissionKey;
 import com.atlassian.jira.security.GlobalPermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.util.I18nHelper;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
@@ -43,8 +44,7 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
 
     private Collection<IssueSecurityLevel> securityLevels;
     private Collection<EventType> eventTypes;
-    
-    private List<String> messages;
+    private String message;
     private CSLConfiguration configuration;
 
     @Inject
@@ -123,6 +123,8 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
 	public void setEventTypes(Collection<EventType> eventTypes) {
 		this.eventTypes = eventTypes;
 	}
+
+	
 }
 
 

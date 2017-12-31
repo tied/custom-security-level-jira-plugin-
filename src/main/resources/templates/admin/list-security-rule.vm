@@ -6,13 +6,15 @@ $webResourceManager.requireResourcesForContext("csl-admin")
       <meta name="admin.active.section" content="admin_plugins_menu/csl_admin_list_sr_section"/>
       <meta name="admin.active.tab" content="csl_list_sr_config"/>
    </head>
+   
+ 
    <body>
    <header class="aui-page-header">
         <div class="aui-page-header-inner">
             <div class="aui-page-header-main">
                 <h2>Custom Security Level</h2>
             </div>
-            
+         
         <div class="aui-page-header-actions">
             <div class="aui-buttons">
               <button class="aui-button" id="btn-add-customsecurity-lvl">
@@ -21,9 +23,32 @@ $webResourceManager.requireResourcesForContext("csl-admin")
             </div>
         </div>
         
+        
         #parse("/templates/admin/fragments/add-dialog.vm")       
 	   
-     </header>
+	   
+   </header>
+   
+   			   
+	   <div id="sucess-messages" class="aui-message aui-message-success 
+	   		#if($action.getMessage() == "") hide #end">
+		    <p class="title">
+		        <strong>Succes!</strong>
+		    </p>
+		    <p>$action.getMessage()</p>
+		</div>
+   
+   		<br>
+        
+		<div id="no-rule-message" class="aui-message aui-message-info 
+			#if($action.getSecurityRules().size() > 0) hide #end
+		">
+		    <p class="title">
+		        <strong>Aucune règle de sécurité définie</strong>
+		    </p>
+		    <p>Pour ajouter une nouvelle règle de sécurité, cliquer le bouton ajouter en haut à droite</p>
+		</div>
+
 	   #parse("/templates/admin/fragments/list.vm")
 	   
 	   #parse("/templates/admin/fragments/edit-dialog.vm")

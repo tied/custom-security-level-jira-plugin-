@@ -105,6 +105,16 @@ public class SecurityRules {
 		return ret;
 		
 	}
+	public String getSimpleEventsList() {
+		StringBuilder ret = new StringBuilder("[");
+		for(Event event : this.events) {
+			ret.append( event.getJiraEventId() );
+			ret.append( "," );
+		}
+		ret.replace(ret.lastIndexOf(","),ret.lastIndexOf(",")+1,"]");
+		return ret.toString();
+		
+	}
 	
 	
 	

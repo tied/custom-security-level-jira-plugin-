@@ -7,8 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -33,6 +36,10 @@ import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleResponse;
+import fr.nlebec.jira.plugins.customseclvl.model.RetrieveSecurityRuleResponse;
+import fr.nlebec.jira.plugins.customseclvl.model.SecurityRuleResponse;
+import fr.nlebec.jira.plugins.customseclvl.model.UpdateSecurityRuleRequestBody;
+import fr.nlebec.jira.plugins.customseclvl.model.UpdateSecurityRuleResponse;
 
 @Path("/security-rule")
 @Scanned
@@ -42,14 +49,12 @@ public class SecurityRuleRestController {
 	private final GlobalPermissionManager globalPermissionManager;
 	private final SecurityRuleService securityRuleService;
 	private final I18nHelper i18nHelper;
-	private SearchService searchService; 
+	private SearchService searchService;
 
 	@Inject
 	public SecurityRuleRestController(@ComponentImport UserManager userManager,
 			@ComponentImport GlobalPermissionManager globalPermissionManager, @ComponentImport I18nHelper i18nHelper,
-			SecurityRuleService securityRuleService,
-			  @ComponentImport SearchService searchService
-			) {
+			SecurityRuleService securityRuleService, @ComponentImport SearchService searchService) {
 		this.userManager = userManager;
 		this.globalPermissionManager = globalPermissionManager;
 		this.i18nHelper = i18nHelper;
@@ -57,6 +62,32 @@ public class SecurityRuleRestController {
 		this.searchService = searchService;
 	}
 
+	@GET
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("/{idSecurityRule}")
+	public Response addSecurityLevel(@PathParam(value = "idSecurityRule") int idSecurityRule, @Context HttpServletRequest request) {
+		String userName = request.getRemoteUser();
+		ApplicationUser user = this.userManager.getUserByKey(userName);
+		RetrieveSecurityRuleResponse response = new RetrieveSecurityRuleResponse();
+		int errorCode = 200;
+		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
+			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
+		} else {
+			try {
+				SecurityRuleResponse resp = ItemConverter.pojoToResponse(this.securityRuleService.getSecurityRule(idSecurityRule));
+				response.setSecurityRule(resp);
+			} catch (SQLException e) {
+				errorCode = 500;
+				response.setError(e.getMessage());
+			} catch (ValidationException e) {
+				errorCode = 400;
+				response.setError(e.getMessage());
+			}
+		}
+		return Response.status(errorCode).entity(response).build();
+	}
+	
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -65,24 +96,25 @@ public class SecurityRuleRestController {
 		String userName = request.getRemoteUser();
 		ApplicationUser user = this.userManager.getUserByKey(userName);
 		AddSecurityRuleResponse response = new AddSecurityRuleResponse();
-		int errorCode = 200;
+		int errorCode = 201;
 		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
 			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
 		} else {
 			try {
-				checkParameters(body,userName);
-				this.securityRuleService.addSecurityRule(ItemConverter.bodyToPojo(body, user));
+				checkParameters(body, user);
+				int idEntity = this.securityRuleService.addSecurityRule(ItemConverter.bodyToPojo(body, user));
+				response.setLocation(request.getRequestURI() + "/" + idEntity );
 			} catch (SQLException e) {
 				errorCode = 500;
 				response.setError(e.getMessage());
-			}
-			catch (ValidationException e) {
+			} catch (ValidationException e) {
 				errorCode = 400;
 				response.setError(e.getMessage());
 			}
 		}
 		return Response.status(errorCode).entity(response).build();
 	}
+
 	@DELETE
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -91,21 +123,52 @@ public class SecurityRuleRestController {
 		String userName = request.getRemoteUser();
 		ApplicationUser user = this.userManager.getUserByKey(userName);
 		DeleteSecurityRuleResponse response = new DeleteSecurityRuleResponse();
+		int errorCode = 201;
 		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
 			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
 		} else {
-			//checkParameters(body);
-			this.securityRuleService.deleteSecurityRule(body.getIdSecurityRuleToDelete());
+			try {
+				// checkParameters(body);
+				this.securityRuleService.deleteSecurityRule(body.getIdSecurityRuleToDelete());
+			} catch (ValidationException e) {
+				errorCode = 400;
+				response.setError(e.getMessage());
+			}
 		}
-		return Response.ok(response).build();
+		return Response.status(errorCode).entity(response).build();
 	}
 
-	private void checkParameters(AddSecurityRuleRequestBody body, String userName) {
-		ApplicationUser user = this.userManager.getUserByName(userName);
+	@PUT
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("/")
+	public Response updateSecurityLevel(UpdateSecurityRuleRequestBody body, @Context HttpServletRequest request)
+			throws SQLException {
+		String userName = request.getRemoteUser();
+		ApplicationUser user = this.userManager.getUserByKey(userName);
+		UpdateSecurityRuleResponse response = new UpdateSecurityRuleResponse();
+		int errorCode = 201;
+		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
+			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
+		} else {
+			try {
+				checkParameters(body, user);
+				this.securityRuleService.updateSecurityRule(ItemConverter.bodyToPojo(body, user));
+				response.setLocation(request.getRequestURI() + "/" + body.getId() );
+			} catch (SQLException e) {
+				errorCode = 500;
+				response.setError(e.getMessage());
+			} catch (ValidationException e) {
+				errorCode = 400;
+				response.setError(e.getMessage());
+			}
+		}
+		return Response.status(errorCode).entity(response).build();
+	}
+
+	private void checkParameters(AddSecurityRuleRequestBody body, ApplicationUser user) {
 		final SearchService.ParseResult parseResult = searchService.parseQuery(user, body.getJql());
-		MessageSet msgSet = searchService.validateQuery(this.userManager.getUserByName(userName), parseResult.getQuery());
-		
-		System.out.println(body.getRuleName() + " "+body.getJql());
+
 		if (body.getActive() == null) {
 			throw new ValidationException("Parametre active n'est pas valide");
 		}
@@ -115,13 +178,58 @@ public class SecurityRuleRestController {
 		if (body.getJql() == null || StringUtils.isEmpty(body.getJql())) {
 			throw new ValidationException("Le JQL est vide ou invalide");
 		}
-		if(msgSet.hasAnyErrors()) {
-			StringBuilder sb= new StringBuilder();
-			for(String msg : msgSet.getErrorMessages()) {
-				sb.append(msg);
-				sb.append("\t\n");
+		if (body.getEvents() == null || body.getEvents().size() == 0) {
+			throw new ValidationException("Au moins un evenement doit être définis");
+		}
+		if (body.getPriority() == null) {
+			throw new ValidationException("Parametre prorité n'est pas valide");
+		}
+		try {
+			MessageSet msgSet = searchService.validateQuery(user, parseResult.getQuery());
+			if (msgSet.hasAnyErrors()) {
+				StringBuilder sb = new StringBuilder();
+				for (String msg : msgSet.getErrorMessages()) {
+					sb.append(msg);
+					sb.append("\t\n");
+				}
+				throw new ValidationException(sb.toString());
 			}
-			throw new ValidationException(sb.toString());
+		} catch (Exception e) {
+			throw new ValidationException(e.getMessage());
+		}
+
+	}
+
+	private void checkParameters(UpdateSecurityRuleRequestBody body, ApplicationUser user) {
+		final SearchService.ParseResult parseResult = searchService.parseQuery(user, body.getJql());
+
+		if (body.getId() == null) {
+			throw new ValidationException("Paramètre ID n'est pas valide");
+		}
+		if (body.getActive() == null) {
+			throw new ValidationException("Parametre active n'est pas valide");
+		}
+		if (body.getRuleName() == null || StringUtils.isEmpty(body.getRuleName())) {
+			throw new ValidationException("Le nom de la règle est vide");
+		}
+		if (body.getJql() == null || StringUtils.isEmpty(body.getJql())) {
+			throw new ValidationException("Le JQL est vide ou invalide");
+		}
+		if (body.getEvents() == null || body.getEvents().size() == 0) {
+			throw new ValidationException("Au moins un evenement doit être définis");
+		}
+		try {
+			MessageSet msgSet = searchService.validateQuery(user, parseResult.getQuery());
+			if (msgSet.hasAnyErrors()) {
+				StringBuilder sb = new StringBuilder();
+				for (String msg : msgSet.getErrorMessages()) {
+					sb.append(msg);
+					sb.append("\t\n");
+				}
+				throw new ValidationException(sb.toString());
+			}
+		} catch (Exception e) {
+			throw new ValidationException(e.getMessage());
 		}
 
 	}
