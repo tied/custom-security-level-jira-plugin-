@@ -4,7 +4,7 @@
 			<div class="aui-group">
 				<div class="aui-item bold">
 					<h3>
-						<b>Nom de la règle : $rule.name</b> 
+						<b>$action.getText('csl.admin.securityrule.list.title', $rule.name) </b> 
 					</h3>
 				</div>
 				
@@ -24,7 +24,7 @@
 			</div>
 			<div class="aui-group ">
 				<div class="aui-item right">
-					<label for="text-input">Active</span></label>
+					<label for="text-input">$action.getText('csl.admin.securityrule.list.active.label')</label>
 				</div>
 				<div class="aui-item">
 					#if ($rule.getActive())
@@ -36,36 +36,36 @@
 			</div>
 			 <div class="aui-group">
 				<div class="aui-item right">
-					<label for="creationDate">Date de création</span></label>
+					<label for="creationDate">$action.getText('csl.admin.securityrule.list.creationdate.label')</label>
 				</div>
 				<div class="aui-item">
 					<span id="creationDate" class="bold">$rule.creationDate</span>
-					<div class="description">Date de création de la règle</div>
+					<div class="description">$action.getText('csl.admin.securityrule.list.creationdate.descr')</div>
 				</div>
 			</div>
 		   <div class="aui-group">
 				<div class="aui-item right">
-					<label for="creationUser">Créateur</span></label>
+					<label for="creationUser">$action.getText('csl.admin.securityrule.list.creator.label')</label>
 				</div>
 				<div class="aui-item">
 					<span id="creationUser" class="bold">$rule.creationUser</span>
-					<div class="description">Créateur de la règle</div>
+					<div class="description">$action.getText('csl.admin.securityrule.list.creator.descr')</div>
 				</div>
 			</div>
 			
 			 <div class="aui-group ">
 				<div class="aui-item right">
-					<label for="jql">JQL</span></label>
+					<label for="jql">$action.getText('csl.admin.securityrule.list.jql.label')</label>
 				</div>
 				<div class="aui-item">
 					<span id="jql" class="bold">$rule.jql</span>
-					<div class="description">La requête JQL appliquée suite au déclenchements de l'évenement</div>
+					<div class="description">$action.getText('csl.admin.securityrule.list.jql.descr')</div>
 				</div>
 			</div>
 			
 				<div class="aui-group ">
 					<div class="aui-item right">
-						<label for="jira-events">Evenements</span></label>
+						<label for="jira-events">$action.getText('csl.admin.securityrule.list.events.label')</label>
 					</div>
 					<div class="aui-item">
 						#foreach ($event in $rule.getEvents())
@@ -74,29 +74,29 @@
 							</span>
 							<br>
 						#end
-						<div class="description">La liste des evenements</div>
+						<div class="description">$action.getText('csl.admin.securityrule.list.events.descr')</div>
 					</div>
 				</div>
 				<div class="aui-group ">
 					<div class="aui-item right">
-						<label for="priority">Niveau de sécurité</span></label>
+						<label for="priority">$action.getText('csl.admin.securityrule.list.securitylvl.label')</label>
 					</div>
 					<div class="aui-item">
 							<span id="securityid" class="bold" >  
 								$rule.getJiraSecurityName() ( $rule.jiraSecurityId )
 							</span>
-						<div class="securityid">Niveau de sécurité appliqué si dossier compris dans la requete JQL ci-dessus</div>
+						<div class="securityid">$action.getText('csl.admin.securityrule.list.securitylvl.descr')</div>
 					</div>
 				</div>
 				<div class="aui-group ">
 					<div class="aui-item right">
-						<label for="priority">Priority</span></label>
+						<label for="priority">$action.getText('csl.admin.securityrule.list.priority.label')</label>
 					</div>
 					<div class="aui-item">
 							<span id="priority" class="bold" >  
 								$rule.priority
 							</span>
-						<div class="description">Priorité</div>
+						<div class="description">$action.getText('csl.admin.securityrule.list.priority.descr')</div>
 					</div>
 				</div>
 				<hr>

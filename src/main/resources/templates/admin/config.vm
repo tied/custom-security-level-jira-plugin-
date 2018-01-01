@@ -11,7 +11,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
  	<header class="aui-page-header">
         <div class="aui-page-header-inner">
             <div class="aui-page-header-main">
-                <h2>Custom Security Level</h2>
+                <h2>$action.getText('csl.admin.securityrule.config.title')</h2>
             </div>
             
         <div class="aui-page-header-actions">
@@ -23,7 +23,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
       <form action="ConfigureCSL!save.jspa" id="admin-form" class="aui">
 		   <div class="aui-group">
 				<div class="aui-item right">
-					<label for="active">Active</label>
+					<label for="active">$action.getText('csl.admin.securityrule.config.active.label')</label>
 				</div>
 				<div class="aui-item">
 					<input class="checkbox" type="checkbox" id="active" value="true" name="active" #if ($action.getConfiguration().getActive()) checked #end>
@@ -36,7 +36,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
 		<br>
        	<div class="buttons-container">
             <div class="buttons">
-               <input class="aui-button aui-button-primary" type="submit" value="Enregistrer" id="save-button">
+               <input class="aui-button aui-button-primary" type="submit" value="$action.getText('csl.admin.securityrule.config.save.label')" id="save-button">
             </div>
          </div>
       </form>	

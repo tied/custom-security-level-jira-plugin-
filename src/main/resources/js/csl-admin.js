@@ -95,7 +95,7 @@ AJS.$(document).ready(function () {
     	var name = AJS.$(this).attr('data-name');
     	var param = {};
     	param.id = id;
-    	if(confirm(AJS.I18n.getText("csl.admin.securityrule.add.delete.confirm.msg") + name)){
+    	if(confirm(AJS.I18n.getText("csl.admin.securityrule.delete.confirm.msg",name))){
 	    	var request = AJS.$.ajax({
 				  url:  AJS.contextPath() + "/rest/csl/1.0/security-rule",
 				  type: "DELETE",
@@ -105,7 +105,7 @@ AJS.$(document).ready(function () {
 				});
 				request.success(function( data ) {
 					AJS.$("div[id=rule-" + id + "]" ).remove();
-					alertUser("sucess-messages", AJS.I18n.getText("csl.admin.securityrule.add.delete.success.msg"));
+					alertUser("sucess-messages", AJS.I18n.getText("csl.admin.securityrule.delete.success.msg"));
 					var countRule = AJS.$("div[id^=rule-]" ).size();
 					
 					if(countRule == 0){
