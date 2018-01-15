@@ -31,7 +31,6 @@ import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
 import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
-import fr.nlebec.jira.plugins.customseclvl.config.SecurityRuleService;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleRequestBody;
@@ -40,6 +39,7 @@ import fr.nlebec.jira.plugins.customseclvl.model.RetrieveSecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.UpdateSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.UpdateSecurityRuleResponse;
+import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleService;
 
 @Path("/security-rule")
 @Scanned

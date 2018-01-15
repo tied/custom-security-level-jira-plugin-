@@ -1,4 +1,4 @@
-package fr.nlebec.jira.plugins.customseclvl.config;
+package fr.nlebec.jira.plugins.customseclvl.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

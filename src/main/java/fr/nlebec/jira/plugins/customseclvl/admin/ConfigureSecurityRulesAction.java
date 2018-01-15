@@ -23,9 +23,9 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserRole;
 
-import fr.nlebec.jira.plugins.customseclvl.config.CSLConfigurationService;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
+import fr.nlebec.jira.plugins.customseclvl.service.CSLConfigurationService;
 
 @Scanned
 public class ConfigureSecurityRulesAction extends JiraWebActionSupport {

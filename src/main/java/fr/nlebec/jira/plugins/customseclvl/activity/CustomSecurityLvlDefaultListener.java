@@ -26,9 +26,9 @@ import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
-import fr.nlebec.jira.plugins.customseclvl.config.SecurityRuleService;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
+import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleService;
 import fr.nlebec.jira.plugins.customseclvl.util.EventUtil;
 
 @Named

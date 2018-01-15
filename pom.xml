@@ -99,6 +99,12 @@
             <version>${streams.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+			<groupId>com.atlassian.plugins</groupId>
+			<artifactId>atlassian-plugins-osgi-testrunner</artifactId>
+			<version>${plugin.testrunner.version}</version>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 
     <build>
@@ -114,6 +120,29 @@
                     <enableQuickReload>true</enableQuickReload>
                     <enableFastdev>false</enableFastdev>
 
+					<configuration>
+						<testGroups>
+							<testGroup>
+								<id>wired-integration</id>
+								<productIds>
+									<productId>jira</productId>
+								</productIds>
+								<includes>
+									<include>fr/**/wired/*WiredTest.java</include>
+								</includes>
+							</testGroup>
+							<testGroup>
+								<id>traditional-integration</id>
+								<productIds>
+									<productId>jira</productId>
+								</productIds>
+								<includes>
+									<include>fr/**/*TrdTest.java</include>
+								</includes>
+							</testGroup>
+						</testGroups>
+					</configuration>
+					
                     <!-- See here for an explanation of default instructions: -->
                     <!-- https://developer.atlassian.com/docs/advanced-topics/configuration-of-instructions-in-atlassian-plugins -->
                     <instructions>
@@ -177,6 +206,7 @@
         <amps.version>6.2.11</amps.version>
         <sal.version>3.0.5</sal.version>
         <ao.version>1.1.0</ao.version>
+        <plugin.testrunner.version>1.1</plugin.testrunner.version>
         <atlassian.spring.scanner.version>1.2.6</atlassian.spring.scanner.version>
         <streams.version>5.4.18</streams.version>
         <!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to generate bundle. -->
