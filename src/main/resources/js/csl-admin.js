@@ -1,5 +1,6 @@
 AJS.$(document).ready(function () {
 	
+    AJS.$('#delete-application-date').datePicker({'overrideBrowserDefault': true});
     AJS.$("#btn-add-customsecurity-lvl").click(function(e) {
     	e.preventDefault();
         AJS.dialog2("#add-dialog").show();
@@ -90,30 +91,48 @@ AJS.$(document).ready(function () {
 			
 		});
     
+  
+    AJS.$("#delete-form").on("submit", function(e){
+    	e.preventDefault();
+    	var id =  $("#delete-rule-id").val();
+		var param = {};
+		param.id = id;
+		param.applicationDate =  $("#delete-application-date").val();
+		
+		AJS.$("#delete-form-error").addClass('hide');
+		AJS.$("#delete-loading").show();
+		
+		var request = AJS.$.ajax({
+			  url:  AJS.contextPath() + "/rest/csl/1.0/security-rule",
+			  type: "DELETE",
+			  data: JSON.stringify(param),
+		      contentType: "application/json",
+			  dataType: "json"
+			});
+			request.success(function( data ) {
+				AJS.$("div[id=rule-" + id + "]" ).remove();
+				alertUser("sucess-messages", AJS.I18n.getText("csl.admin.securityrule.delete.success.msg"));
+				var countRule = AJS.$("div[id^=rule-]" ).size();
+				if(countRule == 0){
+					AJS.$("#no-rule-message").show();
+				}
+				AJS.dialog2("#delete-dialog").hide();
+				var editRedirect = AJS.contextPath() + "/secure/ConfigureSecurityRules.jspa?message=csl.admin.securityrule.update.success"
+				window.location.href = editRedirect ;
+			});
+			
+    });
+    
+    
     AJS.$("[id^=delete-sr]").on("click", function(e){
     	var id = AJS.$(this).attr('data-id');
-    	var name = AJS.$(this).attr('data-name');
-    	var param = {};
-    	param.id = id;
-    	if(confirm(AJS.I18n.getText("csl.admin.securityrule.delete.confirm.msg",name))){
-	    	var request = AJS.$.ajax({
-				  url:  AJS.contextPath() + "/rest/csl/1.0/security-rule",
-				  type: "DELETE",
-				  data: JSON.stringify(param),
-			      contentType: "application/json",
-				  dataType: "json"
-				});
-				request.success(function( data ) {
-					AJS.$("div[id=rule-" + id + "]" ).remove();
-					alertUser("sucess-messages", AJS.I18n.getText("csl.admin.securityrule.delete.success.msg"));
-					var countRule = AJS.$("div[id^=rule-]" ).size();
-					
-					if(countRule == 0){
-						AJS.$("#no-rule-message").show();
-					}
-				});
-	    	}
-		});
+    	AJS.$("#delete-rule-id").attr("value",id);
+    	AJS.dialog2("#delete-dialog").show();
+ 
+	});
+    
+    
+    
     AJS.$("[id^=edit-sr]").on("click", function(e){
     	var id = AJS.$(this).attr('data-id');
     	var name = AJS.$(this).attr('data-name');

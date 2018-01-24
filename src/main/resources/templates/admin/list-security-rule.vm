@@ -24,33 +24,62 @@ $webResourceManager.requireResourcesForContext("csl-admin")
         </div>
         
         
-        #parse("/templates/admin/fragments/add-dialog.vm")       
-	   
-	   
+        #parse("/templates/admin/fragments/add-dialog.vm")
+        
    </header>
    
-   			   
-	   <div id="sucess-messages" class="aui-message aui-message-success 
+     <div id="sucess-messages" class="aui-message aui-message-success 
 	   		#if($action.getMessage() == "") hide #end">
 		    <p class="title">
 		        <strong>Succes!</strong>
 		    </p>
 		    <p>$action.getMessage()</p>
 		</div>
+	
+	
+   <div class="aui-tabs horizontal-tabs">
+	    <ul class="tabs-menu">
+	        <li class="menu-item active-tab">
+	            <a href="#actives-rules-tabs"><strong>$action.getText('csl.admin.securityrule.tab.activerule.label')</strong></a>
+	        </li>
+	        <li class="menu-item">
+	            <a href="#unactives-rules-tabs"><strong>$action.getText('csl.admin.securityrule.tab.unactiverule.label')</strong></a>
+	        </li>
+	        <li class="menu-item">
+	            <a href="#deleted-rules-tabs"><strong>$action.getText('csl.admin.securityrule.tab.deleterule.label')</strong></a>
+	        </li>
+	    </ul>
+	    <div class="tabs-pane active-pane" id="actives-rules-tabs">
+	       <h3>$action.getText('csl.admin.securityrule.tab.activerule.title')</h3>
+	   		<p>
+				<div id="no-rule-message" class="aui-message aui-message-info 
+					#if($action.getSecurityRules().size() > 0) hide #end
+				">
+				    <p class="title">
+				        <strong>Aucune règle de sécurité définie</strong>
+				    </p>
+				    <p>Pour ajouter une nouvelle règle de sécurité, cliquer le bouton ajouter en haut à droite</p>
+				</div>
+			
+				 #parse("/templates/admin/fragments/list.vm")
+			
+			</p>
+	    </div>
+	    <div class="tabs-pane" id="unactives-rules-tabs">
+	        <h3>$action.getText('csl.admin.securityrule.tab.unactiverule.title')</h3>
+	        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+	    </div>
+	    <div class="tabs-pane" id="deleted-rules-tabs">
+	        <h3>$action.getText('csl.admin.securityrule.tab.deleterule.title')</h3>
+	        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+	    </div>
+	</div><!-- // .aui-tabs -->
+   			   
    
-   		<br>
-        
-		<div id="no-rule-message" class="aui-message aui-message-info 
-			#if($action.getSecurityRules().size() > 0) hide #end
-		">
-		    <p class="title">
-		        <strong>Aucune règle de sécurité définie</strong>
-		    </p>
-		    <p>Pour ajouter une nouvelle règle de sécurité, cliquer le bouton ajouter en haut à droite</p>
-		</div>
 
-	   #parse("/templates/admin/fragments/list.vm")
 	   
 	   #parse("/templates/admin/fragments/edit-dialog.vm")
+	   
+	   #parse("/templates/admin/fragments/delete-dialog.vm")
    </body>
 </html>

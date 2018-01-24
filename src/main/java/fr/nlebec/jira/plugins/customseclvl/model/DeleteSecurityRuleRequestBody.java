@@ -11,6 +11,9 @@ public class DeleteSecurityRuleRequestBody {
 
 	@XmlElement(name="id")
 	private Integer idSecurityRuleToDelete;
+	
+	@XmlElement(name="applicationDate")
+	private String applicationDate;
 
 	public Integer getIdSecurityRuleToDelete() {
 		return idSecurityRuleToDelete;
@@ -18,6 +21,14 @@ public class DeleteSecurityRuleRequestBody {
 
 	public void setIdSecurityRuleToDelete(Integer idSecurityRuleToDelete) {
 		this.idSecurityRuleToDelete = idSecurityRuleToDelete;
+	}
+
+	public String getApplicationDate() {
+		return applicationDate;
+	}
+
+	public void setApplicationDate(String applicationDate) {
+		this.applicationDate = applicationDate;
 	}
 	
 }

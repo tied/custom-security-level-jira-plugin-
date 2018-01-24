@@ -21,3 +21,9 @@
 .hide{
 	display : none;	
 }
+.aui-datepicker-dialog {
+  z-index: 4000;
+}
+div.tabs-pane h3{
+	padding-top:20px;
+} 
