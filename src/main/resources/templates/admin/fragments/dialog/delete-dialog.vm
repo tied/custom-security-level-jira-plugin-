@@ -11,7 +11,7 @@
 		   </header>
 		   <div class="aui-dialog2-content">
 		   
-		     <div id="edit-form-error" class="aui-message aui-message-error hide">
+		     <div id="delete-form-error" class="aui-message aui-message-error hide">
 			    <p class="title">
 			        <strong>$action.getText('csl.admin.securityrule.delete.popup.error.title')</strong>
 			    </p>

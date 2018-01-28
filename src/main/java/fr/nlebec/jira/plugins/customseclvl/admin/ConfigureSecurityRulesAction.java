@@ -1,6 +1,7 @@
 package fr.nlebec.jira.plugins.customseclvl.admin;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -113,10 +114,15 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
 		return configurationService.getConfiguration();
 	}
 	
-	public List<SecurityRules> getSecurityRules(){
-		return getConfiguration().getSecurityRules();
+	public List<SecurityRules> getActivesSecurityRules(){
+		return getConfiguration().getActivesSecurityRules();
 	}
-
+	public List<SecurityRules> getInactivesSecurityRules(){
+		return getConfiguration().getInactivesSecurityRules();
+	}
+	public List<SecurityRules> getDeletedSecurityRules(){
+		return getConfiguration().getDeletedSecurityRules();
+	}
 	public Collection<IssueSecurityLevel> getLevelList() {
 		return securityLevels;
 	}

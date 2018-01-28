@@ -74,6 +74,8 @@
      <rest key="csl.rest" path="/csl" version="1.0">
         <package>fr.nlebec.jira.plugins.customseclvl.rest</package>
     </rest>
+    
+    
 
     
 </atlassian-plugin>

@@ -1,5 +1,12 @@
 AJS.$(document).ready(function () {
 	
+	// Hides the dialog
+	AJS.$("#edit-close-button").click(function(e) {
+	    e.preventDefault();
+	    AJS.$("#edit-form-error").hide();
+	    AJS.dialog2("#edit-dialog").hide();
+	});
+	
     AJS.$('#delete-application-date').datePicker({'overrideBrowserDefault': true});
     AJS.$("#btn-add-customsecurity-lvl").click(function(e) {
     	e.preventDefault();
@@ -61,7 +68,7 @@ AJS.$(document).ready(function () {
 		param.ruleName = $("#edit-rule-name").val();
 		param.priority = $("#edit-priority").val();
 		
-		AJS.$("#edit-form-error").addClass('hide');
+		AJS.$("#edit-form-error").hide();
 		AJS.$("#edit-loading").show();
 		
 		var request = AJS.$.ajax({
@@ -79,7 +86,7 @@ AJS.$(document).ready(function () {
 				 window.location.href = editRedirect ;
 			});
 			request.fail(function( data ) {
-				AJS.$("#edit-form-error").removeClass('hide');
+				AJS.$("#edit-form-error").show();
 				AJS.$("#edit-loading").hide();
 				
 				var jsonResponse = JSON.parse(data.responseText);

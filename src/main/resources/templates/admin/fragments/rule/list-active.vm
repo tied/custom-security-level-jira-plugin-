@@ -1,5 +1,15 @@
-#if($action.getSecurityRules().size() > 0)
-	#foreach ($rule in $action.getSecurityRules())
+
+<div id="no-rule-message" class="aui-message aui-message-info 
+					#if($action.getActivesSecurityRules().size() > 0) hide #end
+				">
+	    <p class="title">
+	        <strong>Aucune règle de sécurité définie</strong>
+	    </p>
+	    <p>Pour ajouter une nouvelle règle de sécurité, cliquer le bouton ajouter en haut à droite</p>
+	</div>
+
+#if($action.getActivesSecurityRules().size() > 0)
+	#foreach ($rule in $action.getActivesSecurityRules())
 		<div id="rule-$rule.id">
 			<div class="aui-group">
 				<div class="aui-item bold">

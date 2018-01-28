@@ -73,7 +73,7 @@ public class SecurityRuleService {
     }
 
     public SecurityRules getSecurityRule(int idSecurityRule) throws SQLException {
-    	LOG.info("get new security rule : "+ idSecurityRule);
+    	LOG.info("Get new security rule : "+ idSecurityRule);
     	SecurityRuleAO[] securityRuleAO = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRule)); 
     	List<SecurityRules> securityRules = ItemConverter.convertActiveObjectToPOJO(securityRuleAO);
         return securityRules.get(0);
@@ -117,15 +117,8 @@ public class SecurityRuleService {
 	public void deleteSecurityRule(Integer idSecurityRuleToDelete) {
 		
 		SecurityRuleAO[] securityRules = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRuleToDelete));
-    	  	
-    	if( securityRules.length > 0){
-            LOG.info("Delete security rule : "+ securityRules[0].toString());
-            for (int i = 0; i < securityRules[0].getEvents().length; i++) {
-            	this.eventService.deleteEvent(securityRules[0].getEvents()[i],securityRules[0]);
-			}
-            
-            this.persistenceManager.delete(securityRules[0]);
-    	}
+		securityRules[0].setDeleted(Boolean.TRUE);
+		securityRules[0].save();
         
 	}
 }

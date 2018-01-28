@@ -25,6 +25,9 @@ public interface SecurityRuleAO extends Entity{
 	public Date getDisableDate();
 	public void setDisableDate(Date disableDate);
 	public Boolean getActive();
+	public void setDeleted(Boolean disableDate);
+	public Boolean getDeleted();
+	
 	
 	public void setActive(Boolean active);
 	

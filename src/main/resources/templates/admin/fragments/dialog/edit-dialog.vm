@@ -6,7 +6,7 @@
 					$action.getText('csl.admin.securityrule.edit.popup.title')
 			  </h2>
 		      <a class="aui-dialog2-header-close">
-		      <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+		      <span id="edit-close-button" class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
 		      </a>
 		   </header>
 		   <div class="aui-dialog2-content">

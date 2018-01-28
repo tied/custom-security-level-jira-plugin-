@@ -29,7 +29,29 @@ public class ItemConverter {
 
 	public static CSLConfiguration convertActiveObjectToPOJO(CSLConfigurationAO configurations) {
 		CSLConfiguration csl = new CSLConfiguration();
-		csl.setSecurityRules(convertActiveObjectToPOJO(configurations.getSecurityRules()));
+		List<SecurityRules> allSecurityRules = convertActiveObjectToPOJO(configurations.getSecurityRules());
+		List<SecurityRules> activesRules = new ArrayList<SecurityRules>();
+		List<SecurityRules> inactivesRules = new ArrayList<SecurityRules>();
+		List<SecurityRules> deletedRules = new ArrayList<SecurityRules>();
+		
+		for (SecurityRules securityRules : allSecurityRules) {
+			//If security rule deleted
+			if( Boolean.TRUE.equals(securityRules.getDeleted()) ){
+				deletedRules.add(securityRules);
+			}
+			else {
+				//If security rule active
+				if ( Boolean.TRUE.equals(securityRules.getActive())) {
+					activesRules.add(securityRules);
+				}
+				else {
+					inactivesRules.add(securityRules);
+				}
+			}
+		}
+		csl.setActivesSecurityRules(activesRules);
+		csl.setInactivesSecurityRules(inactivesRules);
+		csl.setDeletedSecurityRules(deletedRules);
 		csl.setActive(configurations.getActive());
 		return csl;
 	}
@@ -37,10 +59,10 @@ public class ItemConverter {
 	public static void bindPojoToActiveObject(CSLConfiguration configuration, CSLConfigurationAO configAo)
 			throws SQLException {
 		configAo.setActive(configuration.getActive());
-		if (configuration.getSecurityRules() != null) {
-			for (int i = 0; i < configuration.getSecurityRules().size(); i++) {
+		if (configuration.getActivesSecurityRules() != null) {
+			for (int i = 0; i < configuration.getActivesSecurityRules().size(); i++) {
 				SecurityRuleAO securityRuleAO = configAo.getEntityManager().create(SecurityRuleAO.class);
-				bindPojoToActiveObject(configAo, configuration.getSecurityRules().get(i), securityRuleAO);
+				bindPojoToActiveObject(configAo, configuration.getActivesSecurityRules().get(i), securityRuleAO);
 			}
 		}
 	}
@@ -93,6 +115,7 @@ public class ItemConverter {
 			sr.setJql(srao[i].getJql());
 			sr.setName(srao[i].getName());
 			sr.setPriority(srao[i].getPriority());
+			sr.setDeleted(srao[i].getDeleted());
 			
 			List<Event> events = new ArrayList<>();
 			for(EventAO eventAo : srao[i].getEvents()) {

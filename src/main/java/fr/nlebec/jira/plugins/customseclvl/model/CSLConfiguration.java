@@ -6,7 +6,11 @@ public class CSLConfiguration {
 
 	private Integer id;
 	
-	private List<SecurityRules> securityRules;
+	private List<SecurityRules> activesSecurityRules;
+	
+	private List<SecurityRules> deletedSecurityRules;
+	
+	private List<SecurityRules> inactivesSecurityRules;
 	
 	private Boolean active;
 
@@ -18,20 +22,36 @@ public class CSLConfiguration {
 		this.id = id;
 	}
 
-	public List<SecurityRules> getSecurityRules() {
-		return securityRules;
-	}
-
-	public void setSecurityRules(List<SecurityRules> securityRules) {
-		this.securityRules = securityRules;
-	}
-
 	public Boolean getActive() {
 		return active;
 	}
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public List<SecurityRules> getActivesSecurityRules() {
+		return activesSecurityRules;
+	}
+
+	public void setActivesSecurityRules(List<SecurityRules> activesSecurityRules) {
+		this.activesSecurityRules = activesSecurityRules;
+	}
+
+	public List<SecurityRules> getDeletedSecurityRules() {
+		return deletedSecurityRules;
+	}
+
+	public void setDeletedSecurityRules(List<SecurityRules> deletedSecurityRules) {
+		this.deletedSecurityRules = deletedSecurityRules;
+	}
+
+	public List<SecurityRules> getInactivesSecurityRules() {
+		return inactivesSecurityRules;
+	}
+
+	public void setInactivesSecurityRules(List<SecurityRules> inactivesSecurityRules) {
+		this.inactivesSecurityRules = inactivesSecurityRules;
 	}
 	
 }

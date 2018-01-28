@@ -24,7 +24,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
         </div>
         
         
-        #parse("/templates/admin/fragments/add-dialog.vm")
+        #parse("/templates/admin/fragments/dialog/add-dialog.vm")
         
    </header>
    
@@ -50,36 +50,34 @@ $webResourceManager.requireResourcesForContext("csl-admin")
 	        </li>
 	    </ul>
 	    <div class="tabs-pane active-pane" id="actives-rules-tabs">
-	       <h3>$action.getText('csl.admin.securityrule.tab.activerule.title')</h3>
 	   		<p>
-				<div id="no-rule-message" class="aui-message aui-message-info 
-					#if($action.getSecurityRules().size() > 0) hide #end
-				">
-				    <p class="title">
-				        <strong>Aucune règle de sécurité définie</strong>
-				    </p>
-				    <p>Pour ajouter une nouvelle règle de sécurité, cliquer le bouton ajouter en haut à droite</p>
-				</div>
-			
-				 #parse("/templates/admin/fragments/list.vm")
+	   		
+				 #parse("/templates/admin/fragments/rule/list-active.vm")
 			
 			</p>
 	    </div>
 	    <div class="tabs-pane" id="unactives-rules-tabs">
-	        <h3>$action.getText('csl.admin.securityrule.tab.unactiverule.title')</h3>
-	        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+	        <p>
+			
+				 #parse("/templates/admin/fragments/rule/list-inactive.vm")
+			
+	        </p>
 	    </div>
 	    <div class="tabs-pane" id="deleted-rules-tabs">
-	        <h3>$action.getText('csl.admin.securityrule.tab.deleterule.title')</h3>
-	        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+	        <p>
+	        
+				 #parse("/templates/admin/fragments/rule/list-deleted.vm")
+			
+	        
+	        </p>
 	    </div>
 	</div><!-- // .aui-tabs -->
    			   
    
 
 	   
-	   #parse("/templates/admin/fragments/edit-dialog.vm")
+	   #parse("/templates/admin/fragments/dialog/edit-dialog.vm")
 	   
-	   #parse("/templates/admin/fragments/delete-dialog.vm")
+	   #parse("/templates/admin/fragments/dialog/delete-dialog.vm")
    </body>
 </html>

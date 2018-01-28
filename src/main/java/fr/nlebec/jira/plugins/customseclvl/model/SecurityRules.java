@@ -21,6 +21,7 @@ public class SecurityRules {
 	private Long jiraSecurityId;
 	private List<Event> events;
 	private String jql;
+	private Boolean deleted;
 	
 	@Override
 	public String toString() {
@@ -114,6 +115,12 @@ public class SecurityRules {
 		ret.replace(ret.lastIndexOf(","),ret.lastIndexOf(",")+1,"]");
 		return ret.toString();
 		
+	}
+	public Boolean getDeleted() {
+		return deleted;
+	}
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 	
 	
