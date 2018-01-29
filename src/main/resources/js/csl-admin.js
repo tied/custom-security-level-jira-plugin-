@@ -8,11 +8,41 @@ AJS.$(document).ready(function () {
 	});
 	
     AJS.$('#delete-application-date').datePicker({'overrideBrowserDefault': true});
+    AJS.$('#add-application-date').datePicker({'overrideBrowserDefault': true});
+    AJS.$('#edit-application-date').datePicker({'overrideBrowserDefault': true});
+    
     AJS.$("#btn-add-customsecurity-lvl").click(function(e) {
     	e.preventDefault();
         AJS.dialog2("#add-dialog").show();
     });
     
+    AJS.$("#add-rule-active").change(function() {
+        if(this.checked) {
+        	AJS.$("#add-application-date-section").show();
+        }
+        else{
+        	AJS.$("#add-application-date-section").hide();
+        }
+    });
+    AJS.$("#edit-rule-active").change(function() {
+    	var active = $("#edit-rule-active").is(':checked');
+    	if(!this.checked && active) {
+        	AJS.$("#edit-rule-application-date-section").show();
+        }
+        else{
+        	AJS.$("#edit-rule-application-date-section").hide();
+        }
+    	if(this.checked && !active) {
+        	AJS.$("#edit-rule-application-date-section").show();
+        }
+        else{
+        	AJS.$("#edit-rule-application-date-section").hide();
+        }
+    });
+	
+	
+    AJS.$("#add-application-date-section").hide();
+    AJS.$("#edit-application-date-section").hide();
     AJS.$("#add-security-lvl").auiSelect2();
     AJS.$("#edit-security-lvl").auiSelect2();
     AJS.$("#add-events").auiSelect2();

@@ -24,6 +24,11 @@
 		            <input class="checkbox" type="checkbox" id="edit-rule-active" name="edit-rule-active" >
 		            <div class="description">Active</div>
 		         </div>
+		           <div id="edit-rule-application-date-section" class="field-group">
+		            <label for="edit-application-date">$action.getText('csl.admin.securityrule.add.applicationdate.label')</label>
+		            <input class="aui-date-picker" id="edit-application-date" type="date"  min="2018-01-01" />
+		            <div class="description">$action.getText('csl.admin.securityrule.add.applicationdate.descr')</div>
+		         </div>
 		         <div class="field-group">
 		            <label for="edit-rule-name">$action.getText('csl.admin.securityrule.edit.name.label') <span class="aui-icon icon-required"></label>
 		            <input class="text medium-field" type="text" id="edit-rule-name" name="edit-rule-name" >
