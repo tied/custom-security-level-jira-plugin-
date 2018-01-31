@@ -1,15 +1,27 @@
 AJS.$(document).ready(function () {
+	var today = new Date();
+	var	oneMonthMaxDate = new Date();
+	oneMonthMaxDate.setMonth(today.getMonth()+1);
 	
 	// Hides the dialog
 	AJS.$("#edit-close-button").click(function(e) {
 	    e.preventDefault();
 	    AJS.$("#edit-form-error").hide();
+		AJS.$("#edit-rule-application-date-section").hide();
 	    AJS.dialog2("#edit-dialog").hide();
 	});
 	
-    AJS.$('#delete-application-date').datePicker({'overrideBrowserDefault': true});
-    AJS.$('#add-application-date').datePicker({'overrideBrowserDefault': true});
-    AJS.$('#edit-application-date').datePicker({'overrideBrowserDefault': true});
+
+	AJS.$('#delete-application-date').datePicker();
+    AJS.$('#add-application-date').datePicker();
+    AJS.$('#edit-application-date').datePicker();
+    AJS.$('#delete-application-date').attr("min",today.toISOString().substring(0,10));
+    AJS.$('#add-application-date').attr("min",today.toISOString().substring(0,10));
+    AJS.$('#edit-application-date').attr("min",today.toISOString().substring(0,10));
+    AJS.$('#delete-application-date').attr("max",oneMonthMaxDate.toISOString().substring(0,10));
+    AJS.$('#add-application-date').attr("max",oneMonthMaxDate.toISOString().substring(0,10));
+    AJS.$('#edit-application-date').attr("max",oneMonthMaxDate.toISOString().substring(0,10));
+    
     
     AJS.$("#btn-add-customsecurity-lvl").click(function(e) {
     	e.preventDefault();
@@ -25,24 +37,21 @@ AJS.$(document).ready(function () {
         }
     });
     AJS.$("#edit-rule-active").change(function() {
-    	var active = $("#edit-rule-active").is(':checked');
-    	if(!this.checked && active) {
+    	var id = $("#edit-rule-id").val()
+    	var active = AJS.$("#edit-sr-" + id ).attr("data-active");
+    	console.log("this.checked "+ this.checked + " " + active);
+    	if((this.checked && !active) || (!this.checked && active)) {
         	AJS.$("#edit-rule-application-date-section").show();
         }
         else{
         	AJS.$("#edit-rule-application-date-section").hide();
         }
-    	if(this.checked && !active) {
-        	AJS.$("#edit-rule-application-date-section").show();
-        }
-        else{
-        	AJS.$("#edit-rule-application-date-section").hide();
-        }
+    	console.log("this.checked "+ this.checked + " " + active);
     });
 	
 	
     AJS.$("#add-application-date-section").hide();
-    AJS.$("#edit-application-date-section").hide();
+    AJS.$("#edit-rule-application-date-section").hide();
     AJS.$("#add-security-lvl").auiSelect2();
     AJS.$("#edit-security-lvl").auiSelect2();
     AJS.$("#add-events").auiSelect2();
