@@ -81,8 +81,6 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
         this.securityLevels = issueSecurityLevelManager.getAllIssueSecurityLevels();
         this.eventTypes = this.eventManager.getEventTypes();
         
-        System.out.println(this.i18n.getText("fr.csl.admin.securityrule.add.success"));
-        
         return INPUT;
     }
 

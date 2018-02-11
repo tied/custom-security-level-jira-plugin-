@@ -29,6 +29,7 @@ import com.atlassian.jira.util.I18nHelper;
 import com.atlassian.jira.util.MessageSet;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import com.atlassian.scheduler.SchedulerServiceException;
 
 import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
@@ -39,6 +40,7 @@ import fr.nlebec.jira.plugins.customseclvl.model.RetrieveSecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.UpdateSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.UpdateSecurityRuleResponse;
+import fr.nlebec.jira.plugins.customseclvl.scheduler.CSLDefaultJobRunner;
 import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleService;
 
 @Path("/security-rule")
@@ -50,23 +52,25 @@ public class SecurityRuleRestController {
 	private final SecurityRuleService securityRuleService;
 	private final I18nHelper i18nHelper;
 	private SearchService searchService;
-
+	private final CSLDefaultJobRunner jobRunner;
+	
 	@Inject
 	public SecurityRuleRestController(@ComponentImport UserManager userManager,
 			@ComponentImport GlobalPermissionManager globalPermissionManager, @ComponentImport I18nHelper i18nHelper,
-			SecurityRuleService securityRuleService, @ComponentImport SearchService searchService) {
+			SecurityRuleService securityRuleService, @ComponentImport SearchService searchService, CSLDefaultJobRunner jobRunner) {
 		this.userManager = userManager;
 		this.globalPermissionManager = globalPermissionManager;
 		this.i18nHelper = i18nHelper;
 		this.securityRuleService = securityRuleService;
 		this.searchService = searchService;
+		this.jobRunner = jobRunner;
 	}
 
 	@GET
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("/{idSecurityRule}")
-	public Response addSecurityLevel(@PathParam(value = "idSecurityRule") int idSecurityRule, @Context HttpServletRequest request) {
+	public Response getSecurityLevel(@PathParam(value = "idSecurityRule") int idSecurityRule, @Context HttpServletRequest request) {
 		String userName = request.getRemoteUser();
 		ApplicationUser user = this.userManager.getUserByKey(userName);
 		RetrieveSecurityRuleResponse response = new RetrieveSecurityRuleResponse();
@@ -92,17 +96,21 @@ public class SecurityRuleRestController {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("/")
-	public Response addSecurityLevel(AddSecurityRuleRequestBody body, @Context HttpServletRequest request) {
+	public Response addSecurityLevel(AddSecurityRuleRequestBody ruleBody, @Context HttpServletRequest request) {
 		String userName = request.getRemoteUser();
 		ApplicationUser user = this.userManager.getUserByKey(userName);
 		AddSecurityRuleResponse response = new AddSecurityRuleResponse();
 		int errorCode = 201;
+		System.out.println(ruleBody.getApplicationDate());
 		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
 			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
 		} else {
 			try {
-				checkParameters(body, user);
-				int idEntity = this.securityRuleService.addSecurityRule(ItemConverter.bodyToPojo(body, user));
+				checkParameters(ruleBody, user);
+				int idEntity = this.securityRuleService.addSecurityRule(ItemConverter.bodyToPojo(ruleBody, user));
+				if( Boolean.TRUE.equals(ruleBody.getActive() && ruleBody.getApplicationDate() != null)) {
+					jobRunner.applySecurityLevelJob(idEntity,ruleBody.getApplicationDate());
+				}
 				response.setLocation(request.getRequestURI() + "/" + idEntity );
 			} catch (SQLException e) {
 				errorCode = 500;
@@ -110,6 +118,10 @@ public class SecurityRuleRestController {
 			} catch (ValidationException e) {
 				errorCode = 400;
 				response.setError(e.getMessage());
+			} catch (SchedulerServiceException e) {
+				errorCode = 500;
+				response.setError(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		return Response.status(errorCode).entity(response).build();
@@ -123,15 +135,22 @@ public class SecurityRuleRestController {
 		String userName = request.getRemoteUser();
 		ApplicationUser user = this.userManager.getUserByKey(userName);
 		DeleteSecurityRuleResponse response = new DeleteSecurityRuleResponse();
+		System.out.println(body.getApplicationDate());
 		int errorCode = 201;
 		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
 			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
 		} else {
 			try {
 				// checkParameters(body);
-				this.securityRuleService.deleteSecurityRule(body.getIdSecurityRuleToDelete());
+				this.securityRuleService.deleteSecurityRule(body.getIdSecurityRuleToDelete(),body.getApplicationDate());
+				if( body.getApplicationDate() != null) {
+					jobRunner.removeSecurityLevelJob(body.getIdSecurityRuleToDelete(),body.getApplicationDate());
+				}
 			} catch (ValidationException e) {
 				errorCode = 400;
+				response.setError(e.getMessage());
+			} catch (SchedulerServiceException e) {
+				errorCode = 500;
 				response.setError(e.getMessage());
 			}
 		}

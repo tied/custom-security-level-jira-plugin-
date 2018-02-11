@@ -72,13 +72,9 @@ public class EventService {
 
     public void addEvent(Event event, SecurityRuleAO srao) throws SQLException {
     	LOG.info("Add new event : "+ event.toString());
-    	
     	EventAO eventAO = this.persistenceManager.create(EventAO.class);
     	EventToSecurityRule eventToSecurityRule = this.persistenceManager.create(EventToSecurityRule.class);
-    	
     	ItemConverter.bindPojoToActiveObject(eventAO, srao, eventToSecurityRule, event);
-    	
-        LOG.info("Save event : "+ eventAO.toString());
         eventAO.save();
         eventToSecurityRule.save();
     }

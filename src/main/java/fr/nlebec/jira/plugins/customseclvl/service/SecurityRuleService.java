@@ -3,6 +3,7 @@ package fr.nlebec.jira.plugins.customseclvl.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -114,9 +115,10 @@ public class SecurityRuleService {
         LOG.info("Update security rule : "+ securityRuleAO.toString());
         securityRuleAO[0].save();
     }
-	public void deleteSecurityRule(Integer idSecurityRuleToDelete) {
+	public void deleteSecurityRule(Integer idSecurityRuleToDelete, Date applicationDeleteDate) {
 		
 		SecurityRuleAO[] securityRules = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRuleToDelete));
+		securityRules[0].setApplicationDate(applicationDeleteDate);
 		securityRules[0].setDeleted(Boolean.TRUE);
 		securityRules[0].save();
         

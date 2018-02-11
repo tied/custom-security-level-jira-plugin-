@@ -46,6 +46,15 @@
 			</div>
 			 <div class="aui-group">
 				<div class="aui-item right">
+					<label for="applicationDate">$action.getText('csl.admin.securityrule.list.applicationdate.label')</label>
+				</div>
+				<div class="aui-item">
+					<span id="applicationDate" class="bold">$rule.applicationDate</span>
+					<div class="description">$action.getText('csl.admin.securityrule.list.applicationdate.descr')</div>
+				</div>
+			</div>
+			 <div class="aui-group">
+				<div class="aui-item right">
 					<label for="creationDate">$action.getText('csl.admin.securityrule.list.creationdate.label')</label>
 				</div>
 				<div class="aui-item">

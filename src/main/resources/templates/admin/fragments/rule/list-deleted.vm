@@ -34,16 +34,13 @@
 						 -->
 				</div>
 			</div>
-			<div class="aui-group ">
+ 			<div class="aui-group">
 				<div class="aui-item right">
-					<label for="text-input">$action.getText('csl.admin.securityrule.list.active.label')</label>
+					<label for="disableDate">$action.getText('csl.admin.securityrule.list.disabledate.label')</label>
 				</div>
 				<div class="aui-item">
-					#if ($rule.getActive())
-						<span class="aui-icon aui-icon-small aui-iconfont-success green"></span>  
-					 #else
-					 	<span class="aui-icon aui-icon-small aui-iconfont-devtools-task-disabled orange"></span>
-					 #end
+					<span id="disableDate" class="bold">$rule.disableDate</span>
+					<div class="description">$action.getText('csl.admin.securityrule.list.disabledate.descr')</div>
 				</div>
 			</div>
 			 <div class="aui-group">

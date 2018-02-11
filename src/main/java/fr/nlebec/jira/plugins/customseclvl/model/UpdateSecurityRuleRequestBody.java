@@ -1,5 +1,6 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -31,6 +32,9 @@ public class UpdateSecurityRuleRequestBody {
 	
 	@XmlElement
 	private Integer priority;
+	
+	@XmlElement
+	private Date applicationDate;
 	
 	public List<Long> getEvents() {
 		return events;
@@ -74,5 +78,11 @@ public class UpdateSecurityRuleRequestBody {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	public Date getApplicationDate() {
+		return applicationDate;
+	}
+	public void setApplicationDate(Date applicationDate) {
+		this.applicationDate = applicationDate;
 	}
 }

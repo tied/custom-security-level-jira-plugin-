@@ -6,11 +6,11 @@ import com.atlassian.scheduler.JobRunner;
 import com.atlassian.scheduler.config.JobRunnerKey;
 
 @Named
-public interface CSLScheduler extends JobRunner
+public interface RemoveSecurityLevel extends JobRunner
 {
     /** Our job runner key */
-    JobRunnerKey CSL_JOB = JobRunnerKey.of(CustomSecurityLevelScheduler.class.getName());
+    JobRunnerKey REMOVE_SL_JOB = JobRunnerKey.of(RemoveSecurityLevelTask.class.getName());
 
     /** Name of the parameter map entry where the ID is stored */
-    String CSL_ID = "DefaultCSLJob";
+    String REMOVE_SL_JOB_ID= "RemoveSecurityLevel";
 }

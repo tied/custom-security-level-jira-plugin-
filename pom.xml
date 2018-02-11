@@ -84,6 +84,7 @@
 		   <groupId>com.atlassian.scheduler</groupId>
 		   <artifactId>atlassian-scheduler-api</artifactId>
 		   <version>1.0</version>
+		    <scope>provided</scope>
 		</dependency>
 
         <dependency>
@@ -158,6 +159,7 @@
                             org.springframework.osgi.*;resolution:="optional",
                             org.eclipse.gemini.blueprint.*;resolution:="optional",
                             com.atlassian.jira.*,
+                            com.atlassian.scheduler.*,
                             com.atlassian.plugins.*,
                             *;resolution:="optional"
                         </Import-Package>

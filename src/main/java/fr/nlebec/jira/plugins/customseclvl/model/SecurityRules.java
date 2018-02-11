@@ -1,20 +1,25 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.atlassian.event.api.EventPublisher;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.security.IssueSecurityLevel;
 import com.atlassian.jira.user.ApplicationUser;
 
-public class SecurityRules {
+public class SecurityRules implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
 	private ApplicationUser creationUser;
 	private Date creationDate;
 	private ApplicationUser disableUser;
+	private Date applicationDate;
 	private Date disableDate;
 	private Boolean active;
 	private Integer priority;
@@ -23,13 +28,6 @@ public class SecurityRules {
 	private String jql;
 	private Boolean deleted;
 	
-	@Override
-	public String toString() {
-		return "SecurityRules [id=" + id + ", name=" + name + ", creationUser=" + creationUser + ", creationDate="
-				+ creationDate + ", disableUser=" + disableUser + ", disableDate=" + disableDate + ", active=" + active
-				+ ", priority=" + priority + ", jiraSecurityId=" + jiraSecurityId + ", events=" + events + ", jql="
-				+ jql + "]";
-	}
 	public Integer getId() {
 		return id;
 	}
@@ -121,6 +119,12 @@ public class SecurityRules {
 	}
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
+	}
+	public Date getApplicationDate() {
+		return applicationDate;
+	}
+	public void setApplicationDate(Date applicationDate) {
+		this.applicationDate = applicationDate;
 	}
 	
 	

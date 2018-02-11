@@ -1,10 +1,10 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -23,6 +23,9 @@ public class AddSecurityRuleRequestBody {
 	
 	@XmlElement
 	private String jql;
+	
+	@XmlElement
+	private Date applicationDate;
 	
 	@XmlElement
 	private Long securityLvl;
@@ -66,5 +69,11 @@ public class AddSecurityRuleRequestBody {
 	}
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+	public Date getApplicationDate() {
+		return applicationDate;
+	}
+	public void setApplicationDate(Date applicationDate) {
+		this.applicationDate = applicationDate;
 	}
 }

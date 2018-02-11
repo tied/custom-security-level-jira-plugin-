@@ -20,6 +20,9 @@ public class SecurityRuleResponse {
 		private List<Long> events;
 		
 		@XmlElement
+		private Date applicationDate;
+		
+		@XmlElement
 		private String ruleName;
 		@XmlElement
 		private Date creationDate;
@@ -105,6 +108,14 @@ public class SecurityRuleResponse {
 
 		public void setCreationUser(Long creationUser) {
 			this.creationUser = creationUser;
+		}
+
+		public Date getApplicationDate() {
+			return applicationDate;
+		}
+
+		public void setApplicationDate(Date applicationDate) {
+			this.applicationDate = applicationDate;
 		}
 	
 }

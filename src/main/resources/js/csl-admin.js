@@ -67,6 +67,8 @@ AJS.$(document).ready(function () {
 		param.events = $("#add-events").val();
 		param.ruleName = $("#add-rule-name").val();
 		param.priority = $("#add-priority").val();
+		param.applicationDate = $("#add-application-date").val();
+		
 		
 		AJS.$("#add-form-error").hide();
 		AJS.$("#add-loading").show();
@@ -106,6 +108,7 @@ AJS.$(document).ready(function () {
 		param.events = $("#edit-events").val();
 		param.ruleName = $("#edit-rule-name").val();
 		param.priority = $("#edit-priority").val();
+		param.applicationDate = $("#edit-application-date").val();
 		
 		AJS.$("#edit-form-error").hide();
 		AJS.$("#edit-loading").show();

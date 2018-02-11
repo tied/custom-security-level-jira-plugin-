@@ -1,5 +1,7 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
+import java.util.Date;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -13,7 +15,7 @@ public class DeleteSecurityRuleRequestBody {
 	private Integer idSecurityRuleToDelete;
 	
 	@XmlElement(name="applicationDate")
-	private String applicationDate;
+	private Date applicationDate;
 
 	public Integer getIdSecurityRuleToDelete() {
 		return idSecurityRuleToDelete;
@@ -23,11 +25,11 @@ public class DeleteSecurityRuleRequestBody {
 		this.idSecurityRuleToDelete = idSecurityRuleToDelete;
 	}
 
-	public String getApplicationDate() {
+	public Date getApplicationDate() {
 		return applicationDate;
 	}
 
-	public void setApplicationDate(String applicationDate) {
+	public void setApplicationDate(Date applicationDate) {
 		this.applicationDate = applicationDate;
 	}
 	

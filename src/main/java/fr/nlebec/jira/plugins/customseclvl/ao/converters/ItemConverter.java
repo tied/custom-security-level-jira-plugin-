@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 
 import com.atlassian.jira.component.ComponentAccessor;
@@ -36,7 +37,8 @@ public class ItemConverter {
 		
 		for (SecurityRules securityRules : allSecurityRules) {
 			//If security rule deleted
-			if( Boolean.TRUE.equals(securityRules.getDeleted()) ){
+			System.out.println(" DisableDate "+securityRules.getDisableDate() +" > deletes : "+Boolean.TRUE.equals(securityRules.getDeleted()));
+			if( securityRules.getDisableDate()!= null && Boolean.TRUE.equals(securityRules.getDeleted() )){
 				deletedRules.add(securityRules);
 			}
 			else {
@@ -73,6 +75,8 @@ public class ItemConverter {
 		securityRuleAo.setCreationDate(sr.getCreationDate());
 		securityRuleAo.setCreationUser(sr.getCreationUser().getId());
 		securityRuleAo.setJql(sr.getJql());
+		securityRuleAo.setApplicationDate(sr.getApplicationDate());
+		securityRuleAo.setDisableDate(sr.getDisableDate());
 		
 		EventToSecurityRule associationAo = configAo.getEntityManager().create(EventToSecurityRule.class); 
 		EventAO eventAO = configAo.getEntityManager().create(EventAO.class);
@@ -100,12 +104,17 @@ public class ItemConverter {
 		for (int i = 0; i < srao.length; i++) {
 			SecurityRules sr = new SecurityRules();
 			sr.setActive(srao[i].getActive());
-			sr.setCreationDate(srao[i].getCreationDate());
+			if (srao[i].getCreationDate() != null) {
+				sr.setCreationDate(srao[i].getCreationDate());
+			}
 			if (UserConverter.convertUsert(srao[i].getCreationUser()).isPresent()) {
 				sr.setCreationUser(UserConverter.convertUsert(srao[i].getCreationUser()).get());
 			}
 			if (srao[i].getDisableDate() != null) {
 				sr.setDisableDate(srao[i].getDisableDate());
+			}
+			if (srao[i].getApplicationDate() != null) {
+				sr.setApplicationDate(srao[i].getApplicationDate());
 			}
 			if (srao[i].getDisableUser() != null && UserConverter.convertUsert(srao[i].getDisableUser()).isPresent()) {
 				sr.setDisableUser(UserConverter.convertUsert(srao[i].getDisableUser()).get());
@@ -136,6 +145,7 @@ public class ItemConverter {
 	public static SecurityRules bodyToPojo(AddSecurityRuleRequestBody body, ApplicationUser creationUser) {
 		SecurityRules securityRule = new SecurityRules();
 		securityRule.setActive(body.getActive());
+		securityRule.setApplicationDate(body.getApplicationDate());
 		securityRule.setCreationDate(new Date());
 		securityRule.setCreationUser(creationUser);
 		securityRule.setEvents(getEventMapping(body.getEvents()));
@@ -161,6 +171,7 @@ public class ItemConverter {
 	public static SecurityRules bodyToPojo(UpdateSecurityRuleRequestBody body, ApplicationUser user) {
 		SecurityRules securityRule = new SecurityRules();
 		securityRule.setId(body.getId());
+		securityRule.setApplicationDate(body.getApplicationDate());
 		securityRule.setActive(body.getActive());
 		securityRule.setCreationDate(new Date());
 		securityRule.setCreationUser(user);
@@ -176,6 +187,7 @@ public class ItemConverter {
 		SecurityRuleResponse srr = new SecurityRuleResponse();
 		srr.setId(securityRule.getId());
 		srr.setActive(securityRule.getActive());
+		srr.setApplicationDate(securityRule.getApplicationDate());
 		srr.setCreationDate(securityRule.getCreationDate());
 		srr.setCreationUser(securityRule.getCreationUser().getId());
 		//srr.setEvents());
