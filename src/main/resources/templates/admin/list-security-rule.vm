@@ -18,7 +18,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
         <div class="aui-page-header-actions">
             <div class="aui-buttons">
               <button class="aui-button" id="btn-add-customsecurity-lvl">
-		      		<span class="aui-icon aui-icon-small aui-iconfont-add">View</span>Ajouter
+		      		<span class="aui-icon aui-icon-small aui-iconfont-add">View</span>$action.getText('csl.admin.securityrule.add.button.label')
 		      </button>
             </div>
         </div>

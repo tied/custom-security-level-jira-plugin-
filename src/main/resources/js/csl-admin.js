@@ -11,10 +11,15 @@ AJS.$(document).ready(function () {
 	    AJS.dialog2("#edit-dialog").hide();
 	});
 	
-
+	AJS.$("#edit-loading").hide();
+	AJS.$("#add-loading").hide();
+	AJS.$("#delete-loading").hide();
+	
+	AJS.$("[id^=unactivate-delete-sr]").tooltip();
 	AJS.$('#delete-application-date').datePicker();
     AJS.$('#add-application-date').datePicker();
     AJS.$('#edit-application-date').datePicker();
+    
     AJS.$('#delete-application-date').attr("min",today.toISOString().substring(0,10));
     AJS.$('#add-application-date').attr("min",today.toISOString().substring(0,10));
     AJS.$('#edit-application-date').attr("min",today.toISOString().substring(0,10));

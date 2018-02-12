@@ -67,7 +67,7 @@
 		         <div class="buttons-container">
 		            <div class="buttons">
 		               <input class="aui-button aui-button-primary" type="submit" value="$action.getText('csl.admin.securityrule.edit.save.label')" id="save-button">
-		                <span id="edit-loading" class="aui-icon aui-icon-wait hide"></span>
+		                <span id="edit-loading" class="aui-icon aui-icon-wait"></span>
 		            </div>
 		         </div>
 		         

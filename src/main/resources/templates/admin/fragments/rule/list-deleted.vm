@@ -35,7 +35,7 @@
 				</div>
 			</div>
  			<div class="aui-group">
-				<div class="aui-item right">
+				<div class="aui-item right-label">
 					<label for="disableDate">$action.getText('csl.admin.securityrule.list.disabledate.label')</label>
 				</div>
 				<div class="aui-item">
@@ -44,7 +44,7 @@
 				</div>
 			</div>
 			 <div class="aui-group">
-				<div class="aui-item right">
+				<div class="aui-item right-label">
 					<label for="creationDate">$action.getText('csl.admin.securityrule.list.creationdate.label')</label>
 				</div>
 				<div class="aui-item">
@@ -53,7 +53,7 @@
 				</div>
 			</div>
 		   <div class="aui-group">
-				<div class="aui-item right">
+				<div class="aui-item right-label">
 					<label for="creationUser">$action.getText('csl.admin.securityrule.list.creator.label')</label>
 				</div>
 				<div class="aui-item">
@@ -63,7 +63,7 @@
 			</div>
 			
 			 <div class="aui-group ">
-				<div class="aui-item right">
+				<div class="aui-item right-label">
 					<label for="jql">$action.getText('csl.admin.securityrule.list.jql.label')</label>
 				</div>
 				<div class="aui-item">
@@ -73,7 +73,7 @@
 			</div>
 			
 				<div class="aui-group ">
-					<div class="aui-item right">
+					<div class="aui-item right-label">
 						<label for="jira-events">$action.getText('csl.admin.securityrule.list.events.label')</label>
 					</div>
 					<div class="aui-item">
@@ -87,7 +87,7 @@
 					</div>
 				</div>
 				<div class="aui-group ">
-					<div class="aui-item right">
+					<div class="aui-item right-label">
 						<label for="priority">$action.getText('csl.admin.securityrule.list.securitylvl.label')</label>
 					</div>
 					<div class="aui-item">
@@ -98,7 +98,7 @@
 					</div>
 				</div>
 				<div class="aui-group ">
-					<div class="aui-item right">
+					<div class="aui-item right-label">
 						<label for="priority">$action.getText('csl.admin.securityrule.list.priority.label')</label>
 					</div>
 					<div class="aui-item">

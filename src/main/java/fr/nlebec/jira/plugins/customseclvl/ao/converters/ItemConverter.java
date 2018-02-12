@@ -37,7 +37,6 @@ public class ItemConverter {
 		
 		for (SecurityRules securityRules : allSecurityRules) {
 			//If security rule deleted
-			System.out.println(" DisableDate "+securityRules.getDisableDate() +" > deletes : "+Boolean.TRUE.equals(securityRules.getDeleted()));
 			if( securityRules.getDisableDate()!= null && Boolean.TRUE.equals(securityRules.getDeleted() )){
 				deletedRules.add(securityRules);
 			}

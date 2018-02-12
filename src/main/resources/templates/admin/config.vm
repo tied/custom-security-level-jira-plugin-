@@ -22,7 +22,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
 
       <form action="ConfigureCSL!save.jspa" id="admin-form" class="aui">
 		   <div class="aui-group">
-				<div class="aui-item right">
+				<div class="aui-item right-label">
 					<label for="active">$action.getText('csl.admin.securityrule.config.active.label')</label>
 				</div>
 				<div class="aui-item">

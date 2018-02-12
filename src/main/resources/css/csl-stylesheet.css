@@ -2,6 +2,10 @@
 	text-align: center;	
 }
 .right{
+	min-width : 20%;
+	text-align: right;	
+}
+.right-label{
 	width : 15%;
 	text-align: right;	
 }
@@ -27,3 +31,7 @@
 div.tabs-pane h3{
 	padding-top:20px;
 } 
+
+.csl-action{
+    padding-right: 10px;
+}

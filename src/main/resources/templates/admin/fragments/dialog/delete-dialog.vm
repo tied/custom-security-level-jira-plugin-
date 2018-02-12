@@ -28,7 +28,7 @@
 		         <div class="buttons-container">
 		            <div class="buttons">
 		               <input class="aui-button aui-button-primary" type="submit" value="$action.getText('csl.admin.securityrule.delete.save.label')" id="save-button">
-		               <span id="delete-loading" class="aui-icon aui-icon-wait hide"></span>
+		               <span id="delete-loading" class="aui-icon aui-icon-wait"></span>
 		            </div>
 		         </div>
 		         

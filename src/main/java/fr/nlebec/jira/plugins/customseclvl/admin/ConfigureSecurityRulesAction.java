@@ -1,15 +1,16 @@
 package fr.nlebec.jira.plugins.customseclvl.admin;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
-import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.core.util.ObjectUtils;
 import com.atlassian.jira.event.type.EventType;
 import com.atlassian.jira.event.type.EventTypeManager;
 import com.atlassian.jira.issue.security.IssueSecurityLevel;
@@ -67,7 +68,6 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
         this.globalPermissionManager = globalPermissionManager;
         this.loginUriProvider = loginUriProvider;
         this.eventManager = eventTypeManager ; 
- 
     }
 
     protected String doExecute() throws Exception {
@@ -142,6 +142,14 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public String formatDate(Date d) {
+		String ret = "-";
+		if( ObjectUtils.isNotEmpty(d) ) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			ret = sdf.format(d);
+		}
+		return ret;
 	}
 }
 

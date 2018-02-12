@@ -19,7 +19,7 @@
 				</div>
 				
 				<div class="aui-item right" style="vertical-align: bottom;" >
-						<span class="aui-icon aui-icon-large aui-iconfont-edit" id="edit-sr-$rule.id" 
+						<span class="aui-icon aui-icon-large aui-iconfont-edit csl-action" id="edit-sr-$rule.id" 
 							data-id="$rule.id" 
 							data-name="$rule.name"
 							data-priority="$rule.priority"
@@ -29,11 +29,28 @@
 							data-events="$rule.getSimpleEventsList()"
 						>
 						</span>
-						<span class="aui-icon aui-icon-large aui-iconfont-delete" id="delete-sr-$rule.id" data-id="$rule.id" data-name="$rule.name"  ></span>
+						
+						#if($rule.getDeleted() != true)
+							
+							<span class="aui-icon aui-icon-large aui-iconfont-delete csl-action" 
+								 id="delete-sr-$rule.id"
+								 data-id="$rule.id" 
+								 data-name="$rule.name" >
+							 </span>
+							 
+						#else
+							<span class="aui-icon aui-icon-large aui-iconfont-warning csl-action" style="color:orange;" 
+								 id="unactivate-delete-sr-$rule.id"
+								 data-id="$rule.id" 
+								 data-name="$rule.name" 
+								 title="$action.getText('csl.admin.securityrule.delete.pending.tooltip', $rule.applicationDate)"
+							 >
+							 </span>
+						#end
 				</div>
 			</div>
 			<div class="aui-group ">
-				<div class="aui-item right">
+				<div class="aui-item right-label">
 					<label for="text-input">$action.getText('csl.admin.securityrule.list.active.label')</label>
 				</div>
 				<div class="aui-item">
@@ -45,25 +62,29 @@
 				</div>
 			</div>
 			 <div class="aui-group">
-				<div class="aui-item right">
+				<div class="aui-item right-label">
 					<label for="applicationDate">$action.getText('csl.admin.securityrule.list.applicationdate.label')</label>
 				</div>
 				<div class="aui-item">
-					<span id="applicationDate" class="bold">$rule.applicationDate</span>
+					<span id="applicationDate" class="bold">
+							$action.formatDate($rule.applicationDate)
+					</span>
 					<div class="description">$action.getText('csl.admin.securityrule.list.applicationdate.descr')</div>
 				</div>
 			</div>
 			 <div class="aui-group">
-				<div class="aui-item right">
+				<div class="aui-item right-label">
 					<label for="creationDate">$action.getText('csl.admin.securityrule.list.creationdate.label')</label>
 				</div>
 				<div class="aui-item">
-					<span id="creationDate" class="bold">$rule.creationDate</span>
+					<span id="creationDate" class="bold">
+							$action.formatDate($rule.creationDate)
+					</span>
 					<div class="description">$action.getText('csl.admin.securityrule.list.creationdate.descr')</div>
 				</div>
 			</div>
 		   <div class="aui-group">
-				<div class="aui-item right">
+				<div class="aui-item right-label">
 					<label for="creationUser">$action.getText('csl.admin.securityrule.list.creator.label')</label>
 				</div>
 				<div class="aui-item">
@@ -73,7 +94,7 @@
 			</div>
 			
 			 <div class="aui-group ">
-				<div class="aui-item right">
+				<div class="aui-item right-label">
 					<label for="jql">$action.getText('csl.admin.securityrule.list.jql.label')</label>
 				</div>
 				<div class="aui-item">
@@ -83,7 +104,7 @@
 			</div>
 			
 				<div class="aui-group ">
-					<div class="aui-item right">
+					<div class="aui-item right-label">
 						<label for="jira-events">$action.getText('csl.admin.securityrule.list.events.label')</label>
 					</div>
 					<div class="aui-item">
@@ -97,7 +118,7 @@
 					</div>
 				</div>
 				<div class="aui-group ">
-					<div class="aui-item right">
+					<div class="aui-item right-label">
 						<label for="priority">$action.getText('csl.admin.securityrule.list.securitylvl.label')</label>
 					</div>
 					<div class="aui-item">
@@ -108,7 +129,7 @@
 					</div>
 				</div>
 				<div class="aui-group ">
-					<div class="aui-item right">
+					<div class="aui-item right-label">
 						<label for="priority">$action.getText('csl.admin.securityrule.list.priority.label')</label>
 					</div>
 					<div class="aui-item">
