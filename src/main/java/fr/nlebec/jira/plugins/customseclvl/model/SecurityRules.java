@@ -1,7 +1,7 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import com.atlassian.jira.component.ComponentAccessor;
@@ -17,10 +17,10 @@ public class SecurityRules implements Serializable {
 	private Integer id;
 	private String name;
 	private ApplicationUser creationUser;
-	private Date creationDate;
+	private ZonedDateTime creationDate;
 	private ApplicationUser disableUser;
-	private Date applicationDate;
-	private Date disableDate;
+	private ZonedDateTime applicationDate;
+	private ZonedDateTime disableDate;
 	private Boolean active;
 	private Integer priority;
 	private Long jiraSecurityId;
@@ -46,10 +46,10 @@ public class SecurityRules implements Serializable {
 	public void setCreationUser(ApplicationUser creationUser) {
 		this.creationUser = creationUser;
 	}
-	public Date getCreationDate() {
+	public ZonedDateTime getCreationDate() {
 		return creationDate;
 	}
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(ZonedDateTime creationDate) {
 		this.creationDate = creationDate;
 	}
 	public ApplicationUser getDisableUser() {
@@ -58,10 +58,10 @@ public class SecurityRules implements Serializable {
 	public void setDisableUser(ApplicationUser disableUser) {
 		this.disableUser = disableUser;
 	}
-	public Date getDisableDate() {
+	public ZonedDateTime getDisableDate() {
 		return disableDate;
 	}
-	public void setDisableDate(Date disableDate) {
+	public void setDisableDate(ZonedDateTime disableDate) {
 		this.disableDate = disableDate;
 	}
 	public Boolean getActive() {
@@ -120,10 +120,10 @@ public class SecurityRules implements Serializable {
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
-	public Date getApplicationDate() {
+	public ZonedDateTime getApplicationDate() {
 		return applicationDate;
 	}
-	public void setApplicationDate(Date applicationDate) {
+	public void setApplicationDate(ZonedDateTime applicationDate) {
 		this.applicationDate = applicationDate;
 	}
 	

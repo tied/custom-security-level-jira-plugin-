@@ -1,5 +1,9 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -25,8 +29,8 @@ public class AddSecurityRuleRequestBody {
 	private String jql;
 	
 	@XmlElement
-	private Date applicationDate;
-	
+	private String applicationDate;
+
 	@XmlElement
 	private Long securityLvl;
 	
@@ -70,10 +74,14 @@ public class AddSecurityRuleRequestBody {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	public Date getApplicationDate() {
+	public ZonedDateTime getApplicationDateAsInstant()  {
+		return ZonedDateTime.parse(applicationDate);
+	}
+	
+	public String getApplicationDate() {
 		return applicationDate;
 	}
-	public void setApplicationDate(Date applicationDate) {
+	public void setApplicationDate(String applicationDate) {
 		this.applicationDate = applicationDate;
 	}
 }

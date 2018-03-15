@@ -1,12 +1,13 @@
 package fr.nlebec.jira.plugins.customseclvl.ao.converters;
 
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 
 import com.atlassian.jira.component.ComponentAccessor;
@@ -28,6 +29,7 @@ public class ItemConverter {
 
 	private final static Logger LOG = Logger.getLogger(ItemConverter.class);
 
+	
 	public static CSLConfiguration convertActiveObjectToPOJO(CSLConfigurationAO configurations) {
 		CSLConfiguration csl = new CSLConfiguration();
 		List<SecurityRules> allSecurityRules = convertActiveObjectToPOJO(configurations.getSecurityRules());
@@ -71,11 +73,11 @@ public class ItemConverter {
 	public static void bindPojoToActiveObject(CSLConfigurationAO configAo, SecurityRules sr,
 			SecurityRuleAO securityRuleAo) throws SQLException {
 		securityRuleAo.setActive(sr.getActive());
-		securityRuleAo.setCreationDate(sr.getCreationDate());
+		securityRuleAo.setCreationDate(Date.from(sr.getCreationDate().toInstant()));
 		securityRuleAo.setCreationUser(sr.getCreationUser().getId());
 		securityRuleAo.setJql(sr.getJql());
-		securityRuleAo.setApplicationDate(sr.getApplicationDate());
-		securityRuleAo.setDisableDate(sr.getDisableDate());
+		securityRuleAo.setApplicationDate(Date.from(sr.getApplicationDate().toInstant()));
+		securityRuleAo.setDisableDate(Date.from(sr.getDisableDate().toInstant()));
 		
 		EventToSecurityRule associationAo = configAo.getEntityManager().create(EventToSecurityRule.class); 
 		EventAO eventAO = configAo.getEntityManager().create(EventAO.class);
@@ -104,16 +106,16 @@ public class ItemConverter {
 			SecurityRules sr = new SecurityRules();
 			sr.setActive(srao[i].getActive());
 			if (srao[i].getCreationDate() != null) {
-				sr.setCreationDate(srao[i].getCreationDate());
+				sr.setCreationDate(ZonedDateTime.from(srao[i].getCreationDate().toInstant()));
 			}
 			if (UserConverter.convertUsert(srao[i].getCreationUser()).isPresent()) {
 				sr.setCreationUser(UserConverter.convertUsert(srao[i].getCreationUser()).get());
 			}
 			if (srao[i].getDisableDate() != null) {
-				sr.setDisableDate(srao[i].getDisableDate());
+				sr.setDisableDate(ZonedDateTime.from(srao[i].getDisableDate().toInstant()));
 			}
 			if (srao[i].getApplicationDate() != null) {
-				sr.setApplicationDate(srao[i].getApplicationDate());
+				sr.setApplicationDate(ZonedDateTime.from(srao[i].getApplicationDate().toInstant()));
 			}
 			if (srao[i].getDisableUser() != null && UserConverter.convertUsert(srao[i].getDisableUser()).isPresent()) {
 				sr.setDisableUser(UserConverter.convertUsert(srao[i].getDisableUser()).get());
@@ -144,8 +146,10 @@ public class ItemConverter {
 	public static SecurityRules bodyToPojo(AddSecurityRuleRequestBody body, ApplicationUser creationUser) {
 		SecurityRules securityRule = new SecurityRules();
 		securityRule.setActive(body.getActive());
-		securityRule.setApplicationDate(body.getApplicationDate());
-		securityRule.setCreationDate(new Date());
+		if(body.getApplicationDate() != null) {
+			securityRule.setApplicationDate(body.getApplicationDateAsInstant());
+		}
+		securityRule.setCreationDate(ZonedDateTime.now());
 		securityRule.setCreationUser(creationUser);
 		securityRule.setEvents(getEventMapping(body.getEvents()));
 		securityRule.setJiraSecurityId(body.getSecurityLvl());
@@ -170,9 +174,9 @@ public class ItemConverter {
 	public static SecurityRules bodyToPojo(UpdateSecurityRuleRequestBody body, ApplicationUser user) {
 		SecurityRules securityRule = new SecurityRules();
 		securityRule.setId(body.getId());
-		securityRule.setApplicationDate(body.getApplicationDate());
+		securityRule.setApplicationDate(body.getApplicationDateAsZoneInstant());
 		securityRule.setActive(body.getActive());
-		securityRule.setCreationDate(new Date());
+		securityRule.setCreationDate(ZonedDateTime.now());
 		securityRule.setCreationUser(user);
 		securityRule.setEvents(getEventMapping(body.getEvents()));
 		securityRule.setJiraSecurityId(body.getSecurityLvl());
@@ -186,8 +190,8 @@ public class ItemConverter {
 		SecurityRuleResponse srr = new SecurityRuleResponse();
 		srr.setId(securityRule.getId());
 		srr.setActive(securityRule.getActive());
-		srr.setApplicationDate(securityRule.getApplicationDate());
-		srr.setCreationDate(securityRule.getCreationDate());
+		srr.setApplicationDate(securityRule.getApplicationDate().toString());
+		srr.setCreationDate(securityRule.getCreationDate().toString());
 		srr.setCreationUser(securityRule.getCreationUser().getId());
 		//srr.setEvents());
 		srr.setSecurityLvl(securityRule.getJiraSecurityId());

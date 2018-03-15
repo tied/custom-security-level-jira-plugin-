@@ -27,7 +27,6 @@ AJS.$(document).ready(function () {
     AJS.$('#add-application-date').attr("max",oneMonthMaxDate.toISOString().substring(0,10));
     AJS.$('#edit-application-date').attr("max",oneMonthMaxDate.toISOString().substring(0,10));
     
-    
     AJS.$("#btn-add-customsecurity-lvl").click(function(e) {
     	e.preventDefault();
         AJS.dialog2("#add-dialog").show();

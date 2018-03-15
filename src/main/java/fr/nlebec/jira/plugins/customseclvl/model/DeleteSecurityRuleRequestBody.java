@@ -1,6 +1,7 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,7 +16,7 @@ public class DeleteSecurityRuleRequestBody {
 	private Integer idSecurityRuleToDelete;
 	
 	@XmlElement(name="applicationDate")
-	private Date applicationDate;
+	private String applicationDate;
 
 	public Integer getIdSecurityRuleToDelete() {
 		return idSecurityRuleToDelete;
@@ -25,12 +26,15 @@ public class DeleteSecurityRuleRequestBody {
 		this.idSecurityRuleToDelete = idSecurityRuleToDelete;
 	}
 
-	public Date getApplicationDate() {
+	public String getApplicationDate() {
 		return applicationDate;
 	}
 
-	public void setApplicationDate(Date applicationDate) {
+	public void setApplicationDate(String applicationDate) {
 		this.applicationDate = applicationDate;
+	}
+	public ZonedDateTime getApplicationDateAsZoneDateTime() {
+		return ZonedDateTime.parse(applicationDate);
 	}
 	
 }

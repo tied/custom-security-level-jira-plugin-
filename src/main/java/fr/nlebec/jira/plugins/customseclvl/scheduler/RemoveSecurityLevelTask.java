@@ -2,7 +2,7 @@ package fr.nlebec.jira.plugins.customseclvl.scheduler;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -12,21 +12,25 @@ import com.atlassian.scheduler.JobRunnerRequest;
 import com.atlassian.scheduler.JobRunnerResponse;
 
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
+import fr.nlebec.jira.plugins.customseclvl.service.DefaultSecurityLevelJobManager;
 import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleApplicationManager;
 import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleService;
 
 @Scanned
 public class RemoveSecurityLevelTask implements ApplySecurityLevel {
 
-	SecurityRuleApplicationManager applicationManager;
+	private SecurityRuleApplicationManager applicationManager;
 	
-	Logger log = Logger.getLogger(RemoveSecurityLevelTask.class);
+	private Logger log = Logger.getLogger(RemoveSecurityLevelTask.class);
 
 	private SecurityRuleService securityRuleService;
 	
-	public RemoveSecurityLevelTask(SecurityRuleApplicationManager applicationManager, SecurityRuleService service) {
+	private DefaultSecurityLevelJobManager jobServices;
+	
+	public RemoveSecurityLevelTask(SecurityRuleApplicationManager applicationManager, SecurityRuleService service, DefaultSecurityLevelJobManager jobServices) {
 		this.applicationManager = applicationManager; 
 		this.securityRuleService = service;
+		this.jobServices = jobServices;
 	}
 	
 	public JobRunnerResponse runJob(JobRunnerRequest req) {
@@ -36,17 +40,13 @@ public class RemoveSecurityLevelTask implements ApplySecurityLevel {
 		SecurityRules sr = null;
 		try {
 			sr = securityRuleService.getSecurityRule(idSr);
-		} catch (SQLException e1) {
-			resp.failed(e1.getMessage());
-		} 
-		applicationManager.removeRuleOnWholeStock(sr);
-		
-		try {
+			applicationManager.removeRuleOnWholeStock(sr);
 			if(sr != null) {
-				sr.setDisableDate(new Date());
+				sr.setDisableDate(ZonedDateTime.now());
 				sr.setActive(Boolean.FALSE);
 				securityRuleService.updateSecurityRule(sr);
 			}
+			jobServices.deleteJobEntry(req.getJobId().toString());
 		} catch (SQLException e1) {
 			resp.failed(e1.getMessage());
 		}

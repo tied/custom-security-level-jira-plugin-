@@ -79,14 +79,6 @@
             <version>${ao.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- SAL, the Active Objects plugin uses SAL's API for transactions -->
-		 <dependency>
-		   <groupId>com.atlassian.scheduler</groupId>
-		   <artifactId>atlassian-scheduler-api</artifactId>
-		   <version>1.0</version>
-		    <scope>provided</scope>
-		</dependency>
-
         <dependency>
             <groupId>com.atlassian.streams</groupId>
             <artifactId>streams-thirdparty-api</artifactId>
@@ -105,7 +97,12 @@
 			<version>${plugin.testrunner.version}</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+            <groupId>com.atlassian.sal</groupId>
+            <artifactId>sal-api</artifactId>
+            <version>${sal.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -148,7 +145,6 @@
                     <!-- https://developer.atlassian.com/docs/advanced-topics/configuration-of-instructions-in-atlassian-plugins -->
                     <instructions>
                         <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
-
                         <!-- Add package to export here -->
                         <Export-Package>
                           fr.nlebec.jira.plugins.customseclvl,
@@ -163,7 +159,6 @@
                             com.atlassian.plugins.*,
                             *;resolution:="optional"
                         </Import-Package>
-
                         <!-- Ensure plugin is spring powered -->
                         <Spring-Context>*</Spring-Context>
                     </instructions>

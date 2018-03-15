@@ -69,13 +69,13 @@
        <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.CSLConfigurationAO</entity>
        <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.SecurityRuleAO</entity>
        <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.EventToSecurityRule</entity> 
-       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.EventAO</entity>  
+       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.EventAO</entity>
+       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.JobEntryAO</entity>  
     </ao> 
     
      <rest key="csl.rest" path="/csl" version="1.0">
         <package>fr.nlebec.jira.plugins.customseclvl.rest</package>
     </rest>
-    
     
 
     

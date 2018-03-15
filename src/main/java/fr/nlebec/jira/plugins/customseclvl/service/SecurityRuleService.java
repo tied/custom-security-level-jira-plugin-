@@ -3,6 +3,8 @@ package fr.nlebec.jira.plugins.customseclvl.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +15,6 @@ import org.apache.log4j.Logger;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.jira.issue.CustomFieldManager;
-import com.atlassian.jira.util.I18nHelper;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
 import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
@@ -31,22 +32,18 @@ public class SecurityRuleService {
     private final static Logger LOG = Logger.getLogger(SecurityRuleService.class);
 
     private ActiveObjects persistenceManager;
-    private I18nHelper i18n;
     private CustomFieldManager customFieldManager;
     private CSLConfiguration configuration;
     private EventService eventService;
 
     @Inject
     public SecurityRuleService(@ComponentImport ActiveObjects persistenceManager,
-                                   @ComponentImport I18nHelper i18n,
                                    @ComponentImport CustomFieldManager customFieldManager,
                                    EventService eventService
                                    
-    		)
-    {
+    		){
         this.customFieldManager = customFieldManager;
         this.persistenceManager = checkNotNull(persistenceManager);
-        this.i18n = i18n;
         this.eventService = eventService;
     }
 
@@ -115,10 +112,10 @@ public class SecurityRuleService {
         LOG.info("Update security rule : "+ securityRuleAO.toString());
         securityRuleAO[0].save();
     }
-	public void deleteSecurityRule(Integer idSecurityRuleToDelete, Date applicationDeleteDate) {
+	public void deleteSecurityRule(Integer idSecurityRuleToDelete, ZonedDateTime applicationDeleteDate) {
 		
 		SecurityRuleAO[] securityRules = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRuleToDelete));
-		securityRules[0].setApplicationDate(applicationDeleteDate);
+		securityRules[0].setApplicationDate(Date.from(applicationDeleteDate.toInstant()));
 		securityRules[0].setDeleted(Boolean.TRUE);
 		securityRules[0].save();
         

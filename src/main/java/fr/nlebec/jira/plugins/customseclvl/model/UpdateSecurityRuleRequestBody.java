@@ -1,5 +1,7 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class UpdateSecurityRuleRequestBody {
 	private Integer priority;
 	
 	@XmlElement
-	private Date applicationDate;
+	private String applicationDate;
 	
 	public List<Long> getEvents() {
 		return events;
@@ -79,10 +81,13 @@ public class UpdateSecurityRuleRequestBody {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Date getApplicationDate() {
+	public String getApplicationDate() {
 		return applicationDate;
 	}
-	public void setApplicationDate(Date applicationDate) {
+	public void setApplicationDate(String applicationDate) {
 		this.applicationDate = applicationDate;
+	}
+	public ZonedDateTime getApplicationDateAsZoneInstant() {
+		return ZonedDateTime.parse(applicationDate);
 	}
 }

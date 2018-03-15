@@ -70,8 +70,7 @@ public class SecurityRuleApplicationManager {
 					for (Issue issue : issues) {
 						MutableIssue mi = issueManager.getIssueByCurrentKey(issue.getKey());
 						if (issueSecurityLevelManager.getSecurityLevel(securityRule.getJiraSecurityId()) != null) {
-							LOG.info("Removing security level on issue "
-									+ mi.getKey());
+							LOG.info("Removing security level on issue " + mi.getKey());
 							mi.setSecurityLevelId(null);
 						} else {
 							LOG.info("Security level does not exist anymore : " + securityRule.getJiraSecurityId());
@@ -87,7 +86,7 @@ public class SecurityRuleApplicationManager {
 				LOG.error("Error running search", e);
 			}
 		} else {
-			LOG.warn("Error parsing jqlQuery: " + parseResult.getErrors());
+			LOG.error("Error parsing jqlQuery: " + parseResult.getErrors());
 		}
 	}
 	
@@ -132,19 +131,8 @@ public class SecurityRuleApplicationManager {
 				LOG.error("Error running search", e);
 			}
 		} else {
-			LOG.warn("Error parsing jqlQuery: " + parseResult.getErrors());
+			LOG.error("Error parsing jqlQuery: " + parseResult.getErrors());
 		}
-		// if (appliedSecurityLevel == false) {
-		// LOG.info("No security level has been applied : removing existing security
-		// level");
-		// MutableIssue mi =
-		// issueManager.getIssueByCurrentKey(event.getIssue().getKey());
-		// mi.setSecurityLevelId(null);
-		// LOG.info("default :
-		// "+issueSecurityLevelManager.getDefaultSecurityLevel(mi.getProjectObject()));
-		// issueManager.updateIssue(adminUser, mi, EventDispatchOption.DO_NOT_DISPATCH,
-		// false);
-		// }
 	}
 
 }

@@ -2,7 +2,6 @@ package fr.nlebec.jira.plugins.customseclvl.scheduler;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -12,21 +11,25 @@ import com.atlassian.scheduler.JobRunnerRequest;
 import com.atlassian.scheduler.JobRunnerResponse;
 
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
+import fr.nlebec.jira.plugins.customseclvl.service.DefaultSecurityLevelJobManager;
 import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleApplicationManager;
 import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleService;
 
 @Scanned
 public class ApplySecurityLevelTask implements ApplySecurityLevel {
 
-	SecurityRuleApplicationManager applicationManager;
+	private SecurityRuleApplicationManager applicationManager;
 	
-	Logger log = Logger.getLogger(ApplySecurityLevelTask.class);
+	private Logger log = Logger.getLogger(ApplySecurityLevelTask.class);
 
 	private SecurityRuleService securityRuleService;
 	
-	public ApplySecurityLevelTask(SecurityRuleApplicationManager applicationManager, SecurityRuleService service) {
+	private DefaultSecurityLevelJobManager jobServices;
+	
+	public ApplySecurityLevelTask(SecurityRuleApplicationManager applicationManager, SecurityRuleService service,DefaultSecurityLevelJobManager jobServices) {
 		this.applicationManager = applicationManager; 
 		this.securityRuleService = service;
+		this.jobServices = jobServices;
 	}
 	
 	public JobRunnerResponse runJob(JobRunnerRequest req) {
@@ -41,6 +44,7 @@ public class ApplySecurityLevelTask implements ApplySecurityLevel {
 		} 
 		
 		applicationManager.applyRuleOnWholeStock(sr);
+		jobServices.deleteJobEntry(req.getJobId().toString());
 		
 		return resp;
 	}

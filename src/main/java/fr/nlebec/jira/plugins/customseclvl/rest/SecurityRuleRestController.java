@@ -1,6 +1,8 @@
 package fr.nlebec.jira.plugins.customseclvl.rest;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +21,19 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.ofbiz.core.entity.GenericEntityException;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.exception.DataAccessException;
+import com.atlassian.jira.issue.IssueManager;
+import com.atlassian.jira.issue.MutableIssue;
+import com.atlassian.jira.issue.security.IssueSecurityLevel;
+import com.atlassian.jira.issue.security.IssueSecurityLevelManager;
 import com.atlassian.jira.permission.GlobalPermissionKey;
+import com.atlassian.jira.permission.ProjectPermissions;
 import com.atlassian.jira.security.GlobalPermissionManager;
+import com.atlassian.jira.security.PermissionManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.jira.util.I18nHelper;
@@ -53,9 +64,11 @@ public class SecurityRuleRestController {
 	private final I18nHelper i18nHelper;
 	private SearchService searchService;
 	private final CSLDefaultJobRunner jobRunner;
+	private IssueSecurityLevelManager issueSecurityManager ;
+	private IssueManager issueManager;
 	
 	@Inject
-	public SecurityRuleRestController(@ComponentImport UserManager userManager,
+	public SecurityRuleRestController(@ComponentImport IssueManager issueManager,@ComponentImport UserManager userManager,@ComponentImport IssueSecurityLevelManager issueSecurityManager, 
 			@ComponentImport GlobalPermissionManager globalPermissionManager, @ComponentImport I18nHelper i18nHelper,
 			SecurityRuleService securityRuleService, @ComponentImport SearchService searchService, CSLDefaultJobRunner jobRunner) {
 		this.userManager = userManager;
@@ -64,6 +77,8 @@ public class SecurityRuleRestController {
 		this.securityRuleService = securityRuleService;
 		this.searchService = searchService;
 		this.jobRunner = jobRunner;
+		this.issueSecurityManager= issueSecurityManager;
+		this.issueManager = issueManager;
 	}
 
 	@GET
@@ -101,15 +116,14 @@ public class SecurityRuleRestController {
 		ApplicationUser user = this.userManager.getUserByKey(userName);
 		AddSecurityRuleResponse response = new AddSecurityRuleResponse();
 		int errorCode = 201;
-		System.out.println(ruleBody.getApplicationDate());
 		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
 			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
 		} else {
 			try {
 				checkParameters(ruleBody, user);
 				int idEntity = this.securityRuleService.addSecurityRule(ItemConverter.bodyToPojo(ruleBody, user));
-				if( Boolean.TRUE.equals(ruleBody.getActive() && ruleBody.getApplicationDate() != null)) {
-					jobRunner.applySecurityLevelJob(idEntity,ruleBody.getApplicationDate());
+				if( Boolean.TRUE.equals(ruleBody.getActive() && ruleBody.getApplicationDateAsInstant() != null)) {
+					jobRunner.addSecurityLevelJob(idEntity,ruleBody.getApplicationDateAsInstant());
 				}
 				response.setLocation(request.getRequestURI() + "/" + idEntity );
 			} catch (SQLException e) {
@@ -121,7 +135,6 @@ public class SecurityRuleRestController {
 			} catch (SchedulerServiceException e) {
 				errorCode = 500;
 				response.setError(e.getMessage());
-				e.printStackTrace();
 			}
 		}
 		return Response.status(errorCode).entity(response).build();
@@ -135,16 +148,15 @@ public class SecurityRuleRestController {
 		String userName = request.getRemoteUser();
 		ApplicationUser user = this.userManager.getUserByKey(userName);
 		DeleteSecurityRuleResponse response = new DeleteSecurityRuleResponse();
-		System.out.println(body.getApplicationDate());
 		int errorCode = 201;
 		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
 			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
 		} else {
 			try {
 				// checkParameters(body);
-				this.securityRuleService.deleteSecurityRule(body.getIdSecurityRuleToDelete(),body.getApplicationDate());
+				this.securityRuleService.deleteSecurityRule(body.getIdSecurityRuleToDelete(),body.getApplicationDateAsZoneDateTime());
 				if( body.getApplicationDate() != null) {
-					jobRunner.removeSecurityLevelJob(body.getIdSecurityRuleToDelete(),body.getApplicationDate());
+					jobRunner.removeSecurityLevelJob(body.getIdSecurityRuleToDelete(),body.getApplicationDateAsZoneDateTime());
 				}
 			} catch (ValidationException e) {
 				errorCode = 400;
@@ -184,7 +196,59 @@ public class SecurityRuleRestController {
 		}
 		return Response.status(errorCode).entity(response).build();
 	}
+	
+	@GET
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("/isl")
+	public Response hasRight(@Context HttpServletRequest request)
+			throws SQLException {
+		String userName = request.getRemoteUser();
+		ApplicationUser user = this.userManager.getUserByKey(userName);
+		UpdateSecurityRuleResponse response = new UpdateSecurityRuleResponse();
+		int errorCode = 201;
+		Collection<IssueSecurityLevel> isl = this.issueSecurityManager.getAllSecurityLevelsForUser(user);
+		if(user != null) {
+			System.out.println(user.toString());
+		}
+		else {
+			System.out.println("Utilsiateur Null!");
+		}
+		System.out.println("Test si permissions pour cet utilisateur : "+userName);
+		for (IssueSecurityLevel issueSecurityLevel : isl) {
+			System.out.println(issueSecurityLevel.getId()+ issueSecurityLevel.getName());
+		}
+		
+		return Response.status(errorCode).entity(response).build();
+	}
 
+	@GET
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("/isl/{issueKey}")
+	public Response canSeeIssue(@PathParam(value = "issueKey") String issueKey,@Context HttpServletRequest request)
+			throws SQLException, GenericEntityException, DataAccessException {
+		String userName = request.getRemoteUser();
+		ApplicationUser user = this.userManager.getUserByKey(userName);
+		UpdateSecurityRuleResponse response = new UpdateSecurityRuleResponse();
+		int errorCode = 200;
+		if(this.issueManager.isExistingIssueKey(issueKey)) {
+			MutableIssue mi = this.issueManager.getIssueByCurrentKey(issueKey);
+			Long isl =  mi.getSecurityLevelId();
+			IssueSecurityLevel finalIsl = issueSecurityManager.getSecurityLevel(isl);
+			System.out.println("Test pour issueKey "+ issueKey);
+			PermissionManager pm = ComponentAccessor.getPermissionManager();
+			
+			if(pm.hasPermission(ProjectPermissions.TRANSITION_ISSUES, mi, user)) {
+				System.out.println("Utilisateur habilité !");
+			}
+			else {
+				System.out.println("Utilisateur non habilité !");
+			}
+		}
+		return Response.status(errorCode).entity(response).build();
+	}
+	
 	private void checkParameters(AddSecurityRuleRequestBody body, ApplicationUser user) {
 		final SearchService.ParseResult parseResult = searchService.parseQuery(user, body.getJql());
 

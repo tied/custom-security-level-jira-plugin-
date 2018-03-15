@@ -30,20 +30,17 @@ public class EventService {
     private final static Logger LOG = Logger.getLogger(EventService.class);
 
     private ActiveObjects persistenceManager;
-    private I18nHelper i18n;
     private CustomFieldManager customFieldManager;
     private CSLConfiguration configuration;
     
 
     @Inject
     public EventService(@ComponentImport ActiveObjects persistenceManager,
-                                   @ComponentImport I18nHelper i18n,
                                    @ComponentImport CustomFieldManager customFieldManager
     		)
     {
         this.customFieldManager = customFieldManager;
         this.persistenceManager = checkNotNull(persistenceManager);
-        this.i18n = i18n;
     }
 
 	public CSLConfiguration getConfiguration() {

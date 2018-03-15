@@ -1,5 +1,6 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -20,12 +21,14 @@ public class SecurityRuleResponse {
 		private List<Long> events;
 		
 		@XmlElement
-		private Date applicationDate;
+		private String applicationDate;
 		
 		@XmlElement
 		private String ruleName;
+		
 		@XmlElement
-		private Date creationDate;
+		private String creationDate;
+		
 		@XmlElement
 		private Long creationUser;
 		
@@ -94,11 +97,11 @@ public class SecurityRuleResponse {
 			this.priority = priority;
 		}
 
-		public Date getCreationDate() {
+		public String getCreationDate() {
 			return creationDate;
 		}
 
-		public void setCreationDate(Date creationDate) {
+		public void setCreationDate(String creationDate) {
 			this.creationDate = creationDate;
 		}
 
@@ -110,11 +113,11 @@ public class SecurityRuleResponse {
 			this.creationUser = creationUser;
 		}
 
-		public Date getApplicationDate() {
+		public String getApplicationDate() {
 			return applicationDate;
 		}
 
-		public void setApplicationDate(Date applicationDate) {
+		public void setApplicationDate(String applicationDate) {
 			this.applicationDate = applicationDate;
 		}
 	
