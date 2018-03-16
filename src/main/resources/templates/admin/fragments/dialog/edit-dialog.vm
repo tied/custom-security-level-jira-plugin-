@@ -26,7 +26,7 @@
 		         </div>
 		           <div id="edit-rule-application-date-section" class="field-group">
 		            <label for="edit-application-date">$action.getText('csl.admin.securityrule.add.applicationdate.label')</label>
-		            <input class="aui-date-picker" id="edit-application-date" type="date"  min="2018-01-01" />
+		            <input class="aui-date-picker" id="edit-application-date" type="datetime-local"  min="2018-01-01" />
 		            <div class="description">$action.getText('csl.admin.securityrule.add.applicationdate.descr')</div>
 		         </div>
 		         <div class="field-group">

@@ -20,12 +20,12 @@ AJS.$(document).ready(function () {
     AJS.$('#add-application-date').datePicker();
     AJS.$('#edit-application-date').datePicker();
     
-    AJS.$('#delete-application-date').attr("min",today.toISOString().substring(0,10));
-    AJS.$('#add-application-date').attr("min",today.toISOString().substring(0,10));
-    AJS.$('#edit-application-date').attr("min",today.toISOString().substring(0,10));
-    AJS.$('#delete-application-date').attr("max",oneMonthMaxDate.toISOString().substring(0,10));
-    AJS.$('#add-application-date').attr("max",oneMonthMaxDate.toISOString().substring(0,10));
-    AJS.$('#edit-application-date').attr("max",oneMonthMaxDate.toISOString().substring(0,10));
+    AJS.$('#delete-application-date').attr("min",formatDate(today));
+    AJS.$('#add-application-date').attr("min",formatDate(today));
+    AJS.$('#edit-application-date').attr("min",formatDate(today));
+    AJS.$('#delete-application-date').attr("max",formatDate(oneMonthMaxDate));
+    AJS.$('#add-application-date').attr("max",formatDate(oneMonthMaxDate));
+    AJS.$('#edit-application-date').attr("max",formatDate(oneMonthMaxDate));
     
     AJS.$("#btn-add-customsecurity-lvl").click(function(e) {
     	e.preventDefault();
@@ -231,6 +231,18 @@ AJS.$(document).ready(function () {
 				console.data;
 			});
     }
+    function formatDate(date) {
+    	  var separator = '-';
+    	  var day = date.getDate();
+    	  var month = date.getMonth() + 1;
+    	  var year = date.getFullYear();
+    	  var hour = date.getHours();
+    	  var minute = date.getMinutes();
+    	  if( month <= 9){
+    		  month = "0" + month; 
+    	  }
+    	  return year + separator + month + separator + day + 'T' + hour + ":" + minute;
+    	}
 });
 
     
