@@ -1,7 +1,8 @@
 package fr.nlebec.jira.plugins.customseclvl.rest;
 
 import java.sql.SQLException;
-import java.text.ParseException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -45,6 +46,7 @@ import com.atlassian.scheduler.SchedulerServiceException;
 import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleResponse;
+import fr.nlebec.jira.plugins.customseclvl.model.CSLConstantes;
 import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.RetrieveSecurityRuleResponse;
@@ -239,7 +241,7 @@ public class SecurityRuleRestController {
 			System.out.println("Test pour issueKey "+ issueKey);
 			PermissionManager pm = ComponentAccessor.getPermissionManager();
 			
-			if(pm.hasPermission(ProjectPermissions.TRANSITION_ISSUES, mi, user)) {
+			if(pm.hasPermission(ProjectPermissions.CREATE_ISSUES, mi, user)) {
 				System.out.println("Utilisateur habilité !");
 			}
 			else {
@@ -267,6 +269,14 @@ public class SecurityRuleRestController {
 		if (body.getPriority() == null) {
 			throw new ValidationException("Parametre prorité n'est pas valide");
 		}
+		if (body.getApplicationDate() == null) {
+			try {
+				ZonedDateTime.parse(body.getApplicationDate(), CSLConstantes.formatter);
+			} catch (DateTimeParseException  e) {
+				throw new ValidationException("La date d'application n'est pas au format valide");
+			}
+		}
+		
 		try {
 			MessageSet msgSet = searchService.validateQuery(user, parseResult.getQuery());
 			if (msgSet.hasAnyErrors()) {
@@ -300,6 +310,13 @@ public class SecurityRuleRestController {
 		}
 		if (body.getEvents() == null || body.getEvents().size() == 0) {
 			throw new ValidationException("Au moins un evenement doit être définis");
+		}
+		if (body.getApplicationDate() == null) {
+			try {
+				ZonedDateTime.parse(body.getApplicationDate(), CSLConstantes.formatter);
+			} catch (DateTimeParseException  e) {
+				throw new ValidationException("La date d'application n'est pas au format valide");
+			}
 		}
 		try {
 			MessageSet msgSet = searchService.validateQuery(user, parseResult.getQuery());

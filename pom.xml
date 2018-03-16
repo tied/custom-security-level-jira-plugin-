@@ -91,12 +91,12 @@
             <version>${streams.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!-- <dependency>
 			<groupId>com.atlassian.plugins</groupId>
 			<artifactId>atlassian-plugins-osgi-testrunner</artifactId>
 			<version>${plugin.testrunner.version}</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency> -->
 		<dependency>
             <groupId>com.atlassian.sal</groupId>
             <artifactId>sal-api</artifactId>

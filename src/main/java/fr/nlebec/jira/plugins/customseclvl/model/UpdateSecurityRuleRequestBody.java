@@ -88,6 +88,6 @@ public class UpdateSecurityRuleRequestBody {
 		this.applicationDate = applicationDate;
 	}
 	public ZonedDateTime getApplicationDateAsZoneInstant() {
-		return ZonedDateTime.parse(applicationDate);
+		return ZonedDateTime.parse(applicationDate, CSLConstantes.formatter);
 	}
 }

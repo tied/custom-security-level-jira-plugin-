@@ -1,6 +1,5 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
-import java.time.Instant;
 import java.time.ZonedDateTime;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -34,7 +33,7 @@ public class DeleteSecurityRuleRequestBody {
 		this.applicationDate = applicationDate;
 	}
 	public ZonedDateTime getApplicationDateAsZoneDateTime() {
-		return ZonedDateTime.parse(applicationDate);
+		return ZonedDateTime.parse(applicationDate, CSLConstantes.formatter);
 	}
 	
 }

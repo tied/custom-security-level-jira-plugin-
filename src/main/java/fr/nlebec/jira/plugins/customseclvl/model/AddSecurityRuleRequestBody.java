@@ -75,7 +75,7 @@ public class AddSecurityRuleRequestBody {
 		this.active = active;
 	}
 	public ZonedDateTime getApplicationDateAsInstant()  {
-		return ZonedDateTime.parse(applicationDate);
+		return ZonedDateTime.parse(applicationDate, CSLConstantes.formatter);
 	}
 	
 	public String getApplicationDate() {

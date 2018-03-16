@@ -2,6 +2,7 @@ package fr.nlebec.jira.plugins.customseclvl.admin;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserRole;
 
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
+import fr.nlebec.jira.plugins.customseclvl.model.CSLConstantes;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
 import fr.nlebec.jira.plugins.customseclvl.service.CSLConfigurationService;
 
@@ -143,11 +145,10 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public String formatDate(Date d) {
+	public String formatDate(ZonedDateTime zdt) {
 		String ret = "-";
-		if( ObjectUtils.isNotEmpty(d) ) {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			ret = sdf.format(d);
+		if( ObjectUtils.isNotEmpty(zdt) ) {
+			ret = zdt.format(CSLConstantes.simpleFormatter);
 		}
 		return ret;
 	}

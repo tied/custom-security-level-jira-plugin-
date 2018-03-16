@@ -2,6 +2,7 @@ package fr.nlebec.jira.plugins.customseclvl.ao.converters;
 
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,8 +77,14 @@ public class ItemConverter {
 		securityRuleAo.setCreationDate(Date.from(sr.getCreationDate().toInstant()));
 		securityRuleAo.setCreationUser(sr.getCreationUser().getId());
 		securityRuleAo.setJql(sr.getJql());
-		securityRuleAo.setApplicationDate(Date.from(sr.getApplicationDate().toInstant()));
-		securityRuleAo.setDisableDate(Date.from(sr.getDisableDate().toInstant()));
+		
+		if( sr.getApplicationDate() != null ){
+			securityRuleAo.setApplicationDate(Date.from(sr.getApplicationDate().toInstant()));
+		}
+		
+		if( sr.getDisableDate() != null ){
+			securityRuleAo.setDisableDate(Date.from(sr.getDisableDate().toInstant()));
+		}
 		
 		EventToSecurityRule associationAo = configAo.getEntityManager().create(EventToSecurityRule.class); 
 		EventAO eventAO = configAo.getEntityManager().create(EventAO.class);
@@ -106,16 +113,16 @@ public class ItemConverter {
 			SecurityRules sr = new SecurityRules();
 			sr.setActive(srao[i].getActive());
 			if (srao[i].getCreationDate() != null) {
-				sr.setCreationDate(ZonedDateTime.from(srao[i].getCreationDate().toInstant()));
+				sr.setCreationDate(ZonedDateTime.ofInstant(srao[i].getCreationDate().toInstant(),ZoneId.systemDefault()));
 			}
 			if (UserConverter.convertUsert(srao[i].getCreationUser()).isPresent()) {
 				sr.setCreationUser(UserConverter.convertUsert(srao[i].getCreationUser()).get());
 			}
 			if (srao[i].getDisableDate() != null) {
-				sr.setDisableDate(ZonedDateTime.from(srao[i].getDisableDate().toInstant()));
+				sr.setDisableDate(ZonedDateTime.ofInstant(srao[i].getDisableDate().toInstant(),ZoneId.systemDefault()));
 			}
 			if (srao[i].getApplicationDate() != null) {
-				sr.setApplicationDate(ZonedDateTime.from(srao[i].getApplicationDate().toInstant()));
+				sr.setApplicationDate(ZonedDateTime.ofInstant(srao[i].getApplicationDate().toInstant(),ZoneId.systemDefault()));
 			}
 			if (srao[i].getDisableUser() != null && UserConverter.convertUsert(srao[i].getDisableUser()).isPresent()) {
 				sr.setDisableUser(UserConverter.convertUsert(srao[i].getDisableUser()).get());
