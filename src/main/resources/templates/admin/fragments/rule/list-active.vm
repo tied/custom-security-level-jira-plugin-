@@ -14,39 +14,45 @@
 			<div class="aui-group">
 				<div class="aui-item bold">
 					<h3>
-						<b>$action.getText('csl.admin.securityrule.list.title', $rule.name) </b> 
+						<b>$action.getText('csl.admin.securityrule.list.title', $rule.name) </b>
+						&nbsp;
+						#if($action.willChangeStatus($rule))
+							<span class="orange aui-icon aui-icon-small aui-iconfont-time"></span>
+						#end
 					</h3>
 				</div>
 				
 				<div class="aui-item right" style="vertical-align: bottom;" >
-						<span class="aui-icon aui-icon-large aui-iconfont-edit csl-action" id="edit-sr-$rule.id" 
-							data-id="$rule.id" 
-							data-name="$rule.name"
-							data-priority="$rule.priority"
-							data-jql="$rule.jql"
-							data-security-lvl="$rule.jiraSecurityId"
-							data-active="$rule.active"
-							data-events="$rule.getSimpleEventsList()"
-						>
-						</span>
-						
-						#if($rule.getDeleted() != true)
-							
-							<span class="aui-icon aui-icon-large aui-iconfont-delete csl-action" 
-								 id="delete-sr-$rule.id"
-								 data-id="$rule.id" 
-								 data-name="$rule.name" >
-							 </span>
-							 
-						#else
-							<span class="aui-icon aui-icon-large aui-iconfont-warning csl-action" style="color:orange;" 
-								 id="unactivate-delete-sr-$rule.id"
-								 data-id="$rule.id" 
-								 data-name="$rule.name" 
-								 title="$action.getText('csl.admin.securityrule.delete.pending.tooltip', $rule.applicationDate)"
-							 >
-							 </span>
-						#end
+						<a href="#actions" aria-owns="actions" aria-haspopup="true" class="aui-button aui-dropdown2-trigger aui-style-default">$action.getText('csl.admin.securityrule.list.actions.label')</a></p>
+						<div id="actions" class="aui-dropdown2 aui-style-default">
+						    <ul class="aui-list-truncate">
+						        <li>
+						        	<a href="#" id="edit-sr-$rule.id" 
+										data-id="$rule.id" 
+										data-name="$rule.name"
+										data-priority="$rule.priority"
+										data-jql="$rule.jql"
+										data-security-lvl="$rule.jiraSecurityId"
+										data-active="$rule.active"
+										data-events="$rule.getSimpleEventsList()" >$action.getText('csl.admin.securityrule.list.actions.edit.label')</a>
+						        </li>
+						        #if($rule.getDeleted() != true)
+								<li>
+						        	<a href="#" id="delete-sr-$rule.id"
+								 	   data-id="$rule.id" 
+								 	   data-name="$rule.name">$action.getText('csl.admin.securityrule.list.actions.delete.label')</a>
+								</li>
+								#else
+								<li>
+									<a href="#" id="unactivate-delete-sr-$rule.id"
+									 data-id="$rule.id" 
+									 data-name="$rule.name" 
+									 title="$action.getText('csl.admin.securityrule.delete.pending.tooltip', $rule.applicationDate)">
+								 		$action.getText('csl.admin.securityrule.list.actions.unactivate.label')</a>
+								</li>
+						        #end
+						    </ul>
+						</div>
 				</div>
 			</div>
 			<div class="aui-group ">
@@ -119,7 +125,7 @@
 				</div>
 				<div class="aui-group ">
 					<div class="aui-item right-label">
-						<label for="priority">$action.getText('csl.admin.securityrule.list.securitylvl.label')</label>
+						<label for="securityid">$action.getText('csl.admin.securityrule.list.securitylvl.label')</label>
 					</div>
 					<div class="aui-item">
 							<span id="securityid" class="bold" >  

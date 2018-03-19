@@ -60,6 +60,7 @@ AJS.$(document).ready(function () {
     AJS.$("#edit-security-lvl").auiSelect2();
     AJS.$("#add-events").auiSelect2();
     AJS.$("#edit-events").auiSelect2();
+    AJS.$("#layout").auiSelect2();
     
     
     AJS.$("#add-form").on("submit", function(e){

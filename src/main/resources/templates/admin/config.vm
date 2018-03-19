@@ -34,6 +34,36 @@ $webResourceManager.requireResourcesForContext("csl-admin")
 				</div>
 			</div>
 		<br>
+			<div class="aui-group">
+				<div class="aui-item right-label">
+					<label for="active">$action.getText('csl.admin.securityrule.config.dateformat.label')</label>
+				</div>
+				<div class="aui-item">
+					<input class="text medium-field" type="text" value="dd/MM/yyyy HH:mm" name="dateformat">
+				</div>
+				<div class="aui-item">
+				</div>
+				<div class="aui-item">
+				</div>
+			</div>
+		<br>
+			<div class="aui-group">
+				<div class="aui-item right-label">
+					<label for="layout">$action.getText('csl.admin.securityrule.config.layout.label')</label>
+				</div>
+				
+				<div class="aui-item">
+					<select id="layout">
+					  <option value="classic" selected>$action.getText('csl.admin.securityrule.config.layout.option.descriptive.label')</option> 
+					  <option value="tab" >$action.getText('csl.admin.securityrule.config.layout.option.tab.label')</option>
+					</select>
+				</div>
+				<div class="aui-item">
+				</div>
+				<div class="aui-item">
+				</div>
+			</div>
+			<br>
        	<div class="buttons-container">
             <div class="buttons">
                <input class="aui-button aui-button-primary" type="submit" value="$action.getText('csl.admin.securityrule.config.save.label')" id="save-button">

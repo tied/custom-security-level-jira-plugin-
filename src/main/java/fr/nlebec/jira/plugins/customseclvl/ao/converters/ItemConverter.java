@@ -45,7 +45,7 @@ public class ItemConverter {
 			}
 			else {
 				//If security rule active
-				if ( Boolean.TRUE.equals(securityRules.getActive())) {
+				if ( Boolean.TRUE.equals(securityRules.getActive() && ZonedDateTime.now().isAfter(securityRules.getApplicationDate()))) {
 					activesRules.add(securityRules);
 				}
 				else {

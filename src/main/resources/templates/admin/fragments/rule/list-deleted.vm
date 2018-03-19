@@ -39,7 +39,9 @@
 					<label for="disableDate">$action.getText('csl.admin.securityrule.list.disabledate.label')</label>
 				</div>
 				<div class="aui-item">
-					<span id="disableDate" class="bold">$rule.disableDate</span>
+					<span id="disableDate" class="bold">
+						$action.formatDate($rule.disableDate)
+					</span>
 					<div class="description">$action.getText('csl.admin.securityrule.list.disabledate.descr')</div>
 				</div>
 			</div>
@@ -48,7 +50,9 @@
 					<label for="creationDate">$action.getText('csl.admin.securityrule.list.creationdate.label')</label>
 				</div>
 				<div class="aui-item">
-					<span id="creationDate" class="bold">$rule.creationDate</span>
+					<span id="creationDate" class="bold">
+						$action.formatDate($rule.creationDate)
+					</span>
 					<div class="description">$action.getText('csl.admin.securityrule.list.creationdate.descr')</div>
 				</div>
 			</div>
@@ -88,7 +92,7 @@
 				</div>
 				<div class="aui-group ">
 					<div class="aui-item right-label">
-						<label for="priority">$action.getText('csl.admin.securityrule.list.securitylvl.label')</label>
+						<label for="securityid">$action.getText('csl.admin.securityrule.list.securitylvl.label')</label>
 					</div>
 					<div class="aui-item">
 							<span id="securityid" class="bold" >  

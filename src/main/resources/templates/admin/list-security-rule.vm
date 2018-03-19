@@ -52,7 +52,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
 	    <div class="tabs-pane active-pane" id="actives-rules-tabs">
 	   		<p>
 	   		
-				 #parse("/templates/admin/fragments/rule/list-active.vm")
+				 #parse("/templates/admin/fragments/rule/list-active-tab.vm")
 			
 			</p>
 	    </div>
