@@ -57,12 +57,17 @@ public class ItemConverter {
 		csl.setInactivesSecurityRules(inactivesRules);
 		csl.setDeletedSecurityRules(deletedRules);
 		csl.setActive(configurations.getActive());
+		csl.setDateFormat(configurations.getDateFormat());
+		csl.setLayout(configurations.getLayout());
 		return csl;
 	}
 
 	public static void bindPojoToActiveObject(CSLConfiguration configuration, CSLConfigurationAO configAo)
 			throws SQLException {
+		LOG.debug("configuration : "+configuration.getDateFormat());
 		configAo.setActive(configuration.getActive());
+		configAo.setLayout(configuration.getLayout());
+		configAo.setDateFormat(configuration.getDateFormat());
 		if (configuration.getActivesSecurityRules() != null) {
 			for (int i = 0; i < configuration.getActivesSecurityRules().size(); i++) {
 				SecurityRuleAO securityRuleAO = configAo.getEntityManager().create(SecurityRuleAO.class);

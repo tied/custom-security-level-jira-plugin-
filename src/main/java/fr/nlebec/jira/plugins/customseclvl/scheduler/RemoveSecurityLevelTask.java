@@ -46,7 +46,7 @@ public class RemoveSecurityLevelTask implements ApplySecurityLevel {
 				sr.setActive(Boolean.FALSE);
 				securityRuleService.updateSecurityRule(sr);
 			}
-			jobServices.deleteJobEntry(req.getJobId().toString());
+			jobServices.deleteJobEntry(req.getJobId().toString(),idSr);
 		} catch (SQLException e1) {
 			resp.failed(e1.getMessage());
 		}

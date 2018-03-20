@@ -1,7 +1,6 @@
 package fr.nlebec.jira.plugins.customseclvl.scheduler;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;

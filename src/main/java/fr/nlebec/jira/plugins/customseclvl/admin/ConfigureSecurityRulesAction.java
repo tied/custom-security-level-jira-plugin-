@@ -1,10 +1,8 @@
 package fr.nlebec.jira.plugins.customseclvl.admin;
 
 import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,8 +24,8 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserRole;
 
+import fr.nlebec.jira.plugins.customseclvl.CSLInitializer;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
-import fr.nlebec.jira.plugins.customseclvl.model.CSLConstantes;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
 import fr.nlebec.jira.plugins.customseclvl.service.CSLConfigurationService;
 
@@ -45,7 +43,6 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
     private final LoginUriProvider loginUriProvider;
     private IssueSecurityLevelManager issueSecurityLevelManager;
     private EventTypeManager eventManager;
-    private Boolean active;
 
     private Collection<IssueSecurityLevel> securityLevels;
     private Collection<EventType> eventTypes;
@@ -86,29 +83,7 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
         return INPUT;
     }
 
-    public String doSave() throws Exception {
-        ApplicationUser loggedInUser = this.getLoggedInUser();
-        if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, loggedInUser)) {
-            URI uri = URI.create(this.getHttpRequest().getRequestURI());
-            return this.forceRedirect(loginUriProvider.getLoginUriForRole(uri, UserRole.ADMIN).toASCIIString());
-        }
-        //Faire controles
-        this.configurationService.updateConfiguration(getActive());
-        this.securityLevels = issueSecurityLevelManager.getAllIssueSecurityLevels();
-        
-        return INPUT;
-    }
 
-	public Boolean getActive() {
-		if(active == null) {
-			active = Boolean.FALSE;
-		}
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
 
 	public CSLConfiguration getConfiguration() {
 		return configurationService.getConfiguration();
@@ -148,7 +123,7 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
 	public String formatDate(ZonedDateTime zdt) {
 		String ret = "-";
 		if( ObjectUtils.isNotEmpty(zdt) ) {
-			ret = zdt.format(CSLConstantes.simpleFormatter);
+			ret = zdt.format(CSLInitializer.getDateTimeFormatter());
 		}
 		return ret;
 	}

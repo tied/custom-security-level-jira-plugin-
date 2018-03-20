@@ -39,7 +39,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
 					<label for="active">$action.getText('csl.admin.securityrule.config.dateformat.label')</label>
 				</div>
 				<div class="aui-item">
-					<input class="text medium-field" type="text" value="dd/MM/yyyy HH:mm" name="dateformat">
+					<input class="text medium-field" type="text" #if ($action.getConfiguration().getDateFormat()) value="$action.getConfiguration().getDateFormat()" #end name="dateFormat" id="dateFormat" >
 				</div>
 				<div class="aui-item">
 				</div>
@@ -53,9 +53,9 @@ $webResourceManager.requireResourcesForContext("csl-admin")
 				</div>
 				
 				<div class="aui-item">
-					<select id="layout">
-					  <option value="classic" selected>$action.getText('csl.admin.securityrule.config.layout.option.descriptive.label')</option> 
-					  <option value="tab" >$action.getText('csl.admin.securityrule.config.layout.option.tab.label')</option>
+					<select id="layout" name="layout" >
+					  <option #if ($action.getConfiguration().getLayout() == "classic") selected #end value="classic" >$action.getText('csl.admin.securityrule.config.layout.option.descriptive.label')</option> 
+					  <option #if ($action.getConfiguration().getLayout() == "tab") selected #end  value="tab" >$action.getText('csl.admin.securityrule.config.layout.option.tab.label')</option>
 					</select>
 				</div>
 				<div class="aui-item">

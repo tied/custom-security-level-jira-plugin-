@@ -51,24 +51,30 @@ $webResourceManager.requireResourcesForContext("csl-admin")
 	    </ul>
 	    <div class="tabs-pane active-pane" id="actives-rules-tabs">
 	   		<p>
-	   		
+	   			#if ($action.getConfiguration().getLayout() == "tab")
 				 #parse("/templates/admin/fragments/rule/list-active-tab.vm")
-			
+				#else
+				 #parse("/templates/admin/fragments/rule/list-active.vm")
+				#end
 			</p>
 	    </div>
 	    <div class="tabs-pane" id="unactives-rules-tabs">
 	        <p>
-			
+				#if ($action.getConfiguration().getLayout() == "tab")
+				 #parse("/templates/admin/fragments/rule/list-inactive-tab.vm")
+				#else
 				 #parse("/templates/admin/fragments/rule/list-inactive.vm")
+				#end
 			
 	        </p>
 	    </div>
 	    <div class="tabs-pane" id="deleted-rules-tabs">
 	        <p>
-	        
+	        	#if ($action.getConfiguration().getLayout() == "tab")
+				 #parse("/templates/admin/fragments/rule/list-deleted-tab.vm")
+				#else
 				 #parse("/templates/admin/fragments/rule/list-deleted.vm")
-			
-	        
+				#end
 	        </p>
 	    </div>
 	</div><!-- // .aui-tabs -->

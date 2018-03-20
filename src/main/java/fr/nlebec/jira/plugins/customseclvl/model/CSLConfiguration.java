@@ -11,8 +11,29 @@ public class CSLConfiguration {
 	private List<SecurityRules> deletedSecurityRules;
 	
 	private List<SecurityRules> inactivesSecurityRules;
+
+	private String dateFormat;
+
+	private String layout;
 	
 	private Boolean active;
+	
+    public String getDateFormat() {
+		return dateFormat;
+	}
+
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+
+	public String getLayout() {
+		return layout;
+	}
+
+	public void setLayout(String layout) {
+		this.layout = layout;
+	}
+	
 
 	public Integer getId() {
 		return id;

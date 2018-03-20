@@ -42,6 +42,8 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
     private IssueSecurityLevelManager issueSecurityLevelManager;
     private EventTypeManager eventManager;
     private Boolean active;
+	private String dateFormat;
+    private String layout;
 
     private Collection<IssueSecurityLevel> securityLevels;
     private Collection<EventType> eventTypes;
@@ -87,8 +89,10 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
         //Faire controles
         if( LOG.isDebugEnabled()) {
         	LOG.debug("Active : " + active);
+        	LOG.debug("dateFormat :" +dateFormat);
+        	LOG.debug("Layout :" +layout);
         }
-        this.configurationService.updateConfiguration(getActive());
+        this.configurationService.updateConfiguration(getActive(), getDateFormat(), getLayout());
         this.securityLevels = issueSecurityLevelManager.getAllIssueSecurityLevels();
         
         return INPUT;
@@ -130,7 +134,24 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
 	public void setEventTypes(Collection<EventType> eventTypes) {
 		this.eventTypes = eventTypes;
 	}
+    public String getDateFormat() {
+		return dateFormat;
+	}
 
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+
+	public String getLayout() {
+		if(layout == null) {
+			layout = "tab";
+		}
+		return layout;
+	}
+
+	public void setLayout(String layout) {
+		this.layout = layout;
+	}
 	
 }
 

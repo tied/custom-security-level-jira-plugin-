@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import fr.nlebec.jira.plugins.customseclvl.CSLInitializer;
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
 public class UpdateSecurityRuleRequestBody {
@@ -88,6 +90,6 @@ public class UpdateSecurityRuleRequestBody {
 		this.applicationDate = applicationDate;
 	}
 	public ZonedDateTime getApplicationDateAsZoneInstant() {
-		return ZonedDateTime.parse(applicationDate, CSLConstantes.formatter);
+		return ZonedDateTime.parse(applicationDate, CSLInitializer.getDefaultDateTimeFormatter());
 	}
 }

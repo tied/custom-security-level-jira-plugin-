@@ -17,7 +17,7 @@ import fr.nlebec.jira.plugins.customseclvl.ao.model.CSLConfigurationAO;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
 
 @Named
-public class CSLConfigurationService {
+public class CSLConfigurationService  {
 
 	private final static Logger LOG = Logger.getLogger(CSLConfigurationService.class);
 
@@ -52,11 +52,14 @@ public class CSLConfigurationService {
 		return configAo;
 	}
 
-	public void updateConfiguration(boolean isActive) throws SQLException {
+	public void updateConfiguration(boolean isActive, String dateFormat, String layout) throws SQLException {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Saving configuration preferences");
 		}
-		this.getConfiguration().setActive(isActive);
+		CSLConfiguration config = this.getConfiguration();
+		config.setActive(isActive);
+		config.setDateFormat(dateFormat);
+		config.setLayout(layout);
 		CSLConfigurationAO configAo = getConfigurationAo();
 		ItemConverter.bindPojoToActiveObject(configuration, configAo);
 		configAo.save();

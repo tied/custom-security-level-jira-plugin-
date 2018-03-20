@@ -25,8 +25,8 @@
 		        </tr>
 		    </thead>
 		    <tbody>
-		    #if($action.getActivesSecurityRules().size() > 0)
-			#foreach ($rule in $action.getActivesSecurityRules())
+		    #if($action.getDeletedSecurityRules().size() > 0)
+			#foreach ($rule in $action.getDeletedSecurityRules())
 		        <tr>
 		        	<td headers="name">$rule.name</td>
 		         	<td headers="active">

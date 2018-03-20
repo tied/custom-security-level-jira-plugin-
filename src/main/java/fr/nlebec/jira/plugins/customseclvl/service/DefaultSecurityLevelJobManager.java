@@ -36,8 +36,8 @@ public class DefaultSecurityLevelJobManager {
 		this.securityRuleService = securityRuleService;
 	}
 
-	public void deleteJobEntry(String jobName) {
-		JobEntryAO[] jobEntries = this.persistenceManager.find(JobEntryAO.class,Query.select().where("JOB_NAME = ?",jobName));
+	public void deleteJobEntry(String jobId, int securityRuleId) {
+		JobEntryAO[] jobEntries = this.persistenceManager.find(JobEntryAO.class,Query.select().where("JOB_ID = ? AND SECURITY_RULE_ID = ?",jobId,securityRuleId));
 		this.persistenceManager.delete(jobEntries[0]);
 	}
 

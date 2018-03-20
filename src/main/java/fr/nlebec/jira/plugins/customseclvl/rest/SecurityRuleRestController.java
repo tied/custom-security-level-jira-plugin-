@@ -43,10 +43,10 @@ import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.scheduler.SchedulerServiceException;
 
+import fr.nlebec.jira.plugins.customseclvl.CSLInitializer;
 import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleResponse;
-import fr.nlebec.jira.plugins.customseclvl.model.CSLConstantes;
 import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.RetrieveSecurityRuleResponse;
@@ -271,7 +271,7 @@ public class SecurityRuleRestController {
 		}
 		if (body.getApplicationDate() == null) {
 			try {
-				ZonedDateTime.parse(body.getApplicationDate(), CSLConstantes.formatter);
+				ZonedDateTime.parse(body.getApplicationDate(), CSLInitializer.getDefaultDateTimeFormatter());
 			} catch (DateTimeParseException  e) {
 				throw new ValidationException("La date d'application n'est pas au format valide");
 			}
@@ -313,7 +313,7 @@ public class SecurityRuleRestController {
 		}
 		if (body.getApplicationDate() == null) {
 			try {
-				ZonedDateTime.parse(body.getApplicationDate(), CSLConstantes.formatter);
+				ZonedDateTime.parse(body.getApplicationDate(), CSLInitializer.getDefaultDateTimeFormatter());
 			} catch (DateTimeParseException  e) {
 				throw new ValidationException("La date d'application n'est pas au format valide");
 			}

@@ -44,7 +44,7 @@ public class ApplySecurityLevelTask implements ApplySecurityLevel {
 		} 
 		
 		applicationManager.applyRuleOnWholeStock(sr);
-		jobServices.deleteJobEntry(req.getJobId().toString());
+		jobServices.deleteJobEntry(req.getJobId().toString(), idSr);
 		
 		return resp;
 	}
