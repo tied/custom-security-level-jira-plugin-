@@ -18,6 +18,8 @@ public class CSLConfiguration {
 	
 	private Boolean active;
 	
+	private Boolean silent;
+	
     public String getDateFormat() {
 		return dateFormat;
 	}
@@ -73,6 +75,14 @@ public class CSLConfiguration {
 
 	public void setInactivesSecurityRules(List<SecurityRules> inactivesSecurityRules) {
 		this.inactivesSecurityRules = inactivesSecurityRules;
+	}
+
+	public Boolean getSilent() {
+		return silent;
+	}
+
+	public void setSilent(Boolean silent) {
+		this.silent = silent;
 	}
 	
 }

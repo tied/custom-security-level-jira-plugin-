@@ -45,6 +45,13 @@
         <styleClass>csl-link</styleClass>
     </web-item>
 
+	<web-item key="csl.admin.list.seelogs.link" name="See Logs section" section="admin_plugins_menu/csl_admin_section" weight="10">
+        <description key="csl.link.seelogs.description">See logs</description>
+        <label key="csl.link.seelogs.label">See Logs</label>
+        <link linkId="csl_see_log">/secure/SeeCslLog.jspa</link>
+        <styleClass>csl-link</styleClass>
+    </web-item>
+
     <webwork1 key="csl.admin.web-action" name="Plugin's Administration Manager">
         <description key="csl.admin.descr">Plugin's Administration Manager</description>
         <actions>

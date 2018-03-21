@@ -21,6 +21,10 @@ public interface CSLConfigurationAO extends Entity {
 	
 	public String getDateFormat();
 	
+	public Boolean getSilent();
+	
+	public void setSilent(Boolean silent);
+	
 	@OneToMany
 	public SecurityRuleAO[] getSecurityRules();
 }

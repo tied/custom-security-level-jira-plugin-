@@ -52,7 +52,7 @@ public class CSLConfigurationService  {
 		return configAo;
 	}
 
-	public void updateConfiguration(boolean isActive, String dateFormat, String layout) throws SQLException {
+	public void updateConfiguration(boolean isActive, String dateFormat, String layout, Boolean silent) throws SQLException {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Saving configuration preferences");
 		}
@@ -60,6 +60,7 @@ public class CSLConfigurationService  {
 		config.setActive(isActive);
 		config.setDateFormat(dateFormat);
 		config.setLayout(layout);
+		config.setSilent(silent);
 		CSLConfigurationAO configAo = getConfigurationAo();
 		ItemConverter.bindPojoToActiveObject(configuration, configAo);
 		configAo.save();

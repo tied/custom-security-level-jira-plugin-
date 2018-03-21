@@ -238,7 +238,6 @@ public class SecurityRuleRestController {
 			MutableIssue mi = this.issueManager.getIssueByCurrentKey(issueKey);
 			Long isl =  mi.getSecurityLevelId();
 			IssueSecurityLevel finalIsl = issueSecurityManager.getSecurityLevel(isl);
-			System.out.println("Test pour issueKey "+ issueKey);
 			PermissionManager pm = ComponentAccessor.getPermissionManager();
 			
 			if(pm.hasPermission(ProjectPermissions.CREATE_ISSUES, mi, user)) {
@@ -269,12 +268,10 @@ public class SecurityRuleRestController {
 		if (body.getPriority() == null) {
 			throw new ValidationException("Parametre prorité n'est pas valide");
 		}
-		if (body.getApplicationDate() == null) {
-			try {
-				ZonedDateTime.parse(body.getApplicationDate(), CSLInitializer.getDefaultDateTimeFormatter());
-			} catch (DateTimeParseException  e) {
-				throw new ValidationException("La date d'application n'est pas au format valide");
-			}
+		try {
+			ZonedDateTime.parse(body.getApplicationDate(), CSLInitializer.getDefaultDateTimeFormatter());
+		} catch (DateTimeParseException  e) {
+			throw new ValidationException("La date d'application n'est pas au format valide");
 		}
 		
 		try {
@@ -311,13 +308,12 @@ public class SecurityRuleRestController {
 		if (body.getEvents() == null || body.getEvents().size() == 0) {
 			throw new ValidationException("Au moins un evenement doit être définis");
 		}
-		if (body.getApplicationDate() == null) {
-			try {
-				ZonedDateTime.parse(body.getApplicationDate(), CSLInitializer.getDefaultDateTimeFormatter());
-			} catch (DateTimeParseException  e) {
-				throw new ValidationException("La date d'application n'est pas au format valide");
-			}
+		try {
+			ZonedDateTime.parse(body.getApplicationDate(), CSLInitializer.getDefaultDateTimeFormatter());
+		} catch (DateTimeParseException  e) {
+			throw new ValidationException("La date d'application n'est pas au format valide");
 		}
+		
 		try {
 			MessageSet msgSet = searchService.validateQuery(user, parseResult.getQuery());
 			if (msgSet.hasAnyErrors()) {

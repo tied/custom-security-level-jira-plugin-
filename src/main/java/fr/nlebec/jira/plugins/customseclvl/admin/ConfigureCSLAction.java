@@ -44,6 +44,7 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
     private Boolean active;
 	private String dateFormat;
     private String layout;
+    private Boolean silent;
 
     private Collection<IssueSecurityLevel> securityLevels;
     private Collection<EventType> eventTypes;
@@ -91,8 +92,9 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
         	LOG.debug("Active : " + active);
         	LOG.debug("dateFormat :" +dateFormat);
         	LOG.debug("Layout :" +layout);
+        	LOG.debug("Silent :" +silent);
         }
-        this.configurationService.updateConfiguration(getActive(), getDateFormat(), getLayout());
+        this.configurationService.updateConfiguration(getActive(), getDateFormat(), getLayout(), getSilent());
         this.securityLevels = issueSecurityLevelManager.getAllIssueSecurityLevels();
         
         return INPUT;
@@ -104,6 +106,8 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
 		}
 		return active;
 	}
+	
+	
 
 	public void setActive(Boolean active) {
 		this.active = active;
@@ -151,6 +155,17 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
 
 	public void setLayout(String layout) {
 		this.layout = layout;
+	}
+
+	public Boolean getSilent() {
+		if(silent == null) {
+			silent= Boolean.FALSE;
+		}
+		return silent;
+	}
+
+	public void setSilent(Boolean silent) {
+		this.silent = silent;
 	}
 	
 }

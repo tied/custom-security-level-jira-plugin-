@@ -59,15 +59,16 @@ public class ItemConverter {
 		csl.setActive(configurations.getActive());
 		csl.setDateFormat(configurations.getDateFormat());
 		csl.setLayout(configurations.getLayout());
+		csl.setSilent(configurations.getSilent());
 		return csl;
 	}
 
 	public static void bindPojoToActiveObject(CSLConfiguration configuration, CSLConfigurationAO configAo)
 			throws SQLException {
-		LOG.debug("configuration : "+configuration.getDateFormat());
 		configAo.setActive(configuration.getActive());
 		configAo.setLayout(configuration.getLayout());
 		configAo.setDateFormat(configuration.getDateFormat());
+		configAo.setSilent(configuration.getSilent());
 		if (configuration.getActivesSecurityRules() != null) {
 			for (int i = 0; i < configuration.getActivesSecurityRules().size(); i++) {
 				SecurityRuleAO securityRuleAO = configAo.getEntityManager().create(SecurityRuleAO.class);

@@ -12,8 +12,8 @@
 			<table class="aui">
 		    <thead>
 		        <tr>
-		        	<th id="name">$action.getText('csl.admin.securityrule.list.tab.title')</th>
 		         	<th id="active">$action.getText('csl.admin.securityrule.list.active.label')</th>
+		         	<th id="name">$action.getText('csl.admin.securityrule.list.tab.title')</th>
 		            <th id="applicationDate">$action.getText('csl.admin.securityrule.list.applicationdate.label')</th>
 		            <th id="creationDate">$action.getText('csl.admin.securityrule.list.creationdate.label')</th>
 		            <th id="creationUser">$action.getText('csl.admin.securityrule.list.creator.label')</th>
@@ -28,7 +28,6 @@
 		    #if($action.getActivesSecurityRules().size() > 0)
 			#foreach ($rule in $action.getActivesSecurityRules())
 		        <tr>
-		        	<td headers="name">$rule.name</td>
 		         	<td headers="active">
 		         		#if ($rule.getActive())
 						<span class="aui-icon aui-icon-small aui-iconfont-success green"></span>  
@@ -36,6 +35,7 @@
 						 	<span class="aui-icon aui-icon-small aui-iconfont-devtools-task-disabled orange"></span>
 						 #end
 		         	</td>
+		         	<td headers="name">$rule.name</td>
 		            <td headers="applicationDate">$action.formatDate($rule.applicationDate)</td>
 		            <td headers="creationDate">$action.formatDate($rule.creationDate)</td>
 		             <td headers="creationUser">$rule.creationUser</td>
@@ -43,12 +43,12 @@
 		             <td headers="jira-events">
 		             	#foreach ($event in $rule.getEvents())
 							<span id="jira-events" class="bold" >  
-								$event.getJiraEventName() ( $event.getJiraEventId() )
+								$event.getJiraEventName()
 							</span>
 							<br>
 						#end
 					</td>
-		            <td headers="securityid">$rule.getJiraSecurityName() ( $rule.jiraSecurityId )</td>
+		            <td headers="securityid">$rule.getJiraSecurityName()</td>
 		            <td headers="priority">$rule.priority</td>
 		             
 		            <td headers="actions-active">
