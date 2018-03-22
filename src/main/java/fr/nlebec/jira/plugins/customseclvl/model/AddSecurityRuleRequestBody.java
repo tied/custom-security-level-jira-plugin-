@@ -30,7 +30,7 @@ public class AddSecurityRuleRequestBody {
 	@XmlElement
 	private String jql;
 	
-	@XmlElement
+	@XmlElement(required=false)
 	private String applicationDate;
 
 	@XmlElement

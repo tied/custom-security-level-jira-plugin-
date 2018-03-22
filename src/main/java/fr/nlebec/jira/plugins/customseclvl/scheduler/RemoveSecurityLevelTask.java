@@ -43,6 +43,7 @@ public class RemoveSecurityLevelTask implements ApplySecurityLevel {
 			applicationManager.removeRuleOnWholeStock(sr);
 			if(sr != null) {
 				sr.setDisableDate(ZonedDateTime.now());
+				sr.setDeleted(Boolean.TRUE);
 				sr.setActive(Boolean.FALSE);
 				securityRuleService.updateSecurityRule(sr);
 			}

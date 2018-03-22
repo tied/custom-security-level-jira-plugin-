@@ -187,6 +187,9 @@ public class SecurityRuleRestController {
 			try {
 				checkParameters(body, user);
 				this.securityRuleService.updateSecurityRule(ItemConverter.bodyToPojo(body, user));
+//				if( body.getApplicationDate() != null) {
+//					jobRunner.removeSecurityLevelJob(body.getId(),body.getApplicationDateAsZoneInstant());
+//				}
 				response.setLocation(request.getRequestURI() + "/" + body.getId() );
 			} catch (SQLException e) {
 				errorCode = 500;
@@ -268,12 +271,13 @@ public class SecurityRuleRestController {
 		if (body.getPriority() == null) {
 			throw new ValidationException("Parametre prorité n'est pas valide");
 		}
-		try {
-			ZonedDateTime.parse(body.getApplicationDate(), CSLInitializer.getDefaultDateTimeFormatter());
-		} catch (DateTimeParseException  e) {
-			throw new ValidationException("La date d'application n'est pas au format valide");
+		if( !StringUtils.isEmpty( body.getApplicationDate() ) ) {
+			try {
+				ZonedDateTime.parse(body.getApplicationDate(), CSLInitializer.getDefaultDateTimeFormatter());
+			} catch (DateTimeParseException  e) {
+				throw new ValidationException("La date d'application n'est pas au format valide");
+			}
 		}
-		
 		try {
 			MessageSet msgSet = searchService.validateQuery(user, parseResult.getQuery());
 			if (msgSet.hasAnyErrors()) {
@@ -291,41 +295,15 @@ public class SecurityRuleRestController {
 	}
 
 	private void checkParameters(UpdateSecurityRuleRequestBody body, ApplicationUser user) {
-		final SearchService.ParseResult parseResult = searchService.parseQuery(user, body.getJql());
 
 		if (body.getId() == null) {
 			throw new ValidationException("Paramètre ID n'est pas valide");
 		}
-		if (body.getActive() == null) {
-			throw new ValidationException("Parametre active n'est pas valide");
-		}
 		if (body.getRuleName() == null || StringUtils.isEmpty(body.getRuleName())) {
 			throw new ValidationException("Le nom de la règle est vide");
 		}
-		if (body.getJql() == null || StringUtils.isEmpty(body.getJql())) {
-			throw new ValidationException("Le JQL est vide ou invalide");
-		}
 		if (body.getEvents() == null || body.getEvents().size() == 0) {
 			throw new ValidationException("Au moins un evenement doit être définis");
-		}
-		try {
-			ZonedDateTime.parse(body.getApplicationDate(), CSLInitializer.getDefaultDateTimeFormatter());
-		} catch (DateTimeParseException  e) {
-			throw new ValidationException("La date d'application n'est pas au format valide");
-		}
-		
-		try {
-			MessageSet msgSet = searchService.validateQuery(user, parseResult.getQuery());
-			if (msgSet.hasAnyErrors()) {
-				StringBuilder sb = new StringBuilder();
-				for (String msg : msgSet.getErrorMessages()) {
-					sb.append(msg);
-					sb.append("\t\n");
-				}
-				throw new ValidationException(sb.toString());
-			}
-		} catch (Exception e) {
-			throw new ValidationException(e.getMessage());
 		}
 
 	}

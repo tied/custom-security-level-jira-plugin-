@@ -135,6 +135,13 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
 		}
 		return ret;
 	}
+	public boolean hasApplicationDate(SecurityRules securityrule) {
+		boolean ret = true;
+		if( ZonedDateTime.now().isBefore(securityrule.getApplicationDate())) {
+			ret = false;
+		}
+		return ret;
+	}
 }
 
 

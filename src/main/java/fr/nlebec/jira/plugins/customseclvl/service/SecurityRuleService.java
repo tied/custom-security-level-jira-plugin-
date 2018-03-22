@@ -98,6 +98,8 @@ public class SecurityRuleService {
     	LOG.info("Update existing security rule : "+ securityRule.toString());
     	
     	SecurityRuleAO[] securityRuleAO = this.persistenceManager.find(SecurityRuleAO.class, Query.select().where("ID = ?",securityRule.getId()));
+    	
+    	
     	ItemConverter.bindPojoToActiveObject(getConfigurationAo(),securityRule, securityRuleAO[0]);
 
     	//Bottom up approach : we delete associations first
@@ -116,7 +118,6 @@ public class SecurityRuleService {
 		
 		SecurityRuleAO[] securityRules = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRuleToDelete));
 		securityRules[0].setApplicationDate(Date.from(applicationDeleteDate.toInstant()));
-		securityRules[0].setDeleted(Boolean.TRUE);
 		securityRules[0].save();
         
 	}

@@ -43,14 +43,12 @@ AJS.$(document).ready(function () {
     AJS.$("#edit-rule-active").change(function() {
     	var id = $("#edit-rule-id").val()
     	var active = AJS.$("#edit-sr-" + id ).attr("data-active");
-    	console.log("this.checked "+ this.checked + " " + active);
     	if((this.checked && !active) || (!this.checked && active)) {
         	AJS.$("#edit-rule-application-date-section").show();
         }
         else{
         	AJS.$("#edit-rule-application-date-section").hide();
         }
-    	console.log("this.checked "+ this.checked + " " + active);
     });
 	
 	
@@ -107,13 +105,9 @@ AJS.$(document).ready(function () {
     	e.preventDefault();
 		var param = {};
 		param.id = $("#edit-rule-id").val();
-		param.jql = $("#edit-jql").val();
-		param.active= $("#edit-rule-active").is(':checked');
-		param.securityLvl= $("#edit-security-lvl").val();
 		param.events = $("#edit-events").val();
 		param.ruleName = $("#edit-rule-name").val();
 		param.priority = $("#edit-priority").val();
-		param.applicationDate = $("#edit-application-date").val();
 		
 		AJS.$("#edit-form-error").hide();
 		AJS.$("#edit-loading").show();
@@ -182,10 +176,12 @@ AJS.$(document).ready(function () {
     	var id = AJS.$(this).attr('data-id');
     	AJS.$("#delete-rule-id").attr("value",id);
     	AJS.dialog2("#delete-dialog").show();
- 
 	});
     
     
+    AJS.$("[id^=unactivate-sr]").on("click", function(e){
+    	AJS.dialog2("#unactivate-dialog").show();
+    });
     
     AJS.$("[id^=edit-sr]").on("click", function(e){
     	var id = AJS.$(this).attr('data-id');
@@ -193,10 +189,10 @@ AJS.$(document).ready(function () {
     	var priority = AJS.$(this).attr('data-priority');
     	var jql = AJS.$(this).attr('data-jql');
     	var securitylvl =AJS.$(this).attr('data-security-lvl');
-    	var active =AJS.$(this).attr('data-active');
-    	var activeAsBoolean = (active == 'true');
     	var events = AJS.$(this).attr('data-events');
     	var eventsAsArray = JSON.parse(events);
+    	var active =AJS.$(this).attr('data-active');
+    	var activeAsBoolean = (active == 'true');
     	
     	 AJS.$("#edit-rule-id").attr("value",id);
     	 AJS.$("#edit-priority").attr("value",priority);

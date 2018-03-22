@@ -85,5 +85,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
 	   #parse("/templates/admin/fragments/dialog/edit-dialog.vm")
 	   
 	   #parse("/templates/admin/fragments/dialog/delete-dialog.vm")
+	   
+	   #parse("/templates/admin/fragments/dialog/unactivate-dialog.vm")
    </body>
 </html>
