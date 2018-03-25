@@ -14,6 +14,7 @@ AJS.$(document).ready(function () {
 	AJS.$("#edit-loading").hide();
 	AJS.$("#add-loading").hide();
 	AJS.$("#delete-loading").hide();
+	AJS.$("#unactivate-loading").hide();
 	
 	AJS.$("[id^=unactivate-delete-sr]").tooltip();
 	AJS.$('#delete-application-date').datePicker();
@@ -23,9 +24,11 @@ AJS.$(document).ready(function () {
     AJS.$('#delete-application-date').attr("min",formatDate(today));
     AJS.$('#add-application-date').attr("min",formatDate(today));
     AJS.$('#edit-application-date').attr("min",formatDate(today));
+    AJS.$('#unactivate-application-date').attr("min",formatDate(today));
     AJS.$('#delete-application-date').attr("max",formatDate(oneMonthMaxDate));
     AJS.$('#add-application-date').attr("max",formatDate(oneMonthMaxDate));
     AJS.$('#edit-application-date').attr("max",formatDate(oneMonthMaxDate));
+    AJS.$('#unactivate-application-date').attr("max",formatDate(oneMonthMaxDate));
     
     AJS.$("#btn-add-customsecurity-lvl").click(function(e) {
     	e.preventDefault();
@@ -171,6 +174,33 @@ AJS.$(document).ready(function () {
 			
     });
     
+    AJS.$("#unactivate-form").on("submit", function(e){
+    	e.preventDefault();
+    	var id =  $("#unactivate-rule-id").val();
+		var param = {};
+		param.id = id;
+		param.applicationDate =  $("#unactivate-application-date").val();
+		
+		AJS.$("#unactivate-form-error").addClass('hide');
+		AJS.$("#unactivate-loading").show();
+		
+		var request = AJS.$.ajax({
+			  url:  AJS.contextPath() + "/rest/csl/1.0/security-rule/unactivate",
+			  type: "POST",
+			  data: JSON.stringify(param),
+		      contentType: "application/json",
+			  dataType: "json"
+			});
+			request.success(function( data ) {
+				AJS.$("div[id=rule-" + id + "]" ).remove();
+				alertUser("sucess-messages", AJS.I18n.getText("csl.admin.securityrule.unactivate.success.msg"));
+				AJS.dialog2("#unactivate-dialog").hide();
+				var editRedirect = AJS.contextPath() + "/secure/ConfigureSecurityRules.jspa?message=csl.admin.securityrule.unactivate.success"
+				window.location.href = editRedirect ;
+			});
+			
+    });
+    
     
     AJS.$("[id^=delete-sr]").on("click", function(e){
     	var id = AJS.$(this).attr('data-id');
@@ -180,6 +210,8 @@ AJS.$(document).ready(function () {
     
     
     AJS.$("[id^=unactivate-sr]").on("click", function(e){
+    	var id = AJS.$(this).attr('data-id');
+    	AJS.$("#unactivate-rule-id").attr("value",id);
     	AJS.dialog2("#unactivate-dialog").show();
     });
     

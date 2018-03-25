@@ -22,6 +22,7 @@ import fr.nlebec.jira.plugins.customseclvl.ao.model.SecurityRuleAO;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
 import fr.nlebec.jira.plugins.customseclvl.model.Event;
+import fr.nlebec.jira.plugins.customseclvl.model.InactiveSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
 import fr.nlebec.jira.plugins.customseclvl.model.UpdateSecurityRuleRequestBody;
@@ -184,6 +185,12 @@ public class ItemConverter {
 		securityRule.setJql(body.getJql());
 		securityRule.setName(body.getRuleName());
 		securityRule.setPriority(body.getPriority());
+		return securityRule;
+	}
+	
+	public static SecurityRules bodyToPojo(InactiveSecurityRuleRequestBody body, ApplicationUser creationUser) {
+		SecurityRules securityRule = new SecurityRules();
+		securityRule.setApplicationDate(body.getApplicationDateAsZoneDateTime());
 		return securityRule;
 	}
 

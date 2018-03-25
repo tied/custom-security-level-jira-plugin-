@@ -49,6 +49,7 @@ import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.AddSecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.DeleteSecurityRuleResponse;
+import fr.nlebec.jira.plugins.customseclvl.model.InactiveSecurityRuleRequestBody;
 import fr.nlebec.jira.plugins.customseclvl.model.RetrieveSecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRuleResponse;
 import fr.nlebec.jira.plugins.customseclvl.model.UpdateSecurityRuleRequestBody;
@@ -141,6 +142,35 @@ public class SecurityRuleRestController {
 		}
 		return Response.status(errorCode).entity(response).build();
 	}
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("/unactivate")
+	public Response disableSecurityRule(InactiveSecurityRuleRequestBody body, @Context HttpServletRequest request) {
+		String userName = request.getRemoteUser();
+		ApplicationUser user = this.userManager.getUserByKey(userName);
+		AddSecurityRuleResponse response = new AddSecurityRuleResponse();
+		int errorCode = 201;
+		if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, user)) {
+			response.setError(this.i18nHelper.getText("fr.csl.admin.error.unauthorized"));
+		} else {
+			try {
+				//checkParameters(ruleBody, user);
+				this.securityRuleService.inactiveSecurityRule(body.getIdSecurityRule(), body.getApplicationDateAsZoneDateTime());
+				if( body.getApplicationDate() != null) {
+					jobRunner.disableSecurityLevelJob(body.getIdSecurityRule(),body.getApplicationDateAsZoneDateTime());
+				}
+			} catch (ValidationException e) {
+				errorCode = 400;
+				response.setError(e.getMessage());
+			} catch (SchedulerServiceException e) {
+				errorCode = 500;
+				response.setError(e.getMessage());
+			}
+		}
+		return Response.status(errorCode).entity(response).build();
+	}
 
 	@DELETE
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -187,9 +217,6 @@ public class SecurityRuleRestController {
 			try {
 				checkParameters(body, user);
 				this.securityRuleService.updateSecurityRule(ItemConverter.bodyToPojo(body, user));
-//				if( body.getApplicationDate() != null) {
-//					jobRunner.removeSecurityLevelJob(body.getId(),body.getApplicationDateAsZoneInstant());
-//				}
 				response.setLocation(request.getRequestURI() + "/" + body.getId() );
 			} catch (SQLException e) {
 				errorCode = 500;

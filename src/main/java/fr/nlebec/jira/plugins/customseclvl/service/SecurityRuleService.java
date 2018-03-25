@@ -3,7 +3,6 @@ package fr.nlebec.jira.plugins.customseclvl.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
@@ -98,8 +97,6 @@ public class SecurityRuleService {
     	LOG.info("Update existing security rule : "+ securityRule.toString());
     	
     	SecurityRuleAO[] securityRuleAO = this.persistenceManager.find(SecurityRuleAO.class, Query.select().where("ID = ?",securityRule.getId()));
-    	
-    	
     	ItemConverter.bindPojoToActiveObject(getConfigurationAo(),securityRule, securityRuleAO[0]);
 
     	//Bottom up approach : we delete associations first
@@ -115,10 +112,14 @@ public class SecurityRuleService {
         securityRuleAO[0].save();
     }
 	public void deleteSecurityRule(Integer idSecurityRuleToDelete, ZonedDateTime applicationDeleteDate) {
-		
 		SecurityRuleAO[] securityRules = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRuleToDelete));
 		securityRules[0].setApplicationDate(Date.from(applicationDeleteDate.toInstant()));
 		securityRules[0].save();
-        
+	}
+	
+	public void inactiveSecurityRule(Integer idSecurityRuleToUpdate, ZonedDateTime applicationDeleteDate) {
+		SecurityRuleAO[] securityRuleAO = this.persistenceManager.find(SecurityRuleAO.class, Query.select().where("ID = ?",idSecurityRuleToUpdate));
+		securityRuleAO[0].setApplicationDate(Date.from(applicationDeleteDate.toInstant()));
+		securityRuleAO[0].save();
 	}
 }

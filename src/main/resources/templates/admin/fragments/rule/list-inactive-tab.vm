@@ -1,6 +1,6 @@
 
 <div id="no-rule-message" class="aui-message aui-message-info 
-					#if($action.getActivesSecurityRules().size() > 0) hide #end
+					#if($action.getInactivesSecurityRules().size() > 0) hide #end
 				">
 	    <p class="title">
 	        <strong>Aucune règle de sécurité définie</strong>

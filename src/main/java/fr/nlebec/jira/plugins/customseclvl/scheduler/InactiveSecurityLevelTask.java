@@ -17,17 +17,17 @@ import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleApplicationManage
 import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleService;
 
 @Scanned
-public class RemoveSecurityLevelTask implements RemoveSecurityLevel {
+public class InactiveSecurityLevelTask implements InactiveSecurityLevel {
 
 	private SecurityRuleApplicationManager applicationManager;
 	
-	private Logger log = Logger.getLogger(RemoveSecurityLevelTask.class);
+	private Logger log = Logger.getLogger(InactiveSecurityLevelTask.class);
 
 	private SecurityRuleService securityRuleService;
 	
 	private DefaultSecurityLevelJobManager jobServices;
 	
-	public RemoveSecurityLevelTask(SecurityRuleApplicationManager applicationManager, SecurityRuleService service, DefaultSecurityLevelJobManager jobServices) {
+	public InactiveSecurityLevelTask(SecurityRuleApplicationManager applicationManager, SecurityRuleService service, DefaultSecurityLevelJobManager jobServices) {
 		this.applicationManager = applicationManager; 
 		this.securityRuleService = service;
 		this.jobServices = jobServices;
@@ -43,7 +43,6 @@ public class RemoveSecurityLevelTask implements RemoveSecurityLevel {
 			applicationManager.removeRuleOnWholeStock(sr);
 			if(sr != null) {
 				sr.setDisableDate(ZonedDateTime.now());
-				sr.setDeleted(Boolean.TRUE);
 				sr.setActive(Boolean.FALSE);
 				securityRuleService.updateSecurityRule(sr);
 			}
