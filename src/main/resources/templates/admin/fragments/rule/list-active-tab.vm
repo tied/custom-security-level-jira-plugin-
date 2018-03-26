@@ -29,7 +29,7 @@
 			#foreach ($rule in $action.getActivesSecurityRules())
 		        <tr>
 		         	<td headers="active">
-		         		#if($action.hasApplicationDate($rule) == false)
+		         		#if($action.hasPendingStatus($rule) == true)
 							<span class="orange aui-icon aui-icon-small aui-iconfont-time"></span>
 						#elseif ($rule.getActive() )
 							<span class="aui-icon aui-icon-small aui-iconfont-success green"></span>  
@@ -65,7 +65,7 @@
 										data-active="$rule.active"
 										data-events="$rule.getSimpleEventsList()" >$action.getText('csl.admin.securityrule.list.actions.edit.label')</a>
 						        </li>
-						        #if($action.hasApplicationDate($rule) == true)
+						        #if($action.hasPendingStatus($rule) != true)
 							        #if($rule.getDeleted() != true)
 									<li>
 							        	<a href="#" id="delete-sr-$rule.id"

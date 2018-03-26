@@ -15,7 +15,7 @@
 					<h3>
 						<b>$action.getText('csl.admin.securityrule.list.title', $rule.name) </b> 
 						&nbsp;
-						#if($action.willChangeStatus($rule))
+						#if($action.hasPendingStatus($rule))
 							<span class="orange aui-icon aui-icon-small aui-iconfont-time"></span>
 						#end
 					</h3>

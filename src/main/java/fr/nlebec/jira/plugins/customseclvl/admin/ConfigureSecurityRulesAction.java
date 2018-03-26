@@ -128,17 +128,10 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
 		return ret;
 	}
 	
-	public boolean willChangeStatus(SecurityRules securityrule) {
+	public boolean hasPendingStatus(SecurityRules securityrule) {
 		boolean ret = false;
 		if( ZonedDateTime.now().isBefore(securityrule.getApplicationDate())) {
 			ret = true;
-		}
-		return ret;
-	}
-	public boolean hasApplicationDate(SecurityRules securityrule) {
-		boolean ret = true;
-		if( ZonedDateTime.now().isBefore(securityrule.getApplicationDate())) {
-			ret = false;
 		}
 		return ret;
 	}
