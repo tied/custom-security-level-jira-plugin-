@@ -16,7 +16,7 @@ AJS.$(document).ready(function () {
 	AJS.$("#delete-loading").hide();
 	AJS.$("#unactivate-loading").hide();
 	
-	AJS.$("[id^=unactivate-delete-sr]").tooltip();
+	//AJS.$("[id^=unactivate-delete-sr]").tooltip();
 	AJS.$('#delete-application-date').datePicker();
     AJS.$('#add-application-date').datePicker();
     AJS.$('#edit-application-date').datePicker();
@@ -269,6 +269,9 @@ AJS.$(document).ready(function () {
     	  var minute = date.getMinutes();
     	  if( month <= 9){
     		  month = "0" + month; 
+    	  }
+    	  if( minute <= 9){
+    		  minute = "0" + minute; 
     	  }
     	  return year + separator + month + separator + day + 'T' + hour + ":" + minute;
     	}

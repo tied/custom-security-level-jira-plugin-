@@ -30,7 +30,10 @@
 		        <tr>
 		        	
 		         	<td headers="active">
-		         		#if ($rule.getActive())
+		         	
+		         		#if( $rule.getDeleted() )
+		         		<span class="aui-icon aui-icon-small aui-iconfont-remove red">Deleted</span>
+		         		#elseif ($rule.getActive())
 						<span class="aui-icon aui-icon-small aui-iconfont-success green"></span>  
 						 #else
 						 	<span class="aui-icon aui-icon-small aui-iconfont-devtools-task-disabled orange"></span>
