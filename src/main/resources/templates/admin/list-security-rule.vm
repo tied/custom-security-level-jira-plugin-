@@ -12,7 +12,7 @@ $webResourceManager.requireResourcesForContext("csl-admin")
    <header class="aui-page-header">
         <div class="aui-page-header-inner">
             <div class="aui-page-header-main">
-                <h2>Custom Security Level</h2>
+                <h2>$action.getText('csl.admin.securityrule.list.header.title')</h2>
             </div>
          
         <div class="aui-page-header-actions">
@@ -87,5 +87,9 @@ $webResourceManager.requireResourcesForContext("csl-admin")
 	   #parse("/templates/admin/fragments/dialog/delete-dialog.vm")
 	   
 	   #parse("/templates/admin/fragments/dialog/unactivate-dialog.vm")
+	   
+	    #parse("/templates/admin/fragments/dialog/active-dialog.vm"	)
+	   
+	    #parse("/templates/admin/fragments/dialog/cancel-dialog.vm"	)
    </body>
 </html>

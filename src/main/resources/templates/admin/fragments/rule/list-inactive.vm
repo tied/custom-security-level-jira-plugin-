@@ -28,7 +28,7 @@
 						        <li>
 						        	<a href="#" id="edit-sr-$rule.id" 
 										data-id="$rule.id" 
-										data-name="$rule.name"
+										data-name="$rule.name" 
 										data-priority="$rule.priority"
 										data-jql="$rule.jql"
 										data-security-lvl="$rule.jiraSecurityId"

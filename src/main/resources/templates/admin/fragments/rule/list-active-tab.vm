@@ -1,4 +1,4 @@
-
+$webResourceManager.requireResourcesForContext("csl-admin")
 <div id="no-rule-message" class="aui-message aui-message-info 
 					#if($action.getActivesSecurityRules().size() > 0) hide #end
 				">
@@ -61,8 +61,10 @@
 										data-name="$rule.name"
 										data-priority="$rule.priority"
 										data-jql="$rule.jql"
-										data-security-lvl="$rule.jiraSecurityId"
-										data-active="$rule.active"
+										data-security-lvl="$rule.jiraSecurityId" 
+										data-active="$rule.active" 
+										data-edit-date-application="$action.formatDateAsDefault($rule.applicationDate)"
+										data-edit-time-application="$action.formatTime($rule.applicationDate)"  
 										data-events="$rule.getSimpleEventsList()" >$action.getText('csl.admin.securityrule.list.actions.edit.label')</a>
 						        </li>
 						        #if($action.hasPendingStatus($rule) != true)
@@ -82,6 +84,13 @@
 									 		$action.getText('csl.admin.securityrule.list.actions.unactivate.label')</a>
 									</li>
 							        #end
+							        
+						       #else
+						     	<li>
+						        	<a href="#" id="cancel-sr-$rule.id"
+								 	   data-id="$rule.id" 
+								 	   data-name="$rule.name">$action.getText('csl.admin.securityrule.list.actions.cancel.label')</a>
+								</li>
 						        #end
 						    </ul>
 		            </td>

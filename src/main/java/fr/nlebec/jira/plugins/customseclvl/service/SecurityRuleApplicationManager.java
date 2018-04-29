@@ -67,54 +67,20 @@ public class SecurityRuleApplicationManager {
 	}
 
 	public void removeRuleOnWholeStock(SecurityRules securityRule) {
-		this.applyRuleOnJQLExp(securityRule, securityRule.getJql());
-		ApplicationUser createdUser = securityRule.getCreationUser();
-		final SearchService.ParseResult parseResult = searchService.parseQuery(createdUser, securityRule.getJql());
-		if (parseResult.isValid()) {
-			try {
-				final SearchResults results = searchService.search(createdUser, parseResult.getQuery(),
-						com.atlassian.jira.web.bean.PagerFilter.getUnlimitedFilter());
-				final List<Issue> issues = results.getIssues();
-				for (Issue issue : issues) {
-					MutableIssue mi = issueManager.getIssueByCurrentKey(issue.getKey());
-					if (issueSecurityLevelManager.getSecurityLevel(securityRule.getJiraSecurityId()) != null) {
-						LOG.info("Removing security level on issue " + mi.getKey());
-						mi.setSecurityLevelId(null);
-					} else {
-						LOG.info("Security level does not exist anymore : " + securityRule.getJiraSecurityId());
-						LOG.info("No security level has been applied");
-					}
-					if(Boolean.TRUE.equals(this.configurationService.getConfiguration().getSilent())) {
-						LOG.debug("No history metadata for this modification - see event log");
-						UpdateIssueRequest updateIssueReq = UpdateIssueRequest.builder().eventDispatchOption(EventDispatchOption.DO_NOT_DISPATCH).sendMail(false).historyMetadata(null).build();
-						issueManager.updateIssue(createdUser, mi, updateIssueReq);
-						for (Activity activity : activityService.activities(ActivityQuery.builder().addEntityFilter("key", mi.getKey()).startDate(Option.option(new Date())).build())) {
-							activityService.delete(activity.getActivityId().get());
-						}
-					}
-					else {
-						issueManager.updateIssue(createdUser, mi, EventDispatchOption.DO_NOT_DISPATCH,false);
-					}
-				}
-			} catch (SearchException e) {
-				LOG.error("Error running search", e);
-			}
-		} else {
-			LOG.error("Error parsing jqlQuery: " + parseResult.getErrors());
-		}
+		this.applyOrRemoveRuleOnJQLExp(securityRule, securityRule.getJql(), true);
 	}
 	
 	public void applyRuleOnWholeStock(SecurityRules securityRule) {
-		this.applyRuleOnJQLExp(securityRule, securityRule.getJql());
+		this.applyOrRemoveRuleOnJQLExp(securityRule, securityRule.getJql(), false);
 	}
 
 	public void applyRule(SecurityRules securityRule, String issueKey) {
 		String jqlQuery = securityRule.getJql() + " AND key = " + issueKey;
-		this.applyRuleOnJQLExp(securityRule, jqlQuery);
+		this.applyOrRemoveRuleOnJQLExp(securityRule, jqlQuery, false);
 
 	}
 
-	private void applyRuleOnJQLExp(SecurityRules securityRule, String jqlQuery) {
+	private void applyOrRemoveRuleOnJQLExp(SecurityRules securityRule, String jqlQuery, boolean removeJiraSecurityLevel) {
 		boolean appliedSecurityLevel = false;
 		ApplicationUser createdUser = securityRule.getCreationUser();
 		final SearchService.ParseResult parseResult = searchService.parseQuery(createdUser, jqlQuery);
@@ -128,7 +94,11 @@ public class SecurityRuleApplicationManager {
 					if (issueSecurityLevelManager.getSecurityLevel(securityRule.getJiraSecurityId()) != null) {
 						LOG.info("Apply security level : " + securityRule.getJiraSecurityId() + " on issue "
 								+ mi.getKey());
-						mi.setSecurityLevelId(securityRule.getJiraSecurityId());
+						Long securityLvl = securityRule.getJiraSecurityId();
+						if( removeJiraSecurityLevel ) {
+							securityLvl = null;
+						}
+						mi.setSecurityLevelId(securityLvl );
 					} else {
 						LOG.info("Security level does not exist anymore : " + securityRule.getJiraSecurityId());
 						LOG.info("No security level has been applied");

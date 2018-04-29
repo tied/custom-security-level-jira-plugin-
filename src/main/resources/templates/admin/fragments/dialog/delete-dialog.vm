@@ -21,7 +21,8 @@
 		      <form id="delete-form" class="aui">
 		         <div class="field-group">
 		            <label for="delete-application-date">$action.getText('csl.admin.securityrule.delete.applicationdate.label') <span class="aui-icon icon-required"></label>
-		            <input class="aui-date-picker" id="delete-application-date" type="datetime-local"  min="2018-01-01" />
+		            <input class="aui-date-picker medium-field" id="delete-application-date" type="date"  min="2018-01-01" />
+		            <input type="text" id="delete-application-date-time" name="delete-application-date-time" class="timepicker short-field"/>
 		            <div class="description">$action.getText('csl.admin.securityrule.delete.applicationdate.descr') </div>
 		         </div>
 		        

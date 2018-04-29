@@ -73,7 +73,11 @@ public class SecurityRuleService {
     	LOG.info("Get new security rule : "+ idSecurityRule);
     	SecurityRuleAO[] securityRuleAO = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRule)); 
     	List<SecurityRules> securityRules = ItemConverter.convertActiveObjectToPOJO(securityRuleAO);
-        return securityRules.get(0);
+    	SecurityRules ret = new SecurityRules();
+    	if(securityRules.size() > 0) {
+    		ret = securityRules.get(0);
+    	}
+        return ret;
     }
 
     public int addSecurityRule(SecurityRules securityRule) throws SQLException {
@@ -111,15 +115,9 @@ public class SecurityRuleService {
         LOG.info("Update security rule : "+ securityRuleAO.toString());
         securityRuleAO[0].save();
     }
-	public void deleteSecurityRule(Integer idSecurityRuleToDelete, ZonedDateTime applicationDeleteDate) {
-		SecurityRuleAO[] securityRules = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRuleToDelete));
-		securityRules[0].setApplicationDate(Date.from(applicationDeleteDate.toInstant()));
-		securityRules[0].save();
-	}
-	
-	public void inactiveSecurityRule(Integer idSecurityRuleToUpdate, ZonedDateTime applicationDeleteDate) {
+	public void updateApplicationDate(Integer idSecurityRuleToUpdate, ZonedDateTime applicationDate) {
 		SecurityRuleAO[] securityRuleAO = this.persistenceManager.find(SecurityRuleAO.class, Query.select().where("ID = ?",idSecurityRuleToUpdate));
-		securityRuleAO[0].setApplicationDate(Date.from(applicationDeleteDate.toInstant()));
+		securityRuleAO[0].setApplicationDate(Date.from(applicationDate.toInstant()));
 		securityRuleAO[0].save();
 	}
 }

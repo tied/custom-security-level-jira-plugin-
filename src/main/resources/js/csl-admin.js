@@ -1,13 +1,36 @@
 AJS.$(document).ready(function () {
+	
+	//Add some 15 minutes delay to not missclick and plan as much as possible
+	var delay = 15;
+	var today = new Date();
+	today.setMinutes(today.getMinutes() + delay);
+	var defaultTime = today.toTimeString().substring(0,5);
+	
+	//Parametrize Timepicker
+	var options = {
+			now: defaultTime, //hh:mm 24 hour format only, defaults to current time
+			twentyFour: true,
+	        title: 'Selectionner heures & minutes', //The Wickedpicker's title,
+	        showSeconds: false, //Whether or not to show seconds,
+	        timeSeparator: ':', // The string to put in between hours and minutes (and seconds)
+	        secondsInterval: 1, //Change interval for seconds, defaults to 1,
+	        minutesInterval: 1, //Change interval for minutes, defaults to 1
+	        clearable: false //Make the picker's input clearable (has clickable "x")
+	    };
+    $('.timepicker').wickedpicker(options);
+    $('.wickedpicker').css("z-index","4000");
+    
 	var today = new Date();
 	var	oneMonthMaxDate = new Date();
 	oneMonthMaxDate.setMonth(today.getMonth()+1);
 	
+	var formatFr = "dd/mm/yy";
+	var datePickerParam = {'overrideBrowserDefault': true, 'languageCode' : 'fr','dateFormat': formatFr};
+
 	// Hides the dialog
 	AJS.$("#edit-close-button").click(function(e) {
 	    e.preventDefault();
 	    AJS.$("#edit-form-error").hide();
-		AJS.$("#edit-rule-application-date-section").hide();
 	    AJS.dialog2("#edit-dialog").hide();
 	});
 	
@@ -15,20 +38,25 @@ AJS.$(document).ready(function () {
 	AJS.$("#add-loading").hide();
 	AJS.$("#delete-loading").hide();
 	AJS.$("#unactivate-loading").hide();
+	AJS.$("#cancel-loading").hide();
 	
 	//AJS.$("[id^=unactivate-delete-sr]").tooltip();
-	AJS.$('#delete-application-date').datePicker();
-    AJS.$('#add-application-date').datePicker();
-    AJS.$('#edit-application-date').datePicker();
-    
-    AJS.$('#delete-application-date').attr("min",formatDate(today));
-    AJS.$('#add-application-date').attr("min",formatDate(today));
-    AJS.$('#edit-application-date').attr("min",formatDate(today));
-    AJS.$('#unactivate-application-date').attr("min",formatDate(today));
-    AJS.$('#delete-application-date').attr("max",formatDate(oneMonthMaxDate));
-    AJS.$('#add-application-date').attr("max",formatDate(oneMonthMaxDate));
-    AJS.$('#edit-application-date').attr("max",formatDate(oneMonthMaxDate));
-    AJS.$('#unactivate-application-date').attr("max",formatDate(oneMonthMaxDate));
+	AJS.$('#delete-application-date').datePicker( datePickerParam	);
+    AJS.$('#add-application-date').datePicker( datePickerParam	);
+    AJS.$('#unactivate-application-date').datePicker( datePickerParam	);
+    $('#delete-application-date-time').wickedpicker();
+    $('#add-application-date-time').wickedpicker();
+    $('#unactivate-application-date-time').wickedpicker();
+    $('#edit-application-date-time').wickedpicker();
+
+    var expectedFormatDate = formatFr;
+
+    AJS.$('#delete-application-date').attr("min",formatDate(today, expectedFormatDate));
+    AJS.$('#add-application-date').attr("min",formatDate(today, expectedFormatDate));
+    AJS.$('#unactivate-application-date').attr("min",formatDate(today,expectedFormatDate));
+    AJS.$('#delete-application-date').attr("max",formatDate(oneMonthMaxDate,expectedFormatDate));
+    AJS.$('#add-application-date').attr("max",formatDate(oneMonthMaxDate,expectedFormatDate));
+    AJS.$('#unactivate-application-date').attr("max",formatDate(oneMonthMaxDate,expectedFormatDate));
     
     AJS.$("#btn-add-customsecurity-lvl").click(function(e) {
     	e.preventDefault();
@@ -36,27 +64,19 @@ AJS.$(document).ready(function () {
     });
     
     AJS.$("#add-rule-active").change(function() {
+    	var required = false;
         if(this.checked) {
         	AJS.$("#add-application-date-section").show();
+        	required = true;
         }
         else{
         	AJS.$("#add-application-date-section").hide();
         }
-    });
-    AJS.$("#edit-rule-active").change(function() {
-    	var id = $("#edit-rule-id").val()
-    	var active = AJS.$("#edit-sr-" + id ).attr("data-active");
-    	if((this.checked && !active) || (!this.checked && active)) {
-        	AJS.$("#edit-rule-application-date-section").show();
-        }
-        else{
-        	AJS.$("#edit-rule-application-date-section").hide();
-        }
+        $("#add-application-date").prop('required',required);
     });
 	
 	
     AJS.$("#add-application-date-section").hide();
-    AJS.$("#edit-rule-application-date-section").hide();
     AJS.$("#add-security-lvl").auiSelect2();
     AJS.$("#edit-security-lvl").auiSelect2();
     AJS.$("#add-events").auiSelect2();
@@ -64,16 +84,49 @@ AJS.$(document).ready(function () {
     AJS.$("#layout").auiSelect2();
     
     
+    AJS.$("#cancel-form").on("submit", function(e){
+    	
+    	e.preventDefault();
+		var param = {};
+		param.id = $("#cancel-rule-id").val();
+		
+		var request = AJS.$.ajax({
+			  url:  AJS.contextPath() + "/rest/csl/1.0/security-rule/cancel",
+			  type: "POST",
+			  data: JSON.stringify(param),
+		      contentType: "application/json",
+			  dataType: "json"
+			});
+			request.success(function( data ) {
+				 AJS.dialog2("#cancel-dialog").hide();
+				 AJS.$("#cancel-loading").hide();
+				 //TODO : find another way
+				 var  addRedirect = AJS.contextPath() + "/secure/ConfigureSecurityRules.jspa?message=csl.admin.securityrule.cancel.success"
+				 window.location.href = addRedirect ;
+			});
+			request.fail(function( data ) {
+				AJS.$("#cancel-form-error").show();
+				AJS.$("#cancel-loading").hide();
+				var jsonResponse = JSON.parse(data.responseText);
+				var errorMessage = jsonResponse.error;
+				AJS.$("#cancel-form-error > p:nth-child(2)").text(errorMessage);
+			});
+		
+    });
     AJS.$("#add-form").on("submit", function(e){
     	e.preventDefault();
 		var param = {};
+		var addApplicationDate = new Date( $.datepicker.parseDate('dd/mm/yy', AJS.$('#add-application-date').val()));
+		var expectedDateFormat = $.datepicker.formatDate( "yy-mm-dd", addApplicationDate );
+		
 		param.jql = $("#add-jql").val();
 		param.active= $("#add-rule-active").is(':checked');
 		param.securityLvl= $("#add-security-lvl").val();
 		param.events = $("#add-events").val();
 		param.ruleName = $("#add-rule-name").val();
 		param.priority = $("#add-priority").val();
-		param.applicationDate = $("#add-application-date").val();
+		param.applicationDate = formatDateTime(expectedDateFormat,$("#add-application-date-time").wickedpicker('time'));
+		
 		
 		
 		AJS.$("#add-form-error").hide();
@@ -148,7 +201,10 @@ AJS.$(document).ready(function () {
     	var id =  $("#delete-rule-id").val();
 		var param = {};
 		param.id = id;
-		param.applicationDate =  $("#delete-application-date").val();
+		var deleteApplicationDate = new Date( $.datepicker.parseDate('dd/mm/yy', AJS.$('#delete-application-date').val()));
+		var expectedDateFormat = $.datepicker.formatDate( "yy-mm-dd", deleteApplicationDate );
+		param.applicationDate = formatDateTime(expectedDateFormat,$("#delete-application-date-time").wickedpicker('time'));
+	
 		
 		AJS.$("#delete-form-error").addClass('hide');
 		AJS.$("#delete-loading").show();
@@ -179,7 +235,10 @@ AJS.$(document).ready(function () {
     	var id =  $("#unactivate-rule-id").val();
 		var param = {};
 		param.id = id;
-		param.applicationDate =  $("#unactivate-application-date").val();
+		
+		var unactivateApplicationDate = new Date( $.datepicker.parseDate('dd/mm/yy', AJS.$('#unactivate-application-date').val()));
+		var expectedDateFormat = $.datepicker.formatDate( "yy-mm-dd", unactivateApplicationDate );
+		param.applicationDate = formatDateTime(expectedDateFormat,$("#unactivate-application-date-time").wickedpicker('time'));
 		
 		AJS.$("#unactivate-form-error").addClass('hide');
 		AJS.$("#unactivate-loading").show();
@@ -215,8 +274,19 @@ AJS.$(document).ready(function () {
     	AJS.dialog2("#unactivate-dialog").show();
     });
     
+    AJS.$("[id^=cancel-sr]").on("click", function(e){
+    	var id = AJS.$(this).attr('data-id');
+    	var name = AJS.$(this).attr('data-name');
+    	AJS.$("#cancel-rule-id").attr("value",id);
+    	AJS.$("#cancel-rule-name").text(name);
+    	AJS.dialog2("#cancel-dialog").show();
+    });
+    
+    
     AJS.$("[id^=edit-sr]").on("click", function(e){
     	var id = AJS.$(this).attr('data-id');
+    	var editApplicationDate  = AJS.$(this).attr('data-edit-date-application');
+    	var editApplicationTime  = AJS.$(this).attr('data-edit-time-application');
     	var name = AJS.$(this).attr('data-name');
     	var priority = AJS.$(this).attr('data-priority');
     	var jql = AJS.$(this).attr('data-jql');
@@ -232,6 +302,8 @@ AJS.$(document).ready(function () {
     	 AJS.$("#edit-jql").attr("value",jql);
     	 AJS.$("#edit-security-lvl").attr("value",securitylvl);
     	 AJS.$("#edit-rule-active").prop("checked",activeAsBoolean);
+    	 AJS.$("#edit-application-date").attr("value",editApplicationDate);
+    	 AJS.$("#edit-application-date-time").attr("value",editApplicationTime);
     	 
     	 AJS.$('#edit-security-lvl').val(securitylvl);
     	 AJS.$('#edit-security-lvl').trigger('change.select2');
@@ -260,8 +332,9 @@ AJS.$(document).ready(function () {
 				console.data;
 			});
     }
-    function formatDate(date) {
-    	  var separator = '-';
+    function formatDate(date,expectedFormatDate) {
+    	 var separator = '-';
+
     	  var day = date.getDate();
     	  var month = date.getMonth() + 1;
     	  var year = date.getFullYear();
@@ -270,11 +343,17 @@ AJS.$(document).ready(function () {
     	  if( month <= 9){
     		  month = "0" + month; 
     	  }
-    	  if( minute <= 9){
-    		  minute = "0" + minute; 
-    	  }
-    	  return year + separator + month + separator + day + 'T' + hour + ":" + minute;
+    	  var ret = year + separator + month + separator + day;
+    	  if( expectedFormatDate == 'dd/mm/yy'){
+      		separator = '/';
+      		ret = day + separator + month + separator + year; 
+      	}
+  
+    	  return ret;
     	}
+    function formatDateTime(date, time){
+    	return date + "T" + time;
+    }
 });
 
     

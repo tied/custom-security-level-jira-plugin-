@@ -126,7 +126,11 @@ public class SecurityRules implements Serializable {
 	public void setApplicationDate(ZonedDateTime applicationDate) {
 		this.applicationDate = applicationDate;
 	}
-	
-	
-	
+	@Override
+	public String toString() {
+		return "SecurityRules [id=" + id + ", name=" + name + ", creationUser=" + creationUser + ", creationDate="
+				+ creationDate + ", disableUser=" + disableUser + ", applicationDate=" + applicationDate
+				+ ", disableDate=" + disableDate + ", active=" + active + ", priority=" + priority + ", jiraSecurityId="
+				+ jiraSecurityId + ", events=" + events + ", jql=" + jql + ", deleted=" + deleted + "]";
+	}
 }

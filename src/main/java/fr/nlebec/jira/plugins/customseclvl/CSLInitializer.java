@@ -22,6 +22,10 @@ public class CSLInitializer implements LifecycleAware {
 		
 		static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm").withZone(ZoneId.systemDefault());
 		
+		static DateTimeFormatter technicalDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		static DateTimeFormatter technicalTimeFormatter = DateTimeFormatter.ofPattern("hh:mm");
+		
 		
 		@Inject
 		public CSLInitializer(CSLConfigurationService configService) {
@@ -36,6 +40,7 @@ public class CSLInitializer implements LifecycleAware {
 			
 		}
 		
+		
 		public static DateTimeFormatter getDateTimeFormatter() {
 			if( simpleFormatter == null ) {
 				simpleFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").withZone(ZoneId.systemDefault());
@@ -48,5 +53,11 @@ public class CSLInitializer implements LifecycleAware {
 		
 		public static DateTimeFormatter getDefaultDateTimeFormatter() {
 			return formatter;
+		}
+		public static DateTimeFormatter getTechnicalDateFormatter() {
+			return technicalDateFormatter;
+		}
+		public static DateTimeFormatter getTechnicalTimeFormatter() {
+			return technicalTimeFormatter;
 		}
 	}

@@ -71,7 +71,10 @@ public class DefaultCSLDefaultJobRunner implements CSLDefaultJobRunner,Lifecycle
 		jobService.persistJobEntry(jobId.toString(),InactiveSecurityLevel.INACTIVE_SL_JOB.toString() ,  idSecurityRule);
 		log.info("Persist Job Entry  " + InactiveSecurityLevel.INACTIVE_SL_JOB.toString() + " : " + jobId.toString());
 	}
-	
+	public void removeTaskFromScheduler(JobId jobid) {
+		log.info("Remove Task from scheduler : "  + jobid.toString());
+		schedulerService.unscheduleJob(jobid);
+	}
 	
 
 
@@ -80,6 +83,7 @@ public class DefaultCSLDefaultJobRunner implements CSLDefaultJobRunner,Lifecycle
 	     schedulerService.unregisterJobRunner(ApplySecurityLevel.APPLY_SL_JOB);
 	     schedulerService.unregisterJobRunner(RemoveSecurityLevel.REMOVE_SL_JOB);
 	     schedulerService.unregisterJobRunner(InactiveSecurityLevel.INACTIVE_SL_JOB);
+	     schedulerService.unregisterJobRunner(ActiveSecurityLevel.ACTIVE_SL_JOB);
 	     
 	     List<SecurityLvlJob> pendingJobs = jobService.getPendingJob();
 			for (SecurityLvlJob pendingJob : pendingJobs) {
@@ -102,10 +106,13 @@ public class DefaultCSLDefaultJobRunner implements CSLDefaultJobRunner,Lifecycle
 		schedulerService.registerJobRunner(ApplySecurityLevel.APPLY_SL_JOB, new ApplySecurityLevelTask(securityRuleApplicationManager,securityRulesService,jobService));
 		schedulerService.registerJobRunner(RemoveSecurityLevel.REMOVE_SL_JOB, new RemoveSecurityLevelTask(securityRuleApplicationManager,securityRulesService,jobService));
 		schedulerService.registerJobRunner(InactiveSecurityLevel.INACTIVE_SL_JOB, new InactiveSecurityLevelTask(securityRuleApplicationManager,securityRulesService,jobService));
+		schedulerService.registerJobRunner(ActiveSecurityLevel.ACTIVE_SL_JOB, new ActiveSecurityLevelTask(securityRuleApplicationManager,securityRulesService,jobService));
 		
 		List<SecurityLvlJob> pendingJobs = jobService.getPendingJob();
 		
+
 		for (SecurityLvlJob pendingJob : pendingJobs) {
+			log.info("pendingJob.getSecurityRule() : " + pendingJob.getSecurityRule());
 			JobConfig jobConfig = createJobConfig(pendingJob.getSecurityRule().getId(),pendingJob.getSecurityRule().getApplicationDate(), JobRunnerKey.of(pendingJob.getJobRunnerKey()));
 			try {
 				schedulerService.scheduleJob(JobId.of(pendingJob.getJobId()), jobConfig);
@@ -114,6 +121,15 @@ public class DefaultCSLDefaultJobRunner implements CSLDefaultJobRunner,Lifecycle
 			}
 		}
 		
+	}
+
+	@Override
+	public void activateSecurityLevelJob(Integer idSecurityRule, ZonedDateTime applicationDate)
+			throws SchedulerServiceException {
+		JobConfig jobConfig = this.createJobConfig(idSecurityRule, applicationDate, ActiveSecurityLevel.ACTIVE_SL_JOB);
+		JobId jobId = schedulerService.scheduleJobWithGeneratedId(jobConfig);
+		jobService.persistJobEntry(jobId.toString(),ActiveSecurityLevel.ACTIVE_SL_JOB.toString() ,  idSecurityRule);
+		log.info("Persist Job Entry  " + ActiveSecurityLevel.ACTIVE_SL_JOB.toString() + " : " + jobId.toString());
 	}
 
 

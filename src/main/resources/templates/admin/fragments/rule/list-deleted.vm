@@ -30,7 +30,6 @@
 						>
 						</span>
 						<span class="aui-icon aui-icon-large aui-iconfont-delete" id="delete-sr-$rule.id" data-id="$rule.id" data-name="$rule.name"  ></span>
-						
 						 -->
 				</div>
 			</div>

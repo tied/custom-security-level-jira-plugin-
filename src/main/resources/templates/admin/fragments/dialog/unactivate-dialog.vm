@@ -21,7 +21,8 @@
 		      <form id="unactivate-form" class="aui">
 		         <div class="field-group">
 		            <label for="unactivate-application-date">$action.getText('csl.admin.securityrule.unactivate.applicationdate.label') <span class="aui-icon icon-required"></label>
-		            <input class="aui-date-picker" id="unactivate-application-date" type="datetime-local"  min="2018-01-01" />
+		            <input class="aui-date-picker" id="unactivate-application-date" type="date"  min="2018-01-01" />
+		            <input type="text" id="unactivate-application-date-time" name="unactivate-application-date-time" class="timepicker short-field"/>
 		            <div class="description">$action.getText('csl.admin.securityrule.unactivate.applicationdate.descr') </div>
 		         </div>
 		        

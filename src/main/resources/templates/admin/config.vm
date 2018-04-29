@@ -1,4 +1,4 @@
-$webResourceManager.requireResourcesForContext("csl-admin")
+$webResourceManager.requireResourcesForContext("csl-config-admin")
 <html>
    <head>
       <title>$action.getText('csl.admin.title')</title>
