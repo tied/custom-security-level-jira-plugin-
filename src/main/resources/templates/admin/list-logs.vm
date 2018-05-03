@@ -1,0 +1,23 @@
+$webResourceManager.requireResourcesForContext("csl-admin")
+<html>
+   <head>
+      <title>$action.getText('csl.admin.title')</title>
+      <meta name="decorator" content="atl.admin" />
+      <meta name="admin.active.section" content="admin_plugins_menu/csl_admin_section"/>
+      <meta name="admin.active.tab" content="csl_config"/>
+   </head>
+   <body>
+
+ 	<header class="aui-page-header">
+        <div class="aui-page-header-inner">
+            <div class="aui-page-header-main">
+               <h2>$action.getText('csl.admin.securityrule.audit.log.title')</h2>
+            </div>
+            
+        <div class="aui-page-header-actions">
+            <div class="aui-buttons">
+            </div>
+        </div>
+     </header>
+   </body>
+</html>

@@ -11,13 +11,14 @@ public class EventUtil {
 	private final static Logger log = Logger.getLogger(EventUtil.class);
 	
 	public static boolean contains(List<Event> events, Long actualEventId){
+		boolean ret = false;
 		for(Event event : events ){
 			if(event.getJiraEventId().equals(actualEventId)){
-				log.debug("Event "+actualEventId+" match with security rule ");
-				return true;
+				log.debug("Event match a security rule parametrization : "+actualEventId);
+				ret = true;
 			}
 		}
-		return false;
+		return ret;
 	}
 	
 }

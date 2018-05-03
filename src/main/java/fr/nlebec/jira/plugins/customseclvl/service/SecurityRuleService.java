@@ -3,6 +3,8 @@ package fr.nlebec.jira.plugins.customseclvl.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.sql.SQLException;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -12,7 +14,6 @@ import org.apache.log4j.Logger;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.jira.issue.CustomFieldManager;
-import com.atlassian.jira.util.I18nHelper;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
 import fr.nlebec.jira.plugins.customseclvl.ao.converters.ItemConverter;
@@ -30,22 +31,18 @@ public class SecurityRuleService {
     private final static Logger LOG = Logger.getLogger(SecurityRuleService.class);
 
     private ActiveObjects persistenceManager;
-    private I18nHelper i18n;
     private CustomFieldManager customFieldManager;
     private CSLConfiguration configuration;
     private EventService eventService;
 
     @Inject
     public SecurityRuleService(@ComponentImport ActiveObjects persistenceManager,
-                                   @ComponentImport I18nHelper i18n,
                                    @ComponentImport CustomFieldManager customFieldManager,
                                    EventService eventService
                                    
-    		)
-    {
+    		){
         this.customFieldManager = customFieldManager;
         this.persistenceManager = checkNotNull(persistenceManager);
-        this.i18n = i18n;
         this.eventService = eventService;
     }
 
@@ -73,10 +70,14 @@ public class SecurityRuleService {
     }
 
     public SecurityRules getSecurityRule(int idSecurityRule) throws SQLException {
-    	LOG.info("get new security rule : "+ idSecurityRule);
+    	LOG.info("Get new security rule : "+ idSecurityRule);
     	SecurityRuleAO[] securityRuleAO = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRule)); 
     	List<SecurityRules> securityRules = ItemConverter.convertActiveObjectToPOJO(securityRuleAO);
-        return securityRules.get(0);
+    	SecurityRules ret = new SecurityRules();
+    	if(securityRules.size() > 0) {
+    		ret = securityRules.get(0);
+    	}
+        return ret;
     }
 
     public int addSecurityRule(SecurityRules securityRule) throws SQLException {
@@ -114,18 +115,9 @@ public class SecurityRuleService {
         LOG.info("Update security rule : "+ securityRuleAO.toString());
         securityRuleAO[0].save();
     }
-	public void deleteSecurityRule(Integer idSecurityRuleToDelete) {
-		
-		SecurityRuleAO[] securityRules = this.persistenceManager.find(SecurityRuleAO.class,Query.select().where("ID = ?",idSecurityRuleToDelete));
-    	  	
-    	if( securityRules.length > 0){
-            LOG.info("Delete security rule : "+ securityRules[0].toString());
-            for (int i = 0; i < securityRules[0].getEvents().length; i++) {
-            	this.eventService.deleteEvent(securityRules[0].getEvents()[i],securityRules[0]);
-			}
-            
-            this.persistenceManager.delete(securityRules[0]);
-    	}
-        
+	public void updateApplicationDate(Integer idSecurityRuleToUpdate, ZonedDateTime applicationDate) {
+		SecurityRuleAO[] securityRuleAO = this.persistenceManager.find(SecurityRuleAO.class, Query.select().where("ID = ?",idSecurityRuleToUpdate));
+		securityRuleAO[0].setApplicationDate(Date.from(applicationDate.toInstant()));
+		securityRuleAO[0].save();
 	}
 }

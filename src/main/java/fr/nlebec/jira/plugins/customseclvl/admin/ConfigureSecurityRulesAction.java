@@ -1,6 +1,8 @@
 package fr.nlebec.jira.plugins.customseclvl.admin;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -8,7 +10,7 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 
-import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.core.util.ObjectUtils;
 import com.atlassian.jira.event.type.EventType;
 import com.atlassian.jira.event.type.EventTypeManager;
 import com.atlassian.jira.issue.security.IssueSecurityLevel;
@@ -23,6 +25,7 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserRole;
 
+import fr.nlebec.jira.plugins.customseclvl.CSLInitializer;
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
 import fr.nlebec.jira.plugins.customseclvl.service.CSLConfigurationService;
@@ -41,7 +44,6 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
     private final LoginUriProvider loginUriProvider;
     private IssueSecurityLevelManager issueSecurityLevelManager;
     private EventTypeManager eventManager;
-    private Boolean active;
 
     private Collection<IssueSecurityLevel> securityLevels;
     private Collection<EventType> eventTypes;
@@ -66,7 +68,6 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
         this.globalPermissionManager = globalPermissionManager;
         this.loginUriProvider = loginUriProvider;
         this.eventManager = eventTypeManager ; 
- 
     }
 
     protected String doExecute() throws Exception {
@@ -80,43 +81,24 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
         this.securityLevels = issueSecurityLevelManager.getAllIssueSecurityLevels();
         this.eventTypes = this.eventManager.getEventTypes();
         
-        System.out.println(this.i18n.getText("fr.csl.admin.securityrule.add.success"));
-        
         return INPUT;
     }
 
-    public String doSave() throws Exception {
-        ApplicationUser loggedInUser = this.getLoggedInUser();
-        if (!this.globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, loggedInUser)) {
-            URI uri = URI.create(this.getHttpRequest().getRequestURI());
-            return this.forceRedirect(loginUriProvider.getLoginUriForRole(uri, UserRole.ADMIN).toASCIIString());
-        }
-        //Faire controles
-        this.configurationService.updateConfiguration(getActive());
-        this.securityLevels = issueSecurityLevelManager.getAllIssueSecurityLevels();
-        
-        return INPUT;
-    }
 
-	public Boolean getActive() {
-		if(active == null) {
-			active = Boolean.FALSE;
-		}
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
 
 	public CSLConfiguration getConfiguration() {
 		return configurationService.getConfiguration();
 	}
 	
-	public List<SecurityRules> getSecurityRules(){
-		return getConfiguration().getSecurityRules();
+	public List<SecurityRules> getActivesSecurityRules(){
+		return getConfiguration().getActivesSecurityRules();
 	}
-
+	public List<SecurityRules> getInactivesSecurityRules(){
+		return getConfiguration().getInactivesSecurityRules();
+	}
+	public List<SecurityRules> getDeletedSecurityRules(){
+		return getConfiguration().getDeletedSecurityRules();
+	}
 	public Collection<IssueSecurityLevel> getLevelList() {
 		return securityLevels;
 	}
@@ -138,6 +120,36 @@ public class ConfigureSecurityRulesAction extends JiraWebActionSupport {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public String formatDate(ZonedDateTime zdt) {
+		String ret = "-";
+		if( ObjectUtils.isNotEmpty(zdt) ) {
+			ret = zdt.format(CSLInitializer.getDateTimeFormatter());
+		}
+		return ret;
+	}
+	public String formatDateAsDefault(ZonedDateTime zdt) {
+		String ret = "-";
+		if( ObjectUtils.isNotEmpty(zdt) ) {
+			ret = zdt.toLocalDate().format(CSLInitializer.getTechnicalDateFormatter());
+		}
+		return 	ret;
+	}
+	
+	public String formatTime(ZonedDateTime zdt) {
+		String ret = "-";
+		if( ObjectUtils.isNotEmpty(zdt) ) {
+			ret = zdt.toLocalTime().format(CSLInitializer.getTechnicalTimeFormatter());
+		}
+		return 	ret;
+	}
+	
+	public boolean hasPendingStatus(SecurityRules securityrule) {
+		boolean ret = false;
+		if( ZonedDateTime.now().isBefore(securityrule.getApplicationDate())) {
+			ret = true;
+		}
+		return ret;
 	}
 }
 

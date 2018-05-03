@@ -9,11 +9,21 @@ import net.java.ao.schema.Table;
 @Preload
 @Table("CSL_CONF")
 public interface CSLConfigurationAO extends Entity {
-
-	@Default(value="false")
 	public Boolean getActive();
 	
 	public void setActive(Boolean active);
+	
+	public String getLayout();
+	
+	public void setLayout(String layout);
+	
+	public void setDateFormat(String dateFormat);
+	
+	public String getDateFormat();
+	
+	public Boolean getSilent();
+	
+	public void setSilent(Boolean silent);
 	
 	@OneToMany
 	public SecurityRuleAO[] getSecurityRules();

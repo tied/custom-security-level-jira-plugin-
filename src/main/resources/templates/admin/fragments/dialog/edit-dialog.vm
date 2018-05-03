@@ -6,7 +6,7 @@
 					$action.getText('csl.admin.securityrule.edit.popup.title')
 			  </h2>
 		      <a class="aui-dialog2-header-close">
-		      <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+		      <span id="edit-close-button" class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
 		      </a>
 		   </header>
 		   <div class="aui-dialog2-content">
@@ -21,8 +21,14 @@
 		      <form id="edit-form" class="aui">
 		         <div class="field-group">
 		            <label for="edit-rule-active">Active</label>
-		            <input class="checkbox" type="checkbox" id="edit-rule-active" name="edit-rule-active" >
+		            <input class="checkbox" type="checkbox" id="edit-rule-active" name="edit-rule-active" disabled>
 		            <div class="description">Active</div>
+		         </div>
+		           <div id="edit-rule-application-date-section" class="field-group">
+		            <label for="edit-application-date">$action.getText('csl.admin.securityrule.add.applicationdate.label')</label>
+		            <input disabled class="aui-date-picker" id="edit-application-date" type="date"  min="2018-01-01" />
+		            <input disabled type="text" id="edit-application-date-time" name="edit-application-date-time" class="timepicker short-field"/>
+		            <div class="description">$action.getText('csl.admin.securityrule.add.applicationdate.descr')</div>
 		         </div>
 		         <div class="field-group">
 		            <label for="edit-rule-name">$action.getText('csl.admin.securityrule.edit.name.label') <span class="aui-icon icon-required"></label>
@@ -40,12 +46,12 @@
 		         </div>
 		         <div class="field-group">
 		            <label for="edit-jql">$action.getText('csl.admin.securityrule.edit.jql.label')<span class="aui-icon icon-required">(required)</span></label>
-		            <input class="text long-field" type="text" id="edit-jql" name="edit-jql" >
+		            <input class="text long-field" type="text" id="edit-jql" name="edit-jql" disabled >
 		            <div class="description">$action.getText('csl.admin.securityrule.edit.jql.descr')</div>
 		         </div>
 		         <div class="field-group">
 		            <label for="edit-security-lvl">$action.getText('csl.admin.securityrule.edit.securitylvl.label')<span class="aui-icon icon-required">(required)</span> </label>
-		            <select id="edit-security-lvl" >
+		            <select id="edit-security-lvl" disabled >
 		               #foreach ($securityLvl in $action.getLevelList())
 		               <option value="$securityLvl.getId()">$securityLvl.getName()</option>
 		               #end
@@ -62,7 +68,7 @@
 		         <div class="buttons-container">
 		            <div class="buttons">
 		               <input class="aui-button aui-button-primary" type="submit" value="$action.getText('csl.admin.securityrule.edit.save.label')" id="save-button">
-		                <span id="edit-loading" class="aui-icon aui-icon-wait hide"></span>
+		                <span id="edit-loading" class="aui-icon aui-icon-wait"></span>
 		            </div>
 		         </div>
 		         

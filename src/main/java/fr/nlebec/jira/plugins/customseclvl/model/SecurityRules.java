@@ -1,34 +1,33 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.List;
 
-import com.atlassian.event.api.EventPublisher;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.security.IssueSecurityLevel;
 import com.atlassian.jira.user.ApplicationUser;
 
-public class SecurityRules {
+public class SecurityRules implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
 	private ApplicationUser creationUser;
-	private Date creationDate;
+	private ZonedDateTime creationDate;
 	private ApplicationUser disableUser;
-	private Date disableDate;
+	private ZonedDateTime applicationDate;
+	private ZonedDateTime disableDate;
 	private Boolean active;
 	private Integer priority;
 	private Long jiraSecurityId;
 	private List<Event> events;
 	private String jql;
+	private Boolean deleted;
 	
-	@Override
-	public String toString() {
-		return "SecurityRules [id=" + id + ", name=" + name + ", creationUser=" + creationUser + ", creationDate="
-				+ creationDate + ", disableUser=" + disableUser + ", disableDate=" + disableDate + ", active=" + active
-				+ ", priority=" + priority + ", jiraSecurityId=" + jiraSecurityId + ", events=" + events + ", jql="
-				+ jql + "]";
-	}
 	public Integer getId() {
 		return id;
 	}
@@ -47,10 +46,10 @@ public class SecurityRules {
 	public void setCreationUser(ApplicationUser creationUser) {
 		this.creationUser = creationUser;
 	}
-	public Date getCreationDate() {
+	public ZonedDateTime getCreationDate() {
 		return creationDate;
 	}
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(ZonedDateTime creationDate) {
 		this.creationDate = creationDate;
 	}
 	public ApplicationUser getDisableUser() {
@@ -59,10 +58,10 @@ public class SecurityRules {
 	public void setDisableUser(ApplicationUser disableUser) {
 		this.disableUser = disableUser;
 	}
-	public Date getDisableDate() {
+	public ZonedDateTime getDisableDate() {
 		return disableDate;
 	}
-	public void setDisableDate(Date disableDate) {
+	public void setDisableDate(ZonedDateTime disableDate) {
 		this.disableDate = disableDate;
 	}
 	public Boolean getActive() {
@@ -115,7 +114,23 @@ public class SecurityRules {
 		return ret.toString();
 		
 	}
-	
-	
-	
+	public Boolean getDeleted() {
+		return deleted;
+	}
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+	public ZonedDateTime getApplicationDate() {
+		return applicationDate;
+	}
+	public void setApplicationDate(ZonedDateTime applicationDate) {
+		this.applicationDate = applicationDate;
+	}
+	@Override
+	public String toString() {
+		return "SecurityRules [id=" + id + ", name=" + name + ", creationUser=" + creationUser + ", creationDate="
+				+ creationDate + ", disableUser=" + disableUser + ", applicationDate=" + applicationDate
+				+ ", disableDate=" + disableDate + ", active=" + active + ", priority=" + priority + ", jiraSecurityId="
+				+ jiraSecurityId + ", events=" + events + ", jql=" + jql + ", deleted=" + deleted + "]";
+	}
 }

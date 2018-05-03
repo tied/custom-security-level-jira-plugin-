@@ -9,13 +9,38 @@
     </plugin-info>
 
     <resource type="i18n" name="i18n" location="/i18n/csl-messages"/>
+   
     
+     <web-resource key="csl-config-admin" name="Custom Security Level JS CSS Resources - Config part">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.auiplugin:dialog2</dependency>
+        <dependency>com.atlassian.auiplugin:aui-select2</dependency>
+        <dependency>com.atlassian.auiplugin:aui-date-picker</dependency>
+        <dependency>com.atlassian.auiplugin:aui-experimental-tooltips</dependency>
+        <dependency>com.atlassian.auiplugin:aui-dropdown2</dependency>
+        <resource type="download" name="csl-main-admin.css" location="/css/csl-stylesheet.css"/>
+        <resource type="download" name="csl-main-admin.js" location="/js/csl-config-admin.js"/>
+        <resource type="download" name="images/" location="/images"/>
+        <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
+        <context>csl-config-admin</context>
+    </web-resource>
     <web-resource key="csl-resources-admin" name="Custom Security Level JS CSS Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:aui-select2</dependency>
+        <dependency>com.atlassian.auiplugin:aui-date-picker</dependency>
+        <dependency>com.atlassian.auiplugin:aui-experimental-tooltips</dependency>
+        <dependency>com.atlassian.auiplugin:aui-dropdown2</dependency>
         <resource type="download" name="csl-main-admin.css" location="/css/csl-stylesheet.css"/>
+        <resource type="download" name="wickedpicker.css" location="/css/wickedpicker.min.css"/>
+        <resource type="download" name="fontello.ttf" location="/fonts/fontello.ttf"/>
+        <resource type="download" name="fontello.svg" location="/fonts/fontello.svg"/>
+        <resource type="download" name="fontello.eot" location="/fonts/fontello.eot"/>
+        <resource type="download" name="fontello.woff" location="/fonts/fontello.woff"/>
         <resource type="download" name="csl-main-admin.js" location="/js/csl-admin.js"/>
+        <resource type="download" name="wickedpicker.js" location="/js/wickedpicker.min.js"/>
         <resource type="download" name="images/" location="/images"/>
         <transformation extension="js">
             <transformer key="jsI18n" />
@@ -35,10 +60,17 @@
         <styleClass>csl-link</styleClass>
     </web-item>
 
-	 <web-item key="csl.admin.list.securityrule.link" name="Plugin's Admin Link" section="admin_plugins_menu/csl_admin_section" weight="10">
-        <description key="csl.link.securityrules.description">Plugin's Admin Link</description>
+	 <web-item key="csl.admin.list.securityrule.link" name="My Security rule link" section="admin_plugins_menu/csl_admin_section" weight="10">
+        <description key="csl.link.securityrules.description">My Security rule link</description>
         <label key="csl.link.securityrules.label">My security rules</label>
         <link linkId="csl_list_sr_config">/secure/ConfigureSecurityRules.jspa</link>
+        <styleClass>csl-link</styleClass>
+    </web-item>
+
+	<web-item key="csl.admin.list.seelogs.link" name="See Logs section" section="admin_plugins_menu/csl_admin_section" weight="10">
+        <description key="csl.link.seelogs.description">See logs</description>
+        <label key="csl.link.seelogs.label">See Logs</label>
+        <link linkId="csl_see_log">/secure/SeeCslLog.jspa</link>
         <styleClass>csl-link</styleClass>
     </web-item>
 
@@ -52,8 +84,8 @@
         </actions>
     </webwork1>
     
-     <webwork1 key="csl.admin.securityrule.web-action" name="Plugin's Administration Manager">
-        <description key="csl.admin.descr">Plugin's Administration Manager</description>
+     <webwork1 key="csl.admin.securityrule.web-action" name="List security rules">
+        <description key="csl.admin.securityrule.descr">List security rules</description>
         <actions>
             <action	name="fr.nlebec.jira.plugins.customseclvl.admin.ConfigureSecurityRulesAction"
                        alias="ConfigureSecurityRules">
@@ -61,18 +93,32 @@
             </action>
         </actions>
     </webwork1>
+
+      <webwork1 key="csl.admin.audit.logs" name="Audit logs">
+        <description key="csl.admin.audit.log.descr">Audit logs</description>
+        <actions>
+            <action	name="fr.nlebec.jira.plugins.customseclvl.admin.SeeLogsAction"
+                       alias="SeeCslLog">
+                <view name="input">/templates/admin/list-logs.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+    
     
 	<ao key="ao-module">
        <description key="csl.ao.description">The Active Objects Service Module</description>
        <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.CSLConfigurationAO</entity>
        <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.SecurityRuleAO</entity>
        <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.EventToSecurityRule</entity> 
-       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.EventAO</entity>  
+       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.EventAO</entity>
+       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.JobEntryAO</entity>
+       <entity>fr.nlebec.jira.plugins.customseclvl.ao.model.AuditLogAO</entity>  
     </ao> 
     
      <rest key="csl.rest" path="/csl" version="1.0">
         <package>fr.nlebec.jira.plugins.customseclvl.rest</package>
     </rest>
+    
 
     
 </atlassian-plugin>

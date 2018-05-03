@@ -24,6 +24,12 @@
 		            <input class="checkbox" type="checkbox" id="add-rule-active"  name="add-rule-active" >
 		            <div class="description">$action.getText('csl.admin.securityrule.add.active.descr')</div>
 		         </div>
+		         <div id="add-application-date-section" class="field-group">
+		            <label for="add-application-date">$action.getText('csl.admin.securityrule.add.applicationdate.label')</label>
+		            <input class="aui-date-picker" id="add-application-date" type="date"  min="2018-01-01" />
+		            <input type="text" id="add-application-date-time" name="add-application-date-time" class="timepicker short-field"/>
+		            <div class="description">$action.getText('csl.admin.securityrule.add.applicationdate.descr')</div>
+		         </div>
 		         <div class="field-group">
 		            <label for="add-rule-name">$action.getText('csl.admin.securityrule.add.name.label')<span class="aui-icon icon-required">(required)</span></label>
 		            <input class="text medium-field" type="text" id="add-rule-name" name="add-rule-name" >
@@ -61,7 +67,7 @@
 		         <div class="buttons-container">
 		            <div class="buttons">
 		               <input class="aui-button aui-button-primary" type="submit" value="$action.getText('csl.admin.securityrule.add.save.label')" id="save-button">
-		               <span id="add-loading" class="aui-icon aui-icon-wait hide"></span>
+		               <span id="add-loading" class="aui-icon aui-icon-wait"></span>
 		            </div>
 		         </div>
 		      </form>

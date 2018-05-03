@@ -18,6 +18,8 @@ public interface SecurityRuleAO extends Entity{
 	public void setName(String name);
 	public Long getCreationUser();
 	public void setCreationUser(Long creationUser);
+	public Date getApplicationDate();
+	public void setApplicationDate(Date applicationDate);
 	public Date getCreationDate();
 	public void setCreationDate(Date creationDate);
 	public Long getDisableUser();
@@ -25,6 +27,9 @@ public interface SecurityRuleAO extends Entity{
 	public Date getDisableDate();
 	public void setDisableDate(Date disableDate);
 	public Boolean getActive();
+	public void setDeleted(Boolean disableDate);
+	public Boolean getDeleted();
+	
 	
 	public void setActive(Boolean active);
 	

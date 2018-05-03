@@ -1,33 +1,21 @@
 package fr.nlebec.jira.plugins.customseclvl.activity;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.core.entity.GenericEntityException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.atlassian.event.api.EventListener;
 import com.atlassian.event.api.EventPublisher;
-import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.event.issue.IssueEvent;
-import com.atlassian.jira.event.type.EventDispatchOption;
-import com.atlassian.jira.event.type.EventType;
-import com.atlassian.jira.issue.Issue;
-import com.atlassian.jira.issue.IssueManager;
-import com.atlassian.jira.issue.MutableIssue;
-import com.atlassian.jira.issue.search.SearchException;
-import com.atlassian.jira.issue.search.SearchResults;
-import com.atlassian.jira.issue.security.IssueSecurityLevel;
-import com.atlassian.jira.issue.security.IssueSecurityLevelManager;
-import com.atlassian.jira.user.ApplicationUser;
-import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
 import fr.nlebec.jira.plugins.customseclvl.model.CSLConfiguration;
 import fr.nlebec.jira.plugins.customseclvl.model.SecurityRules;
+import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleApplicationManager;
 import fr.nlebec.jira.plugins.customseclvl.service.SecurityRuleService;
 import fr.nlebec.jira.plugins.customseclvl.util.EventUtil;
 
@@ -37,72 +25,29 @@ public class CustomSecurityLvlDefaultListener implements InitializingBean, Dispo
 	private final Logger LOG = Logger.getLogger(CustomSecurityLvlDefaultListener.class);
 
 	@ComponentImport
-	public UserManager userManager;
-	@ComponentImport
-	public IssueManager issueManager;
-	@ComponentImport
-	public SearchService searchService;
-	@ComponentImport
 	public EventPublisher eventPublisher;
-	@ComponentImport
-	public IssueSecurityLevelManager issueSecurityLevelManager;
 	
 	public SecurityRuleService securityRuleService;
+	
+	public SecurityRuleApplicationManager applicationManager;
+	
 
 	@Inject
-	public CustomSecurityLvlDefaultListener(EventPublisher eventPublisher, IssueManager issueManager,
-			UserManager userManager, SearchService searchService, SecurityRuleService securityRuleService, IssueSecurityLevelManager issueSecurityLevelManager) {
+	public CustomSecurityLvlDefaultListener(EventPublisher eventPublisher, SecurityRuleService securityRuleService, SecurityRuleApplicationManager applicationManager) {
 		this.eventPublisher = eventPublisher;
-		this.issueManager = issueManager;
-		this.searchService = searchService;
-		this.userManager = userManager;
-		this.issueSecurityLevelManager = issueSecurityLevelManager;
 		this.securityRuleService = securityRuleService;
+		this.applicationManager = applicationManager;
 	}
 
 	@EventListener
-	public void onIssueEvent(IssueEvent event) {
+	public void onIssueEvent(IssueEvent event) throws GenericEntityException {
 		CSLConfiguration config = securityRuleService.getConfiguration();
 		LOG.info("Is plugin active : "+config.getActive().booleanValue());
 		if (Boolean.TRUE.equals(config.getActive())) {
-			for (SecurityRules securityRule : config.getSecurityRules()) {
-				LOG.info("Do security lvl : " + securityRule.getName() + " is active ? "+securityRule.getActive());
-				if (Boolean.TRUE.equals(securityRule.getActive())) {
-					if ( EventUtil.contains(securityRule.getEvents(), event.getEventTypeId())) {
-						String jqlQuery = securityRule.getJql() + " AND key = " + event.getIssue().getKey();
-						ApplicationUser createdUser = securityRule.getCreationUser();
-						final SearchService.ParseResult parseResult = searchService.parseQuery(createdUser, jqlQuery);
-						if (parseResult.isValid()) {
-							try {
-								final SearchResults results = searchService.search(createdUser, parseResult.getQuery(),
-										com.atlassian.jira.web.bean.PagerFilter.getUnlimitedFilter());
-								final List<Issue> issues = results.getIssues();
-								try {
-									for (Issue issue : issues) {
-										MutableIssue mi = issueManager.getIssueByCurrentKey(issue.getKey());
-										
-										if(issueSecurityLevelManager.getSecurityLevel(securityRule.getJiraSecurityId()) != null) {
-											LOG.info("Apply security level : " + securityRule.getJiraSecurityId()+ " on issue " + mi.getKey());
-											mi.setSecurityLevelId(securityRule.getJiraSecurityId());
-										}
-										else {
-											LOG.info("Security level does not exist anymore : " + securityRule.getJiraSecurityId());
-											LOG.info("No security level has been applied");
-										}
-										
-										issueManager.updateIssue(createdUser, mi, EventDispatchOption.DO_NOT_DISPATCH,
-												false);
-									}
-								} catch (Exception e) {
-									LOG.error("Error " + e.getMessage());
-								}
-							} catch (SearchException e) {
-								LOG.error("Error running search", e);
-							}
-						} else {
-							LOG.warn("Error parsing jqlQuery: " + parseResult.getErrors());
-						}
-					}
+			for (SecurityRules securityRule : config.getActivesSecurityRules()) {
+				//TODO:remove following by selecting the whole 
+				if ( EventUtil.contains(securityRule.getEvents(), event.getEventTypeId())) {
+					applicationManager.applyRule(securityRule ,event.getIssue().getKey());
 				}
 			}
 		}

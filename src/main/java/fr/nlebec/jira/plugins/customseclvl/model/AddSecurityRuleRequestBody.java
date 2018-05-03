@@ -1,12 +1,18 @@
 package fr.nlebec.jira.plugins.customseclvl.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import fr.nlebec.jira.plugins.customseclvl.CSLInitializer;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
@@ -24,6 +30,9 @@ public class AddSecurityRuleRequestBody {
 	@XmlElement
 	private String jql;
 	
+	@XmlElement(required=false)
+	private String applicationDate;
+
 	@XmlElement
 	private Long securityLvl;
 	
@@ -66,5 +75,15 @@ public class AddSecurityRuleRequestBody {
 	}
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+	public ZonedDateTime getApplicationDateAsInstant()  {
+		return ZonedDateTime.parse(applicationDate, CSLInitializer.getDefaultDateTimeFormatter());
+	}
+	
+	public String getApplicationDate() {
+		return applicationDate;
+	}
+	public void setApplicationDate(String applicationDate) {
+		this.applicationDate = applicationDate;
 	}
 }

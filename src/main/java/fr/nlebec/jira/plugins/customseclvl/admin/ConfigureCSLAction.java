@@ -1,6 +1,7 @@
 package fr.nlebec.jira.plugins.customseclvl.admin;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,6 +42,9 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
     private IssueSecurityLevelManager issueSecurityLevelManager;
     private EventTypeManager eventManager;
     private Boolean active;
+	private String dateFormat;
+    private String layout;
+    private Boolean silent;
 
     private Collection<IssueSecurityLevel> securityLevels;
     private Collection<EventType> eventTypes;
@@ -86,8 +90,11 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
         //Faire controles
         if( LOG.isDebugEnabled()) {
         	LOG.debug("Active : " + active);
+        	LOG.debug("dateFormat :" +dateFormat);
+        	LOG.debug("Layout :" +layout);
+        	LOG.debug("Silent :" +silent);
         }
-        this.configurationService.updateConfiguration(getActive());
+        this.configurationService.updateConfiguration(getActive(), getDateFormat(), getLayout(), getSilent());
         this.securityLevels = issueSecurityLevelManager.getAllIssueSecurityLevels();
         
         return INPUT;
@@ -99,6 +106,8 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
 		}
 		return active;
 	}
+	
+	
 
 	public void setActive(Boolean active) {
 		this.active = active;
@@ -108,8 +117,14 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
 		return configurationService.getConfiguration();
 	}
 	
-	public List<SecurityRules> getSecurityRules(){
-		return getConfiguration().getSecurityRules();
+	public List<SecurityRules> getActivesSecurityRules(){
+		return getConfiguration().getActivesSecurityRules();
+	}
+	public List<SecurityRules> getInactivesSecurityRules(){
+		return getConfiguration().getInactivesSecurityRules();
+	}
+	public List<SecurityRules> getDeletedSecurityRules(){
+		return getConfiguration().getDeletedSecurityRules();
 	}
 
 	public Collection<IssueSecurityLevel> getLevelList() {
@@ -123,7 +138,35 @@ public class ConfigureCSLAction extends JiraWebActionSupport {
 	public void setEventTypes(Collection<EventType> eventTypes) {
 		this.eventTypes = eventTypes;
 	}
+    public String getDateFormat() {
+		return dateFormat;
+	}
 
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+
+	public String getLayout() {
+		if(layout == null) {
+			layout = "tab";
+		}
+		return layout;
+	}
+
+	public void setLayout(String layout) {
+		this.layout = layout;
+	}
+
+	public Boolean getSilent() {
+		if(silent == null) {
+			silent= Boolean.FALSE;
+		}
+		return silent;
+	}
+
+	public void setSilent(Boolean silent) {
+		this.silent = silent;
+	}
 	
 }
 
